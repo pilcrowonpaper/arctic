@@ -1,4 +1,5 @@
 export { Apple } from "./providers/apple.js";
+export { AzureAD } from "./providers/azure-ad.js";
 export { Discord } from "./providers/discord.js";
 export { Facebook } from "./providers/facebook.js";
 export { Github } from "./providers/github.js";
@@ -14,6 +15,7 @@ export type {
 	AppleRefreshedTokens,
 	AppleTokens
 } from "./providers/apple.js";
+export type { AzureADIdTokenClaims, AzureADTokens, AzureADUser } from "./providers/azure-ad.js";
 export type { DiscordTokens, DiscordUser } from "./providers/discord.js";
 export type { FacebookTokens, FacebookUser } from "./providers/facebook.js";
 export type {

@@ -9,17 +9,19 @@ npm install arctic
 ## Providers
 
 - [Apple](#oauth-20)
+- [Azure AD](#oauth-20-with-pkce-flow)
 - [Discord](#oauth-20)
 - [Facebook](#oauth-20)
 - [Github](#oauth-20)
 - [Google](#oauth-20)
+- [LINE](#oauth-20)
 - [Spotify](#oauth-20)
 - [Twitch](#oauth-20)
 - [Twitter](#oauth-20-with-pkce-flow)
 
 ## OAuth 2.0
 
-Most providers require the `client_id` and `client_secret`. You may also optionally pass `scope`.
+Most providers require the `client_id` and `client_secret`. You may also optionally pass `scope`. For OIDC clients, `openid` and `profile` scope are always included.
 
 ```ts
 import { Github } from "arctic";
@@ -96,7 +98,7 @@ See also:
 
 ## OAuth 2.0 with PKCE flow
 
-Most providers require the `client_id` and `client_secret`. You may also optionally pass `scope`.
+Most providers require the `client_id` and `client_secret`. You may also optionally pass `scope`. For OIDC clients, `openid` and `profile` scope are always included.
 
 ```ts
 import { Github } from "arctic";
