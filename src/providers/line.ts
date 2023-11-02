@@ -41,12 +41,15 @@ export class Line {
 				credentials: this.clientSecret
 			}
 		);
+		const parsedIdToken = parseJWT(result.id_token);
+		if (!parsedIdToken) throw new Error("Failed to parse ID token");
+		const idTokenClaims = parsedIdToken.payload as unknown as LineIdTokenClaims;
 		return {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			idToken: result.id_token,
-			idTokenClaims: this.parseIdToken(result.id_token)
+			idTokenClaims
 		};
 	}
 
@@ -72,12 +75,6 @@ export class Line {
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
-	}
-
-	private parseIdToken(idToken: string): LineIdTokenClaims {
-		const parsedIdToken = parseJWT(idToken);
-		if (!parsedIdToken) throw new Error();
-		return parsedIdToken.payload as unknown as LineIdTokenClaims;
 	}
 }
 

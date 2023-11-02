@@ -85,7 +85,7 @@ export class Apple {
 
 	private parseIdToken(idToken: string): AppleIdTokenClaims {
 		const parsedIdToken = parseJWT(idToken);
-		if (!parsedIdToken) throw new Error();
+		if (!parsedIdToken) throw new Error("Failed to parse ID token");
 		return parsedIdToken.payload as unknown as AppleIdTokenClaims;
 	}
 }

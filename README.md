@@ -76,7 +76,7 @@ const storedState = getCookie("state");
 
 if (!code || !verifyState(state, storedState)) {
 	// 400
-	throw new Error();
+	throw new Error("Invalid request");
 }
 
 try {
@@ -161,7 +161,7 @@ const storedState = getCookie("state");
 
 if (!code || !codeVerifier || !verifyState(state, storedState)) {
 	// 400
-	throw new Error();
+	throw new Error("Invalid request");
 }
 
 try {

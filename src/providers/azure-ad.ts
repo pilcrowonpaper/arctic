@@ -79,7 +79,7 @@ export class AzureAD {
 
 	private parseIdToken(idToken: string): AzureADIdTokenClaims {
 		const parsedIdToken = parseJWT(idToken);
-		if (!parsedIdToken) throw new Error();
+		if (!parsedIdToken) throw new Error("Failed to parse ID token");
 		return parsedIdToken.payload as unknown as AzureADIdTokenClaims;
 	}
 }
