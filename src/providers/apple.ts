@@ -86,20 +86,8 @@ export class Apple {
 	private parseIdToken(idToken: string): AppleIdTokenClaims {
 		const parsedIdToken = parseJWT(idToken);
 		if (!parsedIdToken) throw new Error();
-		const payload = parsedIdToken.payload as IdTokenPayload;
-		const appleUser: AppleIdTokenClaims = {
-			sub: payload.sub,
-			email: payload.email,
-			email_verified: payload.email_verified
-		};
-		return appleUser;
+		return parsedIdToken.payload as unknown as AppleIdTokenClaims;
 	}
-}
-
-interface IdTokenPayload {
-	sub: string;
-	email?: string;
-	email_verified?: boolean;
 }
 
 interface AuthorizationCodeResponseBody {
@@ -117,9 +105,16 @@ interface RefreshTokenResponseBody {
 }
 
 export interface AppleIdTokenClaims {
+	iss: "https://appleid.apple.com";
+	sub: string;
+	aud: string;
+	iat: number;
+	exp: number;
 	email?: string;
 	email_verified?: boolean;
-	sub: string;
+	is_private_email?: boolean;
+	real_user_status: 0 | 1 | 2;
+	transfer_sub?: string;
 }
 
 export interface AppleTokens {
