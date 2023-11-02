@@ -1,0 +1,35 @@
+{
+	"name": "arctic",
+	"type": "module",
+	"version": "0.1.0",
+	"description": "A collection of auth-related utilities",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"module": "dist/index.js",
+	"scripts": {
+		"build": "rm -r dist/* && tsc",
+		"format": "prettier -w .",
+		"lint": "eslint src",
+		"test": "vitest run --sequence.concurrent"
+	},
+	"files": [
+		"/dist/"
+	],
+	"author": "pilcrowOnPaper",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/pilcrowOnPaper/oslo"
+	},
+	"devDependencies": {
+		"@types/node": "^20.8.6",
+		"@typescript-eslint/eslint-plugin": "^6.7.5",
+		"@typescript-eslint/parser": "^6.7.5",
+		"eslint": "^8.51.0",
+		"prettier": "^3.0.3",
+		"typescript": "^5.2.2"
+	},
+	"dependencies": {
+		"oslo": "0.17.0"
+	}
+}
