@@ -2,10 +2,6 @@
 
 Library for handling OAuth 2.0 with built-in providers. Light weight, fully-typed, runtime-agnostic. Built using [`oslo`](http://github.com/pilcrowonpaper/oslo). For a more flexible OAuth 2.0 client, see [`oslo/oauth2`](http://github.com/pilcrowonpaper/oslo).
 
-```
-npm install arctic
-```
-
 ## Providers
 
 - [Apple](#oauth-20)
@@ -67,14 +63,14 @@ return redirect(url);
 Compare the state, and use `validateAuthorizationCode()` to validate the authorization code. This returns an object with an access token, and a refresh token if requested. If the code is invalid, it will throw an `AccessTokenRequestError`.
 
 ```ts
-import { verifyState, OAuth2RequestError } from "arctic";
+import { OAuth2RequestError } from "arctic";
 
 const code = request.url.searchParams.get("code");
 const state = request.url.searchParams.get("state");
 
 const storedState = getCookie("state");
 
-if (!code || !verifyState(state, storedState)) {
+if (!code || !storedState || state !== storedState) {
 	// 400
 	throw new Error("Invalid request");
 }
@@ -151,7 +147,7 @@ return redirect(url);
 Compare the state, and use `validateAuthorizationCode()` to validate the authorization code with the code verifier. This returns an object with an access token, and a refresh token if requested. If the code is invalid, it will throw an `AccessTokenRequestError`.
 
 ```ts
-import { verifyState, OAuth2RequestError } from "arctic";
+import { OAuth2RequestError } from "arctic";
 
 const code = request.url.searchParams.get("code");
 const state = request.url.searchParams.get("state");
@@ -159,7 +155,7 @@ const codeVerifier = request.url.searchParams.get("code_verifier");
 
 const storedState = getCookie("state");
 
-if (!code || !codeVerifier || !verifyState(state, storedState)) {
+if (!code || !codeVerifier || state !== storedState) {
 	// 400
 	throw new Error("Invalid request");
 }

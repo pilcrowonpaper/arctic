@@ -35,4 +35,4 @@ export type { SpotifyTokens, SpotifyUser } from "./providers/spotify.js";
 export type { TwitchTokens, TwitchUser } from "./providers/twitch.js";
 export type { TwitterTokens, TwitterUser } from "./providers/twitter.js";
 
-export { generateCodeVerifier, generateState, verifyState, OAuth2RequestError } from "oslo/oauth2";
+export { generateCodeVerifier, generateState, OAuth2RequestError } from "oslo/oauth2";
