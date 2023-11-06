@@ -7,7 +7,7 @@
 	"types": "dist/index.d.ts",
 	"module": "dist/index.js",
 	"scripts": {
-		"build": "rm -r dist/* && tsc",
+		"build": "rm -rf dist/* && tsc",
 		"format": "prettier -w .",
 		"lint": "eslint src",
 		"test": "vitest run --sequence.concurrent"

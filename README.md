@@ -2,6 +2,10 @@
 
 Library for handling OAuth 2.0 with built-in providers. Light weight, fully-typed, runtime-agnostic. Built using [`oslo`](http://github.com/pilcrowonpaper/oslo). For a more flexible OAuth 2.0 client, see [`oslo/oauth2`](http://github.com/pilcrowonpaper/oslo).
 
+```
+npm install arctic
+```
+
 ## Providers
 
 - [Apple](#oauth-20)
