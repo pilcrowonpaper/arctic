@@ -11,13 +11,13 @@ export class Github {
 	constructor(
 		clientId: string,
 		clientSecret: string,
-		redirectURI: string,
 		options?: {
+			redirectURI?: string;
 			scope?: string[];
 		}
 	) {
 		this.controller = new OAuth2Controller(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
+			redirectURI: options?.redirectURI
 		});
 		this.scope = options?.scope ?? [];
 		this.clientSecret = clientSecret;
