@@ -12,7 +12,7 @@ npm install arctic
 - [Azure AD](#oauth-20-with-pkce-flow)
 - [Discord](#oauth-20)
 - [Facebook](#oauth-20)
-- [Github](#oauth-20)
+- [GitHub](#oauth-20)
 - [Google](#oauth-20)
 - [LINE](#oauth-20)
 - [Spotify](#oauth-20)
@@ -24,9 +24,9 @@ npm install arctic
 Most providers require the `client_id` and `client_secret`. You may also optionally pass `scope`. For OIDC clients, `openid` and `profile` scope are always included.
 
 ```ts
-import { Github } from "arctic";
+import { GitHub } from "arctic";
 
-const github = new Github(clientId, clientSecret, {
+const github = new GitHub(clientId, clientSecret, {
 	scope: ["user:email"] // etc
 });
 ```
@@ -38,7 +38,7 @@ import { Google } from "arctic";
 
 const redirectURI = "http://localhost:3000/login/google/callback";
 
-const github = new Github(clientId, clientSecret, redirectURI);
+const github = new GitHub(clientId, clientSecret, redirectURI);
 ```
 
 ### Create authorization URL
@@ -101,9 +101,9 @@ See also:
 Most providers require the `client_id` and `client_secret`. You may also optionally pass `scope`. For OIDC clients, `openid` and `profile` scope are always included.
 
 ```ts
-import { Github } from "arctic";
+import { GitHub } from "arctic";
 
-const github = new Github(clientId, clientSecret, {
+const github = new GitHub(clientId, clientSecret, {
 	scope: ["user:email"] // etc
 });
 ```
@@ -115,7 +115,7 @@ import { Google } from "arctic";
 
 const redirectURI = "http://localhost:3000/login/google/callback";
 
-const github = new Github(clientId, clientSecret, redirectURI);
+const github = new GitHub(clientId, clientSecret, redirectURI);
 ```
 
 ### Create authorization URL

@@ -3,7 +3,7 @@ import { OAuth2Controller } from "oslo/oauth2";
 const authorizeEndpoint = "https://github.com/login/oauth/authorize";
 const tokenEndpoint = "https://github.com/login/oauth/access_token";
 
-export class Github {
+export class GitHub {
 	private controller: OAuth2Controller;
 	private scope: string[];
 	private clientSecret: string;
@@ -30,7 +30,7 @@ export class Github {
 		});
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<GithubTokens> {
+	public async validateAuthorizationCode(code: string): Promise<GitHubTokens> {
 		const result = await this.controller.validateAuthorizationCode(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
@@ -40,7 +40,7 @@ export class Github {
 		};
 	}
 
-	public async getUser(accessToken: string): Promise<GithubUser> {
+	public async getUser(accessToken: string): Promise<GitHubUser> {
 		const response = await fetch("https://api.github.com/user", {
 			headers: {
 				Authorization: ["Bearer", accessToken].join(" ")
@@ -50,13 +50,13 @@ export class Github {
 	}
 }
 
-export interface GithubTokens {
+export interface GitHubTokens {
 	accessToken: string;
 }
 
-export type GithubUser = PublicGithubUser | PrivateGithubUser;
+export type GitHubUser = PublicGitHubUser | PrivateGitHubUser;
 
-export interface PublicGithubUser {
+export interface PublicGitHubUser {
 	avatar_url: string;
 	bio: string | null;
 	blog: string | null;
@@ -99,7 +99,7 @@ export interface PublicGithubUser {
 	suspended_at?: string | null;
 }
 
-export interface PrivateGithubUser extends PublicGithubUser {
+export interface PrivateGitHubUser extends PublicGitHubUser {
 	collaborators: number;
 	disk_usage: number;
 	owned_private_repos: number;
