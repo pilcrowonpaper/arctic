@@ -80,7 +80,7 @@ export class Apple {
 			audience,
 			subject: this.credentials.clientId
 		});
-		return jwt.value;
+		return jwt;
 	}
 
 	private parseIdToken(idToken: string): AppleIdTokenClaims {
