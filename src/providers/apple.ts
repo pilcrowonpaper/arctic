@@ -1,13 +1,13 @@
 import { TimeSpan, createDate } from "oslo";
 import { decodeBase64 } from "oslo/encoding";
 import { createJWT, parseJWT } from "oslo/jwt";
-import { OAuth2Controller } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 
 const authorizeEndpoint = "https://appleid.apple.com/auth/authorize";
 const tokenEndpoint = "https://appleid.apple.com/auth/token";
 
 export class Apple {
-	private controller: OAuth2Controller;
+	private client: OAuth2Client;
 	private scope: string[];
 	private credentials: AppleCredentials;
 
@@ -19,7 +19,7 @@ export class Apple {
 			scope?: string[];
 		}
 	) {
-		this.controller = new OAuth2Controller(credentials.clientId, authorizeEndpoint, tokenEndpoint, {
+		this.client = new OAuth2Client(credentials.clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI,
 			responseMode: options?.responseMode
 		});
@@ -28,14 +28,14 @@ export class Apple {
 	}
 
 	public async createAuthorizationURL(state: string): Promise<URL> {
-		return await this.controller.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
 			state,
 			scope: this.scope
 		});
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<AppleTokens> {
-		const result = await this.controller.validateAuthorizationCode<AuthorizationCodeResponseBody>(
+		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
 			code,
 			{
 				authenticateWith: "request_body",
@@ -52,7 +52,7 @@ export class Apple {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<AppleRefreshedTokens> {
-		const result = await this.controller.refreshAccessToken<RefreshTokenResponseBody>(
+		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(
 			refreshToken,
 			{
 				authenticateWith: "request_body",

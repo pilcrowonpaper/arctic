@@ -1,10 +1,10 @@
-import { OAuth2Controller } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 
 const authorizeEndpoint = "https://twitter.com/i/oauth2/authorize";
 const tokenEndpoint = "https://api.twitter.com/2/oauth2/token";
 
 export class Twitter {
-	private controller: OAuth2Controller;
+	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
 
@@ -16,7 +16,7 @@ export class Twitter {
 			scope?: string[];
 		}
 	) {
-		this.controller = new OAuth2Controller(clientId, authorizeEndpoint, tokenEndpoint, {
+		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
 		this.scope = options?.scope ?? [];
@@ -25,7 +25,7 @@ export class Twitter {
 	}
 
 	public async createAuthorizationURL(state: string, codeVerifier: string): Promise<URL> {
-		return await this.controller.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
 			state,
 			scope: this.scope,
 			codeVerifier
@@ -36,7 +36,7 @@ export class Twitter {
 		code: string,
 		codeVerifier: string
 	): Promise<TwitterTokens> {
-		const result = await this.controller.validateAuthorizationCode<TokenResponseBody>(code, {
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			credentials: this.clientSecret,
 			codeVerifier
 		});
@@ -56,7 +56,7 @@ export class Twitter {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<TwitterTokens> {
-		const result = await this.controller.refreshAccessToken<TokenResponseBody>(refreshToken, {
+		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});

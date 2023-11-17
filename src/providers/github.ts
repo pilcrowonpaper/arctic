@@ -1,10 +1,10 @@
-import { OAuth2Controller } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 
 const authorizeEndpoint = "https://github.com/login/oauth/authorize";
 const tokenEndpoint = "https://github.com/login/oauth/access_token";
 
 export class GitHub {
-	private controller: OAuth2Controller;
+	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
 
@@ -16,7 +16,7 @@ export class GitHub {
 			scope?: string[];
 		}
 	) {
-		this.controller = new OAuth2Controller(clientId, authorizeEndpoint, tokenEndpoint, {
+		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI: options?.redirectURI
 		});
 		this.scope = options?.scope ?? [];
@@ -24,14 +24,14 @@ export class GitHub {
 	}
 
 	public async createAuthorizationURL(state: string): Promise<URL> {
-		return await this.controller.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
 			state,
 			scope: this.scope
 		});
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<GitHubTokens> {
-		const result = await this.controller.validateAuthorizationCode(code, {
+		const result = await this.client.validateAuthorizationCode(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});

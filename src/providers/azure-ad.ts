@@ -1,9 +1,9 @@
 import { TimeSpan, createDate } from "oslo";
 import { parseJWT } from "oslo/jwt";
-import { OAuth2Controller } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 
 export class AzureAD {
-	private controller: OAuth2Controller;
+	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
 
@@ -18,7 +18,7 @@ export class AzureAD {
 	) {
 		const authorizeEndpoint = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize`;
 		const tokenEndpoint = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`;
-		this.controller = new OAuth2Controller(clientId, authorizeEndpoint, tokenEndpoint, {
+		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
 		this.scope = options?.scope ?? [];
@@ -27,7 +27,7 @@ export class AzureAD {
 	}
 
 	public async createAuthorizationURL(state: string, codeVerifier: string): Promise<URL> {
-		const url = await this.controller.createAuthorizationURL({
+		const url = await this.client.createAuthorizationURL({
 			state,
 			scope: this.scope,
 			codeVerifier
@@ -40,7 +40,7 @@ export class AzureAD {
 		code: string,
 		codeVerifier: string
 	): Promise<AzureADTokens> {
-		const result = await this.controller.validateAuthorizationCode<TokenResponseBody>(code, {
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret,
 			codeVerifier
@@ -64,7 +64,7 @@ export class AzureAD {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<AzureADTokens> {
-		const result = await this.controller.refreshAccessToken<TokenResponseBody>(refreshToken, {
+		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});

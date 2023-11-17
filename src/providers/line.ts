@@ -1,12 +1,12 @@
 import { TimeSpan, createDate } from "oslo";
 import { parseJWT } from "oslo/jwt";
-import { OAuth2Controller } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 
 const authorizeEndpoint = "https://access.line.me/oauth2/v2.1/authorize";
 const tokenEndpoint = "https://api.line.me/oauth2/v2.1/token";
 
 export class Line {
-	private controller: OAuth2Controller;
+	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
 
@@ -18,7 +18,7 @@ export class Line {
 			scope?: string[];
 		}
 	) {
-		this.controller = new OAuth2Controller(clientId, authorizeEndpoint, tokenEndpoint, {
+		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
 		this.scope = options?.scope ?? [];
@@ -27,14 +27,14 @@ export class Line {
 	}
 
 	public async createAuthorizationURL(state: string): Promise<URL> {
-		return await this.controller.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
 			state,
 			scope: this.scope
 		});
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<LineTokens> {
-		const result = await this.controller.validateAuthorizationCode<AuthorizationCodeResponseBody>(
+		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
 			code,
 			{
 				authenticateWith: "request_body",
@@ -63,7 +63,7 @@ export class Line {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<LineRefreshedTokens> {
-		const result = await this.controller.refreshAccessToken<RefreshTokenResponseBody>(
+		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(
 			refreshToken,
 			{
 				authenticateWith: "request_body",

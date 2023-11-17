@@ -1,12 +1,12 @@
 import { TimeSpan, createDate } from "oslo";
-import { OAuth2Controller } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 import { sendRequest } from "../request.js";
 
 const authorizeEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 const tokenEndpoint = "https://oauth2.googleapis.com/token";
 
 export class Google {
-	private controller: OAuth2Controller;
+	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
 	private accessType: "online" | "offline";
@@ -20,7 +20,7 @@ export class Google {
 			accessType?: "online" | "offline";
 		}
 	) {
-		this.controller = new OAuth2Controller(clientId, authorizeEndpoint, tokenEndpoint, {
+		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
 		this.scope = options?.scope ?? [];
@@ -30,7 +30,7 @@ export class Google {
 	}
 
 	public async createAuthorizationURL(state: string): Promise<URL> {
-		const url = await this.controller.createAuthorizationURL({
+		const url = await this.client.createAuthorizationURL({
 			state,
 			scope: this.scope
 		});
@@ -39,7 +39,7 @@ export class Google {
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<GoogleTokens> {
-		const result = await this.controller.validateAuthorizationCode<AuthorizationCodeResponseBody>(
+		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
 			code,
 			{
 				authenticateWith: "request_body",
@@ -60,7 +60,7 @@ export class Google {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<GoogleRefreshedTokens> {
-		const result = await this.controller.refreshAccessToken<RefreshTokenResponseBody>(
+		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(
 			refreshToken,
 			{
 				authenticateWith: "request_body",

@@ -1,11 +1,11 @@
 import { TimeSpan, createDate } from "oslo";
-import { OAuth2Controller } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 
 const authorizeEndpoint = "https://accounts.spotify.com/authorize";
 const tokenEndpoint = "https://accounts.spotify.com/api/token";
 
 export class Spotify {
-	private controller: OAuth2Controller;
+	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
 
@@ -17,7 +17,7 @@ export class Spotify {
 			scope?: string[];
 		}
 	) {
-		this.controller = new OAuth2Controller(clientId, authorizeEndpoint, tokenEndpoint, {
+		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
 		this.scope = options?.scope ?? [];
@@ -25,14 +25,14 @@ export class Spotify {
 	}
 
 	public async createAuthorizationURL(state: string): Promise<URL> {
-		return await this.controller.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
 			state,
 			scope: this.scope
 		});
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<SpotifyTokens> {
-		const result = await this.controller.validateAuthorizationCode<TokenResponseBody>(code, {
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			credentials: this.clientSecret
 		});
 		return {
@@ -52,7 +52,7 @@ export class Spotify {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<SpotifyTokens> {
-		const result = await this.controller.refreshAccessToken<TokenResponseBody>(refreshToken);
+		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken);
 		return {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,

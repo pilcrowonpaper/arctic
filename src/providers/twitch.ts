@@ -1,11 +1,11 @@
 import { TimeSpan, createDate } from "oslo";
-import { OAuth2Controller } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 
 const authorizeEndpoint = "https://id.twitch.tv/oauth2/authorize";
 const tokenEndpoint = "https://id.twitch.tv/oauth2/token";
 
 export class Twitch {
-	private controller: OAuth2Controller;
+	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
 
@@ -17,7 +17,7 @@ export class Twitch {
 			scope?: string[];
 		}
 	) {
-		this.controller = new OAuth2Controller(clientId, authorizeEndpoint, tokenEndpoint, {
+		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
 		this.scope = options?.scope ?? [];
@@ -25,14 +25,14 @@ export class Twitch {
 	}
 
 	public async createAuthorizationURL(state: string): Promise<URL> {
-		return await this.controller.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
 			state,
 			scope: this.scope
 		});
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<TwitchTokens> {
-		const result = await this.controller.validateAuthorizationCode<TokenResponseBody>(code, {
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
@@ -53,7 +53,7 @@ export class Twitch {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<TwitchTokens> {
-		const result = await this.controller.refreshAccessToken<TokenResponseBody>(refreshToken, {
+		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});

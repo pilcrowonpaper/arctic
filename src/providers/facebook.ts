@@ -1,11 +1,11 @@
 import { TimeSpan, createDate } from "oslo";
-import { OAuth2Controller } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 
 const authorizeEndpoint = "https://www.facebook.com/v16.0/dialog/oauth";
 const tokenEndpoint = "https://graph.facebook.com/v16.0/oauth/access_token";
 
 export class Facebook {
-	private controller: OAuth2Controller;
+	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
 
@@ -17,7 +17,7 @@ export class Facebook {
 			scope?: string[];
 		}
 	) {
-		this.controller = new OAuth2Controller(clientId, authorizeEndpoint, tokenEndpoint, {
+		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
 		this.scope = options?.scope ?? [];
@@ -26,14 +26,14 @@ export class Facebook {
 	}
 
 	public async createAuthorizationURL(state: string): Promise<URL> {
-		return await this.controller.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
 			state,
 			scope: this.scope
 		});
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<FacebookTokens> {
-		const result = await this.controller.validateAuthorizationCode<TokenResponseBody>(code, {
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
