@@ -29,21 +29,23 @@ export class Google {
 		this.accessType = options?.accessType ?? "online";
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
+	public async createAuthorizationURL(state: string, codeVerifier?: string): Promise<URL> {
 		const url = await this.client.createAuthorizationURL({
 			state,
-			scope: this.scope
+			scope: this.scope,
+			codeVerifier
 		});
 		url.searchParams.set("access_type", this.accessType);
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<GoogleTokens> {
+	public async validateAuthorizationCode(code: string, codeVerifier?: string): Promise<GoogleTokens> {
 		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
 			code,
 			{
 				authenticateWith: "request_body",
-				credentials: this.clientSecret
+				credentials: this.clientSecret,
+				codeVerifier
 			}
 		);
 		return {
