@@ -52,13 +52,10 @@ export class Apple {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<AppleRefreshedTokens> {
-		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(
-			refreshToken,
-			{
-				authenticateWith: "request_body",
-				credentials: await this.createClientSecret()
-			}
-		);
+		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(refreshToken, {
+			authenticateWith: "request_body",
+			credentials: await this.createClientSecret()
+		});
 		return {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
@@ -115,6 +112,8 @@ export interface AppleIdTokenClaims {
 	is_private_email?: boolean;
 	real_user_status: 0 | 1 | 2;
 	transfer_sub?: string;
+	nonce?: string;
+	nonce_supported?: boolean;
 }
 
 export interface AppleTokens {
