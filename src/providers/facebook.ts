@@ -46,7 +46,7 @@ export class Facebook {
 		const url = new URL("https://graph.facebook.com/me");
 		url.searchParams.set("access_token", accessToken);
 		url.searchParams.set("fields", ["id", "name", "picture", "email"].join(","));
-		const response = await fetch("https://discord.com/api/users/@me", {
+		const response = await fetch(url, {
 			headers: {
 				Authorization: ["Bearer", accessToken].join(" ")
 			}
