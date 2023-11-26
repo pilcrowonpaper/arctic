@@ -21,7 +21,6 @@ export class Facebook {
 			redirectURI
 		});
 		this.scope = options?.scope ?? [];
-		this.scope.push("identify");
 		this.clientSecret = clientSecret;
 	}
 
@@ -44,7 +43,7 @@ export class Facebook {
 	}
 
 	public async getUser(accessToken: string): Promise<FacebookUser> {
-		const url = new URL("https://discord.com/api/users/@me");
+		const url = new URL("https://graph.facebook.com/me");
 		url.searchParams.set("access_token", accessToken);
 		url.searchParams.set("fields", ["id", "name", "picture", "email"].join(","));
 		const response = await fetch("https://discord.com/api/users/@me", {
