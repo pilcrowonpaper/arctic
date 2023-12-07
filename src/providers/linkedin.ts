@@ -1,4 +1,3 @@
-import { TimeSpan, createDate } from "oslo";
 import { OAuth2Client } from "oslo/oauth2";
 
 const authorizeEndpoint = "https://www.linkedin.com/oauth/v2/authorization";
@@ -12,13 +11,13 @@ export class LinkedIn {
 	constructor(
 		clientId: string,
 		clientSecret: string,
+		redirectURI: string,
 		options?: {
-			redirectURI?: string;
 			scope?: string[];
 		}
 	) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI: options?.redirectURI
+			redirectURI
 		});
 		this.scope = options?.scope ?? [];
 		this.clientSecret = clientSecret;
@@ -52,6 +51,20 @@ export class LinkedIn {
 			}
 		});
 		return await response.json();
+	}
+
+	public async refreshAccessToken(refreshToken: string): Promise<LinkedInTokens> {
+		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
+			authenticateWith: "request_body",
+			credentials: this.clientSecret
+		});
+		return {
+			accessToken: result.access_token,
+			accessTokenExpiresIn: result.expires_in,
+			refreshToken: result.refresh_token,
+			refreshTokenExpiresIn: result.refresh_token_expires_in,
+			scope: result.scope
+		};
 	}
 }
 
