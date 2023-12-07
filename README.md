@@ -17,6 +17,7 @@ See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 - Facebook
 - Github
 - Google
+- LinkedIn
 - Twitch
 
 ### OAuth 2.0 with PKCE
@@ -97,13 +98,6 @@ try {
 	// unknown error
 }
 ```
-
-### Other
-
-See also:
-
-- [Get the current user](#get-the-current-user)
-- [Refresh access tokens](#refresh-access-tokens)
 
 ## OAuth 2.0 providers with PKCE
 
