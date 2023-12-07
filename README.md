@@ -125,7 +125,7 @@ import { Google } from "arctic";
 
 const redirectURI = "http://localhost:3000/login/google/callback";
 
-const github = new GitHub(clientId, clientSecret, redirectURI);
+const google = new Google(clientId, clientSecret, redirectURI);
 ```
 
 ### Create authorization URL
