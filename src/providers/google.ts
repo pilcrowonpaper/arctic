@@ -39,7 +39,10 @@ export class Google {
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string, codeVerifier?: string): Promise<GoogleTokens> {
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier?: string
+	): Promise<GoogleTokens> {
 		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
 			code,
 			{
@@ -62,13 +65,10 @@ export class Google {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<GoogleRefreshedTokens> {
-		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(
-			refreshToken,
-			{
-				authenticateWith: "request_body",
-				credentials: this.clientSecret
-			}
-		);
+		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(refreshToken, {
+			authenticateWith: "request_body",
+			credentials: this.clientSecret
+		});
 		return {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))

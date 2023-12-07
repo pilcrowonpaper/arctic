@@ -63,13 +63,10 @@ export class Line {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<LineRefreshedTokens> {
-		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(
-			refreshToken,
-			{
-				authenticateWith: "request_body",
-				credentials: this.clientSecret
-			}
-		);
+		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(refreshToken, {
+			authenticateWith: "request_body",
+			credentials: this.clientSecret
+		});
 		return {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
