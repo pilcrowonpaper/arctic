@@ -41,6 +41,15 @@ export class GitLab implements OAuth2ProviderWithPKCE {
 			codeVerifier
 		});
 	}
+
+	public async getUser(accessToken: string): Promise<GitlabUser> {
+		const response = await fetch(`${this.serverUrl}/api/v4/user`, {
+			headers: {
+				Authorization: ["Bearer", accessToken].join(" ")
+			}
+		});
+		return await response.json();
+	}
 }
 
 export type GitlabTokens = {
