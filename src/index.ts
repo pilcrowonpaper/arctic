@@ -36,6 +36,7 @@ export type {
 	LineTokens,
 	LineUser
 } from "./providers/line.js";
+export type { LinkedInTokens, LinkedInUser } from "./providers/linkedin.js";
 export type { SpotifyTokens, SpotifyUser } from "./providers/spotify.js";
 export type { TwitchTokens, TwitchUser } from "./providers/twitch.js";
 export type { TwitterTokens, TwitterUser } from "./providers/twitter.js";

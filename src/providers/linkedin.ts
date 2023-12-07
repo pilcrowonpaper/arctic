@@ -1,18 +1,16 @@
-import { OAuth2Client } from "oslo/oauth2";
+import { OAuth2Client, generateState } from "oslo/oauth2";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 const authorizeEndpoint = "https://www.linkedin.com/oauth/v2/authorization";
 const tokenEndpoint = "https://www.linkedin.com/oauth/v2/accessToken";
 
-export class LinkedIn implements OAuth2Provider {
+export class LinkedIn implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private scope: string[];
-	private clientSecret: string;
 
 	constructor(
 		clientId: string,
-		clientSecret: string,
 		redirectURI: string,
 		options?: {
 			scope?: string[];
@@ -22,27 +20,29 @@ export class LinkedIn implements OAuth2Provider {
 			redirectURI
 		});
 		this.scope = options?.scope ?? [];
-		this.clientSecret = clientSecret;
+		this.scope.push("openid", "profile");
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
+	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
-			state,
+			codeVerifier,
+			state: generateState(),
 			scope: this.scope
 		});
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<LinkedInTokens> {
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier: string
+	): Promise<LinkedInTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			authenticateWith: "request_body",
-			credentials: this.clientSecret
+			codeVerifier
 		});
 		return {
 			accessToken: result.access_token,
 			accessTokenExpiresIn: result.expires_in,
 			refreshToken: result.refresh_token,
-			refreshTokenExpiresIn: result.refresh_token_expires_in,
-			scope: result.scope
+			refreshTokenExpiresIn: result.refresh_token_expires_in
 		};
 	}
 
@@ -54,20 +54,6 @@ export class LinkedIn implements OAuth2Provider {
 		});
 		return await response.json();
 	}
-
-	public async refreshAccessToken(refreshToken: string): Promise<LinkedInTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			authenticateWith: "request_body",
-			credentials: this.clientSecret
-		});
-		return {
-			accessToken: result.access_token,
-			accessTokenExpiresIn: result.expires_in,
-			refreshToken: result.refresh_token,
-			refreshTokenExpiresIn: result.refresh_token_expires_in,
-			scope: result.scope
-		};
-	}
 }
 
 interface TokenResponseBody {
@@ -75,7 +61,6 @@ interface TokenResponseBody {
 	expires_in: number;
 	refresh_token: string;
 	refresh_token_expires_in: number;
-	scope: string;
 }
 
 export type LinkedInTokens = {
@@ -83,7 +68,6 @@ export type LinkedInTokens = {
 	accessTokenExpiresIn: number;
 	refreshToken: string;
 	refreshTokenExpiresIn: number;
-	scope: string;
 };
 
 export type LinkedInUser = {
