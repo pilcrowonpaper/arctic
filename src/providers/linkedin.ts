@@ -31,6 +31,20 @@ export class LinkedIn {
 		});
 	}
 
+	public async validateAuthorizationCode(code: string): Promise<LinkedInTokens> {
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
+			authenticateWith: "request_body",
+			credentials: this.clientSecret
+		});
+		return {
+			accessToken: result.access_token,
+			accessTokenExpiresIn: result.expires_in,
+			refreshToken: result.refresh_token,
+			refreshTokenExpiresIn: result.refresh_token_expires_in,
+			scope: result.scope
+		};
+	}
+
 	public async getUser(accessToken: string): Promise<LinkedInUser> {
 		const response = await fetch("https://api.linkedin.com/v2/userinfo", {
 			headers: {
@@ -41,6 +55,21 @@ export class LinkedIn {
 	}
 }
 
+interface TokenResponseBody {
+	access_token: string;
+	expires_in: number;
+	refresh_token: string;
+	refresh_token_expires_in: number;
+	scope: string;
+}
+
+export type LinkedInTokens = {
+	accessToken: string;
+	accessTokenExpiresIn: number;
+	refreshToken: string;
+	refreshTokenExpiresIn: number;
+	scope: string;
+};
 
 export type LinkedInUser = {
 	sub: string;
