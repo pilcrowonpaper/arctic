@@ -1,9 +1,11 @@
 import { OAuth2Client } from "oslo/oauth2";
 
+import type { OAuth2Provider } from "../index.js";
+
 const authorizeEndpoint = "https://www.linkedin.com/oauth/v2/authorization";
 const tokenEndpoint = "https://www.linkedin.com/oauth/v2/accessToken";
 
-export class LinkedIn {
+export class LinkedIn implements OAuth2Provider {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
