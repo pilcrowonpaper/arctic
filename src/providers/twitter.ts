@@ -5,7 +5,7 @@ import type { OAuth2ProviderWithPKCE } from "../index.js";
 const authorizeEndpoint = "https://twitter.com/i/oauth2/authorize";
 const tokenEndpoint = "https://api.twitter.com/2/oauth2/token";
 
-export class Twitter implements OAuth2ProviderWithPKCE{
+export class Twitter implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;

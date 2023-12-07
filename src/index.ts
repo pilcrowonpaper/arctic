@@ -5,6 +5,7 @@ export { Facebook } from "./providers/facebook.js";
 export { GitHub } from "./providers/github.js";
 export { Google } from "./providers/google.js";
 export { Line } from "./providers/line.js";
+export { LinkedIn } from "./providers/linkedin.js";
 export { Spotify } from "./providers/spotify.js";
 export { Twitch } from "./providers/twitch.js";
 export { Twitter } from "./providers/twitter.js";
@@ -35,6 +36,7 @@ export type {
 	LineTokens,
 	LineUser
 } from "./providers/line.js";
+export type { LinkedInTokens, LinkedInUser } from "./providers/linkedin.js";
 export type { SpotifyTokens, SpotifyUser } from "./providers/spotify.js";
 export type { TwitchTokens, TwitchUser } from "./providers/twitch.js";
 export type { TwitterTokens, TwitterUser } from "./providers/twitter.js";
