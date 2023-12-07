@@ -50,6 +50,25 @@ export class GitLab implements OAuth2ProviderWithPKCE {
 		});
 		return await response.json();
 	}
+
+	public async refreshAccessToken(refreshToken: string): Promise<GitlabTokens> {
+		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
+			authenticateWith: "request_body",
+			credentials: this.clientSecret
+		});
+
+		return {
+			accessToken: result.access_token,
+			accessTokenExpiresIn: result.expires_in,
+			refreshToken: result.refresh_token
+		};
+	}
+}
+
+interface TokenResponseBody {
+	access_token: string;
+	expires_in: number;
+	refresh_token: string;
 }
 
 export type GitlabTokens = {
