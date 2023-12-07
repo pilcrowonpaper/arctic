@@ -29,6 +29,7 @@ export type {
 	PrivateGitHubUser,
 	PublicGitHubUser
 } from "./providers/github.js";
+export type { GitlabTokens, GitlabUser } from "./providers/gitlab.js";
 export type { GoogleRefreshedTokens, GoogleTokens, GoogleUser } from "./providers/google.js";
 export type {
 	LineIdTokenClaims,
