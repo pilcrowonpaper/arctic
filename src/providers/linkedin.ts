@@ -23,6 +23,7 @@ export class LinkedIn implements OAuth2Provider {
 		});
 		this.clientSecret = clientSecret;
 		this.scope = options?.scope ?? [];
+		this.scope.push("openid", "profile")
 	}
 
 	public async createAuthorizationURL(state: string): Promise<URL> {
