@@ -4,7 +4,7 @@ import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2ProviderWithPKCE } from "../index.js";
 
-export class MicrosoftEntra implements OAuth2ProviderWithPKCE{
+export class MicrosoftEntra implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
