@@ -1,6 +1,6 @@
 import { OAuth2Client, generateState } from "oslo/oauth2";
 
-import type { OAuth2ProviderWithPKCE, Tokens } from "../index.js";
+import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 const authorizeEndpoint = "/oauth/authorize";
 const tokenEndpoint = "/oauth/token";
