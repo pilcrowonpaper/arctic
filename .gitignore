@@ -1,3 +1,6 @@
 pnpm-lock.yaml
 dist
 node_modules
+
+# bun 
+bun.lockb
