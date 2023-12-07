@@ -1,4 +1,4 @@
-import { OAuth2Client } from "oslo/oauth2";
+import { OAuth2Client, generateState } from "oslo/oauth2";
 
 import type { OAuth2ProviderWithPKCE } from "../index.js";
 
@@ -30,7 +30,16 @@ export class GitLab implements OAuth2ProviderWithPKCE {
 			}
 		);
 		this.scope = options?.scope ?? [];
+		this.scope.push("read_user");
 		this.clientSecret = clientSecret;
+	}
+
+	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
+		return await this.client.createAuthorizationURL({
+			state: generateState(),
+			scope: this.scope,
+			codeVerifier
+		});
 	}
 }
 
