@@ -1,16 +1,18 @@
-import { OAuth2Client, generateState } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://www.linkedin.com/oauth/v2/authorization";
 const tokenEndpoint = "https://www.linkedin.com/oauth/v2/accessToken";
 
-export class LinkedIn implements OAuth2ProviderWithPKCE {
+export class LinkedIn implements OAuth2Provider {
 	private client: OAuth2Client;
+	private clientSecret: string;
 	private scope: string[];
 
 	constructor(
 		clientId: string,
+		clientSecret: string,
 		redirectURI: string,
 		options?: {
 			scope?: string[];
@@ -19,24 +21,21 @@ export class LinkedIn implements OAuth2ProviderWithPKCE {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
+		this.clientSecret = clientSecret;
 		this.scope = options?.scope ?? [];
-		this.scope.push("openid", "profile");
 	}
 
-	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
+	public async createAuthorizationURL(state: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
-			codeVerifier,
-			state: generateState(),
+			state,
 			scope: this.scope
 		});
 	}
 
-	public async validateAuthorizationCode(
-		code: string,
-		codeVerifier: string
-	): Promise<LinkedInTokens> {
+	public async validateAuthorizationCode(code: string): Promise<LinkedInTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			codeVerifier
+			authenticateWith: "request_body",
+			credentials: this.clientSecret
 		});
 		return {
 			accessToken: result.access_token,
