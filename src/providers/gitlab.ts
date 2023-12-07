@@ -1,6 +1,6 @@
 import { OAuth2Client, generateState } from "oslo/oauth2";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2ProviderWithPKCE, Tokens } from "../index.js";
 
 const authorizeEndpoint = "/oauth/authorize";
 const tokenEndpoint = "/oauth/token";
@@ -40,6 +40,21 @@ export class GitLab implements OAuth2ProviderWithPKCE {
 			scope: this.scope,
 			codeVerifier
 		});
+	}
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier: string
+	): Promise<GitlabTokens> {
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
+			credentials: this.clientSecret,
+			codeVerifier
+		});
+
+		return {
+			accessToken: result.access_token,
+			accessTokenExpiresIn: result.expires_in,
+			refreshToken: result.refresh_token
+		};
 	}
 
 	public async getUser(accessToken: string): Promise<GitlabUser> {
