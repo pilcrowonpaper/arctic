@@ -2,7 +2,9 @@ import { TimeSpan, createDate } from "oslo";
 import { parseJWT } from "oslo/jwt";
 import { OAuth2Client } from "oslo/oauth2";
 
-export class AzureAD {
+import type { OAuth2ProviderWithPKCE } from "../index.js";
+
+export class MicrosoftEntra implements OAuth2ProviderWithPKCE{
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
@@ -26,9 +28,8 @@ export class AzureAD {
 		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(state: string, codeVerifier: string): Promise<URL> {
+	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
 		const url = await this.client.createAuthorizationURL({
-			state,
 			scope: this.scope,
 			codeVerifier
 		});
@@ -39,7 +40,7 @@ export class AzureAD {
 	public async validateAuthorizationCode(
 		code: string,
 		codeVerifier: string
-	): Promise<AzureADTokens> {
+	): Promise<MicrosoftEntraTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret,
@@ -54,7 +55,7 @@ export class AzureAD {
 		};
 	}
 
-	public async getUser(accessToken: string): Promise<AzureADUser> {
+	public async getUser(accessToken: string): Promise<MicrosoftEntraUser> {
 		const response = await fetch("https://graph.microsoft.com/oidc/userinfo", {
 			headers: {
 				Authorization: ["Bearer", accessToken].join(" ")
@@ -63,7 +64,7 @@ export class AzureAD {
 		return await response.json();
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<AzureADTokens> {
+	public async refreshAccessToken(refreshToken: string): Promise<MicrosoftEntraTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
@@ -77,14 +78,14 @@ export class AzureAD {
 		};
 	}
 
-	private parseIdToken(idToken: string): AzureADIdTokenClaims {
+	private parseIdToken(idToken: string): MicrosoftEntraIdTokenClaims {
 		const parsedIdToken = parseJWT(idToken);
 		if (!parsedIdToken) throw new Error("Failed to parse ID token");
-		return parsedIdToken.payload as unknown as AzureADIdTokenClaims;
+		return parsedIdToken.payload as unknown as MicrosoftEntraIdTokenClaims;
 	}
 }
 
-export interface AzureADIdTokenClaims {
+export interface MicrosoftEntraIdTokenClaims {
 	sub: string;
 	iss: string;
 	aud: string;
@@ -111,15 +112,15 @@ interface TokenResponseBody {
 	id_token: string;
 }
 
-export interface AzureADTokens {
+export interface MicrosoftEntraTokens {
 	idToken: string;
 	accessToken: string;
 	accessTokenExpiresAt: Date;
 	refreshToken: string | null;
-	idTokenClaims: AzureADIdTokenClaims;
+	idTokenClaims: MicrosoftEntraIdTokenClaims;
 }
 
-export interface AzureADUser {
+export interface MicrosoftEntraUser {
 	sub: string;
 	name: string;
 	family_name: string;

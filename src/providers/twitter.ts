@@ -1,9 +1,11 @@
-import { OAuth2Client } from "oslo/oauth2";
+import { OAuth2Client, generateState } from "oslo/oauth2";
+
+import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 const authorizeEndpoint = "https://twitter.com/i/oauth2/authorize";
 const tokenEndpoint = "https://api.twitter.com/2/oauth2/token";
 
-export class Twitter {
+export class Twitter implements OAuth2ProviderWithPKCE{
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
@@ -24,9 +26,9 @@ export class Twitter {
 		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(state: string, codeVerifier: string): Promise<URL> {
+	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
-			state,
+			state: generateState(),
 			scope: this.scope,
 			codeVerifier
 		});

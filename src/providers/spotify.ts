@@ -1,17 +1,17 @@
 import { TimeSpan, createDate } from "oslo";
 import { OAuth2Client } from "oslo/oauth2";
 
+import type { OAuth2ProviderWithPKCE } from "../index.js";
+
 const authorizeEndpoint = "https://accounts.spotify.com/authorize";
 const tokenEndpoint = "https://accounts.spotify.com/api/token";
 
-export class Spotify {
+export class Spotify implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private scope: string[];
-	private clientSecret: string;
 
 	constructor(
 		clientId: string,
-		clientSecret: string,
 		redirectURI: string,
 		options?: {
 			scope?: string[];
@@ -21,19 +21,21 @@ export class Spotify {
 			redirectURI
 		});
 		this.scope = options?.scope ?? [];
-		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
+	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
-			state,
+			codeVerifier,
 			scope: this.scope
 		});
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<SpotifyTokens> {
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier: string
+	): Promise<SpotifyTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret
+			codeVerifier
 		});
 		return {
 			accessToken: result.access_token,

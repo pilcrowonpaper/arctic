@@ -8,18 +8,27 @@ npm install arctic
 
 ## Providers
 
-- [Apple](#oauth-20)
-- [Azure AD](#oauth-20-with-pkce-flow)
-- [Discord](#oauth-20)
-- [Facebook](#oauth-20)
-- [GitHub](#oauth-20)
-- [Google](#oauth-20)
-- [LINE](#oauth-20)
-- [Spotify](#oauth-20)
-- [Twitch](#oauth-20)
-- [Twitter](#oauth-20-with-pkce-flow)
+### OAuth 2.0
 
-## OAuth 2.0
+See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
+
+- Apple
+- Discord
+- Facebook
+- Github
+- Google
+- Twitch
+
+### OAuth 2.0 with PKCE
+
+See [OAuth 2.0 providers with PKCE](#oauth-20-providers-with-pkce) for instructions.
+
+- Line
+- Microsoft Entra
+- Spotify
+- Twitter
+
+## OAuth 2.0 providers
 
 Most providers require the `client_id` and `client_secret`. You may also optionally pass `scope`. For OIDC clients, `openid` and `profile` scope are always included.
 
@@ -96,7 +105,7 @@ See also:
 - [Get the current user](#get-the-current-user)
 - [Refresh access tokens](#refresh-access-tokens)
 
-## OAuth 2.0 with PKCE flow
+## OAuth 2.0 providers with PKCE
 
 Most providers require the `client_id` and `client_secret`. You may also optionally pass `scope`. For OIDC clients, `openid` and `profile` scope are always included.
 
@@ -120,23 +129,16 @@ const github = new GitHub(clientId, clientSecret, redirectURI);
 
 ### Create authorization URL
 
-Generate state and code verifier using `generateState()` and `generateCodeVerifier()`, and store them as cookies. Use them to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
+When using the PKCE flow, `state` is not necessary. Generate a code verifier using `generateCodeVerifier()`, and store it as a cookie. Use them to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
 
 ```ts
 import { generateState, generateCodeVerifier } from "arctic";
 
-const state = generateState();
 const codeVerifier = generateCodeVerifier();
 
 const url = await github.createAuthorizationURL(state, codeVerifier);
 
-// store state and code verifier as cookie
-setCookie("state", state, {
-	secure: true, // set to false in localhost
-	path: "/",
-	httpOnly: true,
-	maxAge: 60 * 10 // 10 min
-});
+// store code verifier as cookie
 setCookie("code_verifier", state, {
 	secure: true, // set to false in localhost
 	path: "/",
@@ -148,21 +150,13 @@ return redirect(url);
 
 ### Validate authorization code
 
-Compare the state, and use `validateAuthorizationCode()` to validate the authorization code with the code verifier. This returns an object with an access token, and a refresh token if requested. If the code is invalid, it will throw an `AccessTokenRequestError`.
+Use `validateAuthorizationCode()` to validate the authorization code with the code verifier. This returns an object with an access token, and a refresh token if requested. If the code is invalid, it will throw an `AccessTokenRequestError`.
 
 ```ts
 import { OAuth2RequestError } from "arctic";
 
 const code = request.url.searchParams.get("code");
-const state = request.url.searchParams.get("state");
 const codeVerifier = request.url.searchParams.get("code_verifier");
-
-const storedState = getCookie("state");
-
-if (!code || !codeVerifier || state !== storedState) {
-	// 400
-	throw new Error("Invalid request");
-}
 
 try {
 	const tokens = await github.validateAuthorizationCode(code, codeVerifier);

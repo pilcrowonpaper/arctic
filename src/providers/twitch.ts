@@ -1,10 +1,12 @@
 import { TimeSpan, createDate } from "oslo";
 import { OAuth2Client } from "oslo/oauth2";
 
+import type { OAuth2Provider } from "../index.js";
+
 const authorizeEndpoint = "https://id.twitch.tv/oauth2/authorize";
 const tokenEndpoint = "https://id.twitch.tv/oauth2/token";
 
-export class Twitch {
+export class Twitch implements OAuth2Provider {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;

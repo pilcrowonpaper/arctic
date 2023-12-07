@@ -1,11 +1,12 @@
 import { TimeSpan, createDate } from "oslo";
 import { parseJWT } from "oslo/jwt";
-import { OAuth2Client } from "oslo/oauth2";
+import { OAuth2Client, generateState } from "oslo/oauth2";
+import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 const authorizeEndpoint = "https://access.line.me/oauth2/v2.1/authorize";
 const tokenEndpoint = "https://api.line.me/oauth2/v2.1/token";
 
-export class Line {
+export class Line implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
@@ -26,19 +27,21 @@ export class Line {
 		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
+	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
-			state,
+			state: generateState(),
+			codeVerifier,
 			scope: this.scope
 		});
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<LineTokens> {
+	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<LineTokens> {
 		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
 			code,
 			{
 				authenticateWith: "request_body",
-				credentials: this.clientSecret
+				credentials: this.clientSecret,
+				codeVerifier
 			}
 		);
 		const parsedIdToken = parseJWT(result.id_token);

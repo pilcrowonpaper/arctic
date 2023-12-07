@@ -2,10 +2,12 @@ import { TimeSpan, createDate } from "oslo";
 import { OAuth2Client } from "oslo/oauth2";
 import { sendRequest } from "../request.js";
 
+import type { OAuth2Provider } from "../index.js";
+
 const authorizeEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 const tokenEndpoint = "https://oauth2.googleapis.com/token";
 
-export class Google {
+export class Google implements OAuth2Provider {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
@@ -29,26 +31,21 @@ export class Google {
 		this.accessType = options?.accessType ?? "online";
 	}
 
-	public async createAuthorizationURL(state: string, codeVerifier?: string): Promise<URL> {
+	public async createAuthorizationURL(state: string): Promise<URL> {
 		const url = await this.client.createAuthorizationURL({
-			state,
 			scope: this.scope,
-			codeVerifier
+			state
 		});
 		url.searchParams.set("access_type", this.accessType);
 		return url;
 	}
 
-	public async validateAuthorizationCode(
-		code: string,
-		codeVerifier?: string
-	): Promise<GoogleTokens> {
+	public async validateAuthorizationCode(code: string): Promise<GoogleTokens> {
 		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
 			code,
 			{
 				authenticateWith: "request_body",
-				credentials: this.clientSecret,
-				codeVerifier
+				credentials: this.clientSecret
 			}
 		);
 		return {
