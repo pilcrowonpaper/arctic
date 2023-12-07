@@ -3,10 +3,12 @@ import { decodeBase64 } from "oslo/encoding";
 import { createJWT, parseJWT } from "oslo/jwt";
 import { OAuth2Client } from "oslo/oauth2";
 
+import type { OAuth2Provider } from "../index.js";
+
 const authorizeEndpoint = "https://appleid.apple.com/auth/authorize";
 const tokenEndpoint = "https://appleid.apple.com/auth/token";
 
-export class Apple {
+export class Apple implements OAuth2Provider {
 	private client: OAuth2Client;
 	private scope: string[];
 	private credentials: AppleCredentials;

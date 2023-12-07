@@ -1,9 +1,11 @@
 import { OAuth2Client } from "oslo/oauth2";
 
+import type { OAuth2Provider } from "../index.js";
+
 const authorizeEndpoint = "https://github.com/login/oauth/authorize";
 const tokenEndpoint = "https://github.com/login/oauth/access_token";
 
-export class GitHub {
+export class GitHub implements OAuth2Provider {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;

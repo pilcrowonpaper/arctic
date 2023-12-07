@@ -1,10 +1,12 @@
 import { TimeSpan, createDate } from "oslo";
 import { OAuth2Client } from "oslo/oauth2";
 
+import type { OAuth2Provider } from "../index.js";
+
 const authorizeEndpoint = "https://www.facebook.com/v16.0/dialog/oauth";
 const tokenEndpoint = "https://graph.facebook.com/v16.0/oauth/access_token";
 
-export class Facebook {
+export class Facebook implements OAuth2Provider {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;

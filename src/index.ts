@@ -1,5 +1,5 @@
 export { Apple } from "./providers/apple.js";
-export { AzureAD } from "./providers/azure-ad.js";
+export { MicrosoftEntra } from "./providers/microsoft-entra.js";
 export { Discord } from "./providers/discord.js";
 export { Facebook } from "./providers/facebook.js";
 export { GitHub } from "./providers/github.js";
@@ -15,7 +15,11 @@ export type {
 	AppleRefreshedTokens,
 	AppleTokens
 } from "./providers/apple.js";
-export type { AzureADIdTokenClaims, AzureADTokens, AzureADUser } from "./providers/azure-ad.js";
+export type {
+	MicrosoftEntraIdTokenClaims,
+	MicrosoftEntraTokens,
+	MicrosoftEntraUser
+} from "./providers/microsoft-entra.js";
 export type { DiscordTokens, DiscordUser } from "./providers/discord.js";
 export type { FacebookTokens, FacebookUser } from "./providers/facebook.js";
 export type {
@@ -36,3 +40,21 @@ export type { TwitchTokens, TwitchUser } from "./providers/twitch.js";
 export type { TwitterTokens, TwitterUser } from "./providers/twitter.js";
 
 export { generateCodeVerifier, generateState, OAuth2RequestError } from "oslo/oauth2";
+
+export interface OAuth2Provider {
+	createAuthorizationURL(state: string): Promise<URL>;
+	validateAuthorizationCode(code: string): Promise<Tokens>;
+	refreshAccessToken?(refreshToken: string): Promise<Tokens>;
+	getUser?(accessToken: string): Promise<{}>;
+}
+
+export interface OAuth2ProviderWithPKCE {
+	createAuthorizationURL(codeVerifier: string): Promise<URL>;
+	validateAuthorizationCode(code: string, codeVerifier: string): Promise<Tokens>;
+	refreshAccessToken?(refreshToken: string): Promise<Tokens>;
+	getUser?(accessToken: string): Promise<{}>;
+}
+
+export interface Tokens {
+	accessToken: string;
+}
