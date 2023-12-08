@@ -2,10 +2,6 @@ import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2Provider } from "../index.js";
 
-const authorizeEndpoint = "/authorize";
-const tokenEndpoint = "/token";
-const userinfoEndpoint = "/userinfo";
-
 export class Auth0 implements OAuth2Provider {
 	private client: OAuth2Client;
 	private appDomain: string;
@@ -21,15 +17,12 @@ export class Auth0 implements OAuth2Provider {
 			scope?: string[];
 		}
 	) {
-		this.appDomain = appDomain
-		this.client = new OAuth2Client(
-			clientId,
-			this.appDomain + authorizeEndpoint,
-			this.appDomain + tokenEndpoint,
-			{
-				redirectURI
-			}
-		);
+		this.appDomain = appDomain;
+		const authorizeEndpoint = this.appDomain + "/authorize";
+		const tokenEndpoint = this.appDomain + "/token";
+		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
+			redirectURI
+		});
 		this.clientSecret = clientSecret;
 		this.scope = options?.scope ?? [];
 		this.scope.push("openid", "profile");
@@ -55,7 +48,8 @@ export class Auth0 implements OAuth2Provider {
 	}
 
 	public async getUser(accessToken: string): Promise<Auth0User> {
-		const response = await fetch(this.appDomain + userinfoEndpoint, {
+		const userinfoEndpoint = this.appDomain + "/userinfo";
+		const response = await fetch(userinfoEndpoint, {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}

@@ -1,16 +1,12 @@
 import { OAuth2Client } from "oslo/oauth2";
-import { getOriginFromDomain } from "../url.js";
 
 import type { OAuth2Provider } from "../index.js";
-
-const authorizeEndpoint = "/oauth/authorize";
-const tokenEndpoint = "/oauth/token";
 
 export class GitLab implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
 	private scope: string[];
-	private serverOrigin: string;
+	private domain: string;
 
 	constructor(
 		clientId: string,
@@ -21,15 +17,12 @@ export class GitLab implements OAuth2Provider {
 			scope?: string[];
 		}
 	) {
-		this.serverOrigin = getOriginFromDomain(options?.domain ?? "https://gitlab.com");
-		this.client = new OAuth2Client(
-			clientId,
-			this.serverOrigin + authorizeEndpoint,
-			this.serverOrigin + tokenEndpoint,
-			{
-				redirectURI
-			}
-		);
+		this.domain = options?.domain ?? "https://gitlab.com";
+		const authorizeEndpoint = this.domain + "/oauth/authorize";
+		const tokenEndpoint = this.domain + "/oauth/token";
+		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
+			redirectURI
+		});
 		this.clientSecret = clientSecret;
 		this.scope = options?.scope ?? [];
 		this.scope.push("read_user");
@@ -55,7 +48,7 @@ export class GitLab implements OAuth2Provider {
 	}
 
 	public async getUser(accessToken: string): Promise<GitLabUser> {
-		const response = await fetch(this.serverOrigin + "/api/v4/user", {
+		const response = await fetch(this.domain + "/api/v4/user", {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}

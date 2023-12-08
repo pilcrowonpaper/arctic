@@ -3,10 +3,6 @@ import { TimeSpan, createDate } from "oslo";
 
 import type { OAuth2ProviderWithPKCE } from "../index.js";
 
-const authorizePath = "/protocol/openid-connect/auth";
-const tokenPath = "/protocol/openid-connect/token";
-const userinfoPath = "/protocol/openid-connect/userinfo";
-
 export class Keycloak implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private realmURL: string;
@@ -23,8 +19,8 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 		}
 	) {
 		this.realmURL = realmURL;
-		const authorizeEndpoint = this.realmURL + authorizePath;
-		const tokenEndpoint = this.realmURL + tokenPath;
+		const authorizeEndpoint = this.realmURL + "/protocol/openid-connect/auth";
+		const tokenEndpoint = this.realmURL + "/protocol/openid-connect/token";
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
@@ -59,7 +55,8 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 	}
 
 	public async getUser(accessToken: string): Promise<KeycloakUser> {
-		const response = await fetch(this.realmURL + userinfoPath, {
+		const userinfoEndpoint = this.realmURL + "/protocol/openid-connect/userinfo";
+		const response = await fetch(userinfoEndpoint, {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}
