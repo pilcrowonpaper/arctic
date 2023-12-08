@@ -4,6 +4,7 @@ export { Discord } from "./providers/discord.js";
 export { Facebook } from "./providers/facebook.js";
 export { GitHub } from "./providers/github.js";
 export { Google } from "./providers/google.js";
+export { Kakao } from "./providers/kakao.js";
 export { Line } from "./providers/line.js";
 export { LinkedIn } from "./providers/linkedin.js";
 export { Spotify } from "./providers/spotify.js";
@@ -31,6 +32,13 @@ export type {
 } from "./providers/github.js";
 export type { GitLabTokens, GitLabUser } from "./providers/gitlab.js";
 export type { GoogleRefreshedTokens, GoogleTokens, GoogleUser } from "./providers/google.js";
+export type {
+	KakaoAccount,
+	KakaoPartner,
+	KakaoProfile,
+	KakaoTokens,
+	KakaoUser
+} from "./providers/kakao.js";
 export type {
 	LineIdTokenClaims,
 	LineRefreshedTokens,
