@@ -1,4 +1,5 @@
 import { OAuth2Client } from "oslo/oauth2";
+import { TimeSpan, createDate } from "oslo";
 
 import type { OAuth2Provider } from "../index.js";
 
@@ -41,9 +42,9 @@ export class LinkedIn implements OAuth2Provider {
 		});
 		return {
 			accessToken: result.access_token,
-			accessTokenExpiresIn: result.expires_in,
+			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			refreshToken: result.refresh_token,
-			refreshTokenExpiresIn: result.refresh_token_expires_in
+			refreshTokenExpiresAt: createDate(new TimeSpan(result.refresh_token_expires_in, "s"))
 		};
 	}
 
@@ -66,9 +67,9 @@ interface TokenResponseBody {
 
 export interface LinkedInTokens {
 	accessToken: string;
-	accessTokenExpiresIn: number;
+	accessTokenExpiresAt: Date;
 	refreshToken: string;
-	refreshTokenExpiresIn: number;
+	refreshTokenExpiresAt: Date;
 }
 
 export interface LinkedInUser {
