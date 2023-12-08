@@ -49,7 +49,7 @@ export class LinkedIn implements OAuth2Provider {
 	public async getUser(accessToken: string): Promise<LinkedInUser> {
 		const response = await fetch("https://api.linkedin.com/v2/userinfo", {
 			headers: {
-				Authorization: ["Bearer", accessToken].join(" ")
+				Authorization: `Bearer ${accessToken}`
 			}
 		});
 		return await response.json();

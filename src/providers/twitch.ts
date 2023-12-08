@@ -48,7 +48,7 @@ export class Twitch implements OAuth2Provider {
 	public async getUser(accessToken: string): Promise<TwitchUser> {
 		const response = await fetch("https://api.twitch.tv/helix/users", {
 			headers: {
-				Authorization: ["Bearer", accessToken].join(" ")
+				Authorization: `Bearer ${accessToken}`
 			}
 		});
 		return await response.json();

@@ -51,7 +51,7 @@ export class Twitter implements OAuth2ProviderWithPKCE {
 	public async getUser(accessToken: string): Promise<TwitterUser> {
 		const response = await fetch("https://api.twitter.com/2/users/me", {
 			headers: {
-				Authorization: ["Bearer", accessToken].join(" ")
+				Authorization: `Bearer ${accessToken}`
 			}
 		});
 		return await response.json();

@@ -57,7 +57,7 @@ export class Google implements OAuth2Provider {
 
 	public async getUser(accessToken: string): Promise<GoogleUser> {
 		const request = new Request("https://www.googleapis.com/oauth2/v3/userinfo");
-		request.headers.set("Authorization", ["Bearer", accessToken].join(" "));
+		request.headers.set("Authorization", `Bearer ${accessToken}`);
 		return await sendRequest<GoogleUser>(request);
 	}
 

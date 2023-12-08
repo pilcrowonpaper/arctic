@@ -47,7 +47,7 @@ export class Spotify implements OAuth2ProviderWithPKCE {
 	public async getUser(accessToken: string): Promise<SpotifyUser> {
 		const response = await fetch("https://api.spotify.com/v1/me", {
 			headers: {
-				Authorization: ["Bearer", accessToken].join(" ")
+				Authorization: `Bearer ${accessToken}`
 			}
 		});
 		return await response.json();

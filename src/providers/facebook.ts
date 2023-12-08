@@ -50,7 +50,7 @@ export class Facebook implements OAuth2Provider {
 		url.searchParams.set("fields", ["id", "name", "picture", "email"].join(","));
 		const response = await fetch(url, {
 			headers: {
-				Authorization: ["Bearer", accessToken].join(" ")
+				Authorization: `Bearer ${accessToken}`
 			}
 		});
 		return await response.json();

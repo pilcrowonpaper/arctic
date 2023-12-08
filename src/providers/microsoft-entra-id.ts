@@ -58,7 +58,7 @@ export class MicrosoftEntraID implements OAuth2ProviderWithPKCE {
 	public async getUser(accessToken: string): Promise<MicrosoftEntraIDUser> {
 		const response = await fetch("https://graph.microsoft.com/oidc/userinfo", {
 			headers: {
-				Authorization: ["Bearer", accessToken].join(" ")
+				Authorization: `Bearer ${accessToken}`
 			}
 		});
 		return await response.json();

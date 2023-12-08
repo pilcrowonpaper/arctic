@@ -59,7 +59,7 @@ export class Line implements OAuth2ProviderWithPKCE {
 	public async getUser(accessToken: string): Promise<LineUser> {
 		const response = await fetch("https://api.line.me/v2/profile", {
 			headers: {
-				Authorization: ["Bearer", accessToken].join(" ")
+				Authorization: `Bearer ${accessToken}`
 			}
 		});
 		return await response.json();

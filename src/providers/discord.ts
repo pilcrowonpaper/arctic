@@ -49,7 +49,7 @@ export class Discord implements OAuth2Provider {
 	public async getUser(accessToken: string): Promise<DiscordUser> {
 		const response = await fetch("https://discord.com/api/users/@me", {
 			headers: {
-				Authorization: ["Bearer", accessToken].join(" ")
+				Authorization: `Bearer ${accessToken}`
 			}
 		});
 		return await response.json();

@@ -45,7 +45,7 @@ export class GitHub implements OAuth2Provider {
 	public async getUser(accessToken: string): Promise<GitHubUser> {
 		const response = await fetch("https://api.github.com/user", {
 			headers: {
-				Authorization: ["Bearer", accessToken].join(" ")
+				Authorization: `Bearer ${accessToken}`
 			}
 		});
 		return await response.json();
