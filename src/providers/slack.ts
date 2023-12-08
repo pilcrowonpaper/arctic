@@ -1,11 +1,11 @@
 import { OAuth2Client } from "oslo/oauth2";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://slack.com/openid/connect/authorize";
 const tokenEndpoint = "https://slack.com/api/openid.connect.token";
 
-export class Slack implements OAuth2ProviderWithPKCE {
+export class Slack implements OAuth2Provider {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
@@ -26,18 +26,17 @@ export class Slack implements OAuth2ProviderWithPKCE {
 		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
+	public async createAuthorizationURL(state: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
-			codeVerifier,
+			state,
 			scope: this.scope
 		});
 	}
 
-	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<SlackTokens> {
+	public async validateAuthorizationCode(code: string): Promise<SlackTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
-			credentials: this.clientSecret,
-			codeVerifier
+			credentials: this.clientSecret
 		});
 		return {
 			accessToken: result.access_token,

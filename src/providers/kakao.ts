@@ -1,12 +1,12 @@
 import { TimeSpan, createDate } from "oslo";
 import { OAuth2Client } from "oslo/oauth2";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://kauth.kakao.com/oauth/authorize";
 const tokenEndpoint = "https://kauth.kakao.com/oauth/token";
 
-export class Kakao implements OAuth2ProviderWithPKCE {
+export class Kakao implements OAuth2Provider {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
@@ -26,18 +26,17 @@ export class Kakao implements OAuth2ProviderWithPKCE {
 		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
+	public async createAuthorizationURL(state: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
-			codeVerifier,
+			state,
 			scope: this.scope
 		});
 	}
 
-	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<KakaoTokens> {
+	public async validateAuthorizationCode(code: string): Promise<KakaoTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
-			credentials: this.clientSecret,
-			codeVerifier
+			credentials: this.clientSecret
 		});
 		return {
 			accessToken: result.access_token,
