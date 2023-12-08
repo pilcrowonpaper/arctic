@@ -1,4 +1,5 @@
 export { Apple } from "./providers/apple.js";
+export { Auth0 } from "./providers/auth0.js";
 export { MicrosoftEntraID } from "./providers/microsoft-entra-id.js";
 export { Discord } from "./providers/discord.js";
 export { Facebook } from "./providers/facebook.js";
@@ -19,6 +20,7 @@ export type {
 	AppleRefreshedTokens,
 	AppleTokens
 } from "./providers/apple.js";
+export type { Auth0Tokens, Auth0User } from "./providers/auth0.js";
 export type {
 	MicrosoftEntraIDIdTokenClaims,
 	MicrosoftEntraIDTokens,
