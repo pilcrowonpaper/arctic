@@ -16,6 +16,7 @@ See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 - Discord
 - Facebook
 - Github
+- GitLab
 - Google
 - LinkedIn
 - Twitch
