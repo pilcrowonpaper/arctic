@@ -1,6 +1,6 @@
 import { TimeSpan, createDate } from "oslo";
 import { decodeBase64 } from "oslo/encoding";
-import { createJWT, parseJWT } from "oslo/jwt";
+import { createJWT } from "oslo/jwt";
 import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2Provider } from "../index.js";
@@ -48,8 +48,7 @@ export class Apple implements OAuth2Provider {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token ?? null,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token,
-			idTokenClaims: this.parseIdToken(result.id_token)
+			idToken: result.id_token
 		};
 	}
 
@@ -61,8 +60,7 @@ export class Apple implements OAuth2Provider {
 		return {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token,
-			idTokenClaims: this.parseIdToken(result.id_token)
+			idToken: result.id_token
 		};
 	}
 
@@ -81,12 +79,6 @@ export class Apple implements OAuth2Provider {
 		});
 		return jwt;
 	}
-
-	private parseIdToken(idToken: string): AppleIdTokenClaims {
-		const parsedIdToken = parseJWT(idToken);
-		if (!parsedIdToken) throw new Error("Failed to parse ID token");
-		return parsedIdToken.payload as unknown as AppleIdTokenClaims;
-	}
 }
 
 interface AuthorizationCodeResponseBody {
@@ -103,34 +95,17 @@ interface RefreshTokenResponseBody {
 	id_token: string;
 }
 
-export interface AppleIdTokenClaims {
-	iss: "https://appleid.apple.com";
-	sub: string;
-	aud: string;
-	iat: number;
-	exp: number;
-	email?: string;
-	email_verified?: boolean;
-	is_private_email?: boolean;
-	real_user_status: 0 | 1 | 2;
-	transfer_sub?: string;
-	nonce?: string;
-	nonce_supported?: boolean;
-}
-
 export interface AppleTokens {
 	accessToken: string;
 	refreshToken: string | null;
 	accessTokenExpiresAt: Date;
 	idToken: string;
-	idTokenClaims: AppleIdTokenClaims;
 }
 
 export interface AppleRefreshedTokens {
 	accessToken: string;
 	accessTokenExpiresAt: Date;
 	idToken: string;
-	idTokenClaims: AppleIdTokenClaims;
 }
 
 export interface AppleCredentials {

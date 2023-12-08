@@ -1,5 +1,4 @@
 import { TimeSpan, createDate } from "oslo";
-import { parseJWT } from "oslo/jwt";
 import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2ProviderWithPKCE } from "../index.js";
@@ -51,7 +50,6 @@ export class MicrosoftEntraID implements OAuth2ProviderWithPKCE {
 			refreshToken: result.refresh_token ?? null,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			idToken: result.id_token,
-			idTokenClaims: this.parseIdToken(result.id_token)
 		};
 	}
 
@@ -74,35 +72,8 @@ export class MicrosoftEntraID implements OAuth2ProviderWithPKCE {
 			refreshToken: result.refresh_token ?? null,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			idToken: result.id_token,
-			idTokenClaims: this.parseIdToken(result.id_token)
 		};
 	}
-
-	private parseIdToken(idToken: string): MicrosoftEntraIDIdTokenClaims {
-		const parsedIdToken = parseJWT(idToken);
-		if (!parsedIdToken) throw new Error("Failed to parse ID token");
-		return parsedIdToken.payload as unknown as MicrosoftEntraIDIdTokenClaims;
-	}
-}
-
-export interface MicrosoftEntraIDIdTokenClaims {
-	sub: string;
-	iss: string;
-	aud: string;
-	idp: string;
-	iat: number;
-	nbf: number;
-	exp: number;
-	at_hash: string;
-	preferred_username: string;
-	email?: string;
-	name: string;
-	oid: string;
-	roles: string[];
-	tid: string;
-	uti: string;
-	ver: "1.0" | "2.0";
-	hasgroups?: true;
 }
 
 interface TokenResponseBody {
@@ -117,7 +88,6 @@ export interface MicrosoftEntraIDTokens {
 	accessToken: string;
 	accessTokenExpiresAt: Date;
 	refreshToken: string | null;
-	idTokenClaims: MicrosoftEntraIDIdTokenClaims;
 }
 
 export interface MicrosoftEntraIDUser {

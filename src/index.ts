@@ -22,12 +22,7 @@ export { Twitch } from "./providers/twitch.js";
 export { Twitter } from "./providers/twitter.js";
 export { Yahoo } from "./providers/yahoo.js";
 
-export type {
-	AppleCredentials,
-	AppleIdTokenClaims,
-	AppleRefreshedTokens,
-	AppleTokens
-} from "./providers/apple.js";
+export type { AppleCredentials, AppleRefreshedTokens, AppleTokens } from "./providers/apple.js";
 export type { AtlassianTokens, AtlassianUser } from "./providers/atlassian.js";
 export type { Auth0Tokens, Auth0User } from "./providers/auth0.js";
 export type {
@@ -60,7 +55,6 @@ export type { KeycloakTokens, KeycloakUser } from "./providers/keycloak.js";
 export type { LineRefreshedTokens, LineTokens, LineUser } from "./providers/line.js";
 export type { LinkedInTokens, LinkedInUser } from "./providers/linkedin.js";
 export type {
-	MicrosoftEntraIDIdTokenClaims,
 	MicrosoftEntraIDTokens,
 	MicrosoftEntraIDUser
 } from "./providers/microsoft-entra-id.js";
