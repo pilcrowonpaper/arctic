@@ -1,13 +1,13 @@
 import { OAuth2Client } from "oslo/oauth2";
 import { TimeSpan, createDate } from "oslo";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 const authorizePath = "/protocol/openid-connect/auth";
 const tokenPath = "/protocol/openid-connect/token";
 const userinfoPath = "/protocol/openid-connect/userinfo";
 
-export class Keycloak implements OAuth2Provider {
+export class Keycloak implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private realmURL: string;
 	private clientSecret: string;
@@ -33,14 +33,18 @@ export class Keycloak implements OAuth2Provider {
 		this.scope.push("openid", "profile");
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
+	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
 			scope: this.scope,
-			state
+			codeVerifier
 		});
 	}
-	public async validateAuthorizationCode(code: string): Promise<KeycloakTokens> {
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier: string
+	): Promise<KeycloakTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
+			codeVerifier,
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
