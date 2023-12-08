@@ -1,53 +1,50 @@
-import { OAuth2Client, generateState } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
+import { getOriginFromDomain } from "../url.js";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "/oauth/authorize";
 const tokenEndpoint = "/oauth/token";
 
-export class GitLab implements OAuth2ProviderWithPKCE {
+export class GitLab implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
 	private scope: string[];
-	private serverUrl: string;
+	private serverOrigin: string;
 
 	constructor(
 		clientId: string,
 		clientSecret: string,
 		redirectURI: string,
-		serverUrl?: string,
 		options?: {
+			domain?: string;
 			scope?: string[];
 		}
 	) {
-		this.serverUrl = serverUrl || "https://gitlab.com";
+		this.serverOrigin = getOriginFromDomain(options?.domain ?? "https://gitlab.com");
 		this.client = new OAuth2Client(
 			clientId,
-			`${this.serverUrl}${authorizeEndpoint}`,
-			`${this.serverUrl}${tokenEndpoint}`,
+			this.serverOrigin + authorizeEndpoint,
+			this.serverOrigin + tokenEndpoint,
 			{
 				redirectURI
 			}
 		);
+		this.clientSecret = clientSecret;
 		this.scope = options?.scope ?? [];
 		this.scope.push("read_user");
-		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
+	public async createAuthorizationURL(state: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
-			state: generateState(),
 			scope: this.scope,
-			codeVerifier
+			state
 		});
 	}
-	public async validateAuthorizationCode(
-		code: string,
-		codeVerifier: string
-	): Promise<GitlabTokens> {
+	public async validateAuthorizationCode(code: string): Promise<GitLabTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret,
-			codeVerifier
+			authenticateWith: "request_body",
+			credentials: this.clientSecret
 		});
 
 		return {
@@ -57,16 +54,16 @@ export class GitLab implements OAuth2ProviderWithPKCE {
 		};
 	}
 
-	public async getUser(accessToken: string): Promise<GitlabUser> {
-		const response = await fetch(`${this.serverUrl}/api/v4/user`, {
+	public async getUser(accessToken: string): Promise<GitLabUser> {
+		const response = await fetch(this.serverOrigin + "/api/v4/user", {
 			headers: {
-				Authorization: ["Bearer", accessToken].join(" ")
+				Authorization: `Bearer ${accessToken}`
 			}
 		});
 		return await response.json();
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<GitlabTokens> {
+	public async refreshAccessToken(refreshToken: string): Promise<GitLabTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
@@ -86,13 +83,13 @@ interface TokenResponseBody {
 	refresh_token: string;
 }
 
-export type GitlabTokens = {
+export type GitLabTokens = {
 	accessToken: string;
 	accessTokenExpiresIn: number;
 	refreshToken: string;
 };
 
-export type GitlabUser = {
+export type GitLabUser = {
 	id: number;
 	username: string;
 	email: string;
