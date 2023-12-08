@@ -3,8 +3,8 @@ import { TimeSpan, createDate } from "oslo";
 
 import type { OAuth2Provider } from "../index.js";
 
-const authorizeEndpoint = "https://github.com/login/oauth/authorize";
-const tokenEndpoint = "https://github.com/login/oauth/access_token";
+const authorizeEndpoint = "https://www.reddit.com/api/v1/authorize";
+const tokenEndpoint = "https://www.reddit.com/api/v1/access_token";
 
 export class Reddit implements OAuth2Provider {
 	private client: OAuth2Client;
