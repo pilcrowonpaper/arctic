@@ -29,6 +29,7 @@ See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 - Reddit
 - Spotify
 - Twitch
+- Yahoo
 
 ### OAuth 2.0 with PKCE
 

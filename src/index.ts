@@ -20,6 +20,7 @@ export { Slack } from "./providers/slack.js";
 export { Spotify } from "./providers/spotify.js";
 export { Twitch } from "./providers/twitch.js";
 export { Twitter } from "./providers/twitter.js";
+export { Yahoo } from "./providers/yahoo.js";
 
 export type {
 	AppleCredentials,
@@ -69,6 +70,7 @@ export type { SlackTokens, SlackUser } from "./providers/slack.js";
 export type { SpotifyTokens, SpotifyUser } from "./providers/spotify.js";
 export type { TwitchTokens, TwitchUser } from "./providers/twitch.js";
 export type { TwitterTokens, TwitterUser } from "./providers/twitter.js";
+export type { YahooTokens, YahooUser } from "./providers/yahoo.js";
 
 export { generateCodeVerifier, generateState, OAuth2RequestError } from "oslo/oauth2";
 
