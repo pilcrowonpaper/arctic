@@ -76,13 +76,13 @@ interface TokenResponseBody {
 	refresh_token: string;
 }
 
-export type GitLabTokens = {
+export interface GitLabTokens {
 	accessToken: string;
 	accessTokenExpiresIn: number;
 	refreshToken: string;
-};
+}
 
-export type GitLabUser = {
+export interface GitLabUser {
 	id: number;
 	username: string;
 	email: string;
@@ -120,4 +120,4 @@ export type GitLabUser = {
 	external: boolean;
 	private_profile: boolean;
 	commit_email: string;
-};
+}

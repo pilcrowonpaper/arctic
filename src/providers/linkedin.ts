@@ -63,14 +63,14 @@ interface TokenResponseBody {
 	refresh_token_expires_in: number;
 }
 
-export type LinkedInTokens = {
+export interface LinkedInTokens {
 	accessToken: string;
 	accessTokenExpiresIn: number;
 	refreshToken: string;
 	refreshTokenExpiresIn: number;
-};
+}
 
-export type LinkedInUser = {
+export interface LinkedInUser {
 	sub: string;
 	name: string;
 	email: string;
@@ -82,4 +82,4 @@ export type LinkedInUser = {
 		language: string;
 	};
 	picture: string;
-};
+}

@@ -77,13 +77,13 @@ interface TokenResponseBody {
 	id_token: string;
 }
 
-export type Auth0Tokens = {
+export interface Auth0Tokens {
 	accessToken: string;
 	refreshToken: string;
 	idToken: string;
-};
+}
 
-export type Auth0User = {
+export interface Auth0User {
 	sub: string;
 	name: string;
 	picture: string;
@@ -102,4 +102,4 @@ export type Auth0User = {
 	zoneinfo?: string;
 	phone_number?: string;
 	phone_number_verified?: boolean;
-};
+}
