@@ -1,12 +1,12 @@
 import { TimeSpan, createDate } from "oslo";
 import { OAuth2Client } from "oslo/oauth2";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://accounts.spotify.com/authorize";
 const tokenEndpoint = "https://accounts.spotify.com/api/token";
 
-export class Spotify implements OAuth2ProviderWithPKCE {
+export class Spotify implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
 	private scope: string[];
