@@ -1,5 +1,5 @@
 export { Apple } from "./providers/apple.js";
-export { MicrosoftEntra } from "./providers/microsoft-entra.js";
+export { MicrosoftEntraID } from "./providers/microsoft-entra-id.js";
 export { Discord } from "./providers/discord.js";
 export { Facebook } from "./providers/facebook.js";
 export { GitHub } from "./providers/github.js";
@@ -17,10 +17,10 @@ export type {
 	AppleTokens
 } from "./providers/apple.js";
 export type {
-	MicrosoftEntraIdTokenClaims,
-	MicrosoftEntraTokens,
-	MicrosoftEntraUser
-} from "./providers/microsoft-entra.js";
+	MicrosoftEntraIDIdTokenClaims,
+	MicrosoftEntraIDTokens,
+	MicrosoftEntraIDUser
+} from "./providers/microsoft-entra-id.js";
 export type { DiscordTokens, DiscordUser } from "./providers/discord.js";
 export type { FacebookTokens, FacebookUser } from "./providers/facebook.js";
 export type {

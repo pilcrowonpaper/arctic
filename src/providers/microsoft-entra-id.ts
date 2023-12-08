@@ -4,7 +4,7 @@ import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2ProviderWithPKCE } from "../index.js";
 
-export class MicrosoftEntra implements OAuth2ProviderWithPKCE {
+export class MicrosoftEntraID implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
@@ -40,7 +40,7 @@ export class MicrosoftEntra implements OAuth2ProviderWithPKCE {
 	public async validateAuthorizationCode(
 		code: string,
 		codeVerifier: string
-	): Promise<MicrosoftEntraTokens> {
+	): Promise<MicrosoftEntraIDTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret,
@@ -55,7 +55,7 @@ export class MicrosoftEntra implements OAuth2ProviderWithPKCE {
 		};
 	}
 
-	public async getUser(accessToken: string): Promise<MicrosoftEntraUser> {
+	public async getUser(accessToken: string): Promise<MicrosoftEntraIDUser> {
 		const response = await fetch("https://graph.microsoft.com/oidc/userinfo", {
 			headers: {
 				Authorization: ["Bearer", accessToken].join(" ")
@@ -64,7 +64,7 @@ export class MicrosoftEntra implements OAuth2ProviderWithPKCE {
 		return await response.json();
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<MicrosoftEntraTokens> {
+	public async refreshAccessToken(refreshToken: string): Promise<MicrosoftEntraIDTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
@@ -78,14 +78,14 @@ export class MicrosoftEntra implements OAuth2ProviderWithPKCE {
 		};
 	}
 
-	private parseIdToken(idToken: string): MicrosoftEntraIdTokenClaims {
+	private parseIdToken(idToken: string): MicrosoftEntraIDIdTokenClaims {
 		const parsedIdToken = parseJWT(idToken);
 		if (!parsedIdToken) throw new Error("Failed to parse ID token");
-		return parsedIdToken.payload as unknown as MicrosoftEntraIdTokenClaims;
+		return parsedIdToken.payload as unknown as MicrosoftEntraIDIdTokenClaims;
 	}
 }
 
-export interface MicrosoftEntraIdTokenClaims {
+export interface MicrosoftEntraIDIdTokenClaims {
 	sub: string;
 	iss: string;
 	aud: string;
@@ -112,15 +112,15 @@ interface TokenResponseBody {
 	id_token: string;
 }
 
-export interface MicrosoftEntraTokens {
+export interface MicrosoftEntraIDTokens {
 	idToken: string;
 	accessToken: string;
 	accessTokenExpiresAt: Date;
 	refreshToken: string | null;
-	idTokenClaims: MicrosoftEntraIdTokenClaims;
+	idTokenClaims: MicrosoftEntraIDIdTokenClaims;
 }
 
-export interface MicrosoftEntraUser {
+export interface MicrosoftEntraIDUser {
 	sub: string;
 	name: string;
 	family_name: string;
