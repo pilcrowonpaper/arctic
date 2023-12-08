@@ -8,10 +8,12 @@ const tokenEndpoint = "https://accounts.spotify.com/api/token";
 
 export class Spotify implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
+	private clientSecret: string;
 	private scope: string[];
 
 	constructor(
 		clientId: string,
+		clientSecret: string,
 		redirectURI: string,
 		options?: {
 			scope?: string[];
@@ -20,22 +22,20 @@ export class Spotify implements OAuth2ProviderWithPKCE {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
+		this.clientSecret = clientSecret;
 		this.scope = options?.scope ?? [];
 	}
 
-	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
+	public async createAuthorizationURL(state: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
-			codeVerifier,
+			state,
 			scope: this.scope
 		});
 	}
 
-	public async validateAuthorizationCode(
-		code: string,
-		codeVerifier: string
-	): Promise<SpotifyTokens> {
+	public async validateAuthorizationCode(code: string): Promise<SpotifyTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			codeVerifier
+			credentials: this.clientSecret
 		});
 		return {
 			accessToken: result.access_token,

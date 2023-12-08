@@ -19,6 +19,7 @@ See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 - GitLab
 - Google
 - LinkedIn
+- Spotify
 - Twitch
 
 ### OAuth 2.0 with PKCE
@@ -27,7 +28,6 @@ See [OAuth 2.0 providers with PKCE](#oauth-20-providers-with-pkce) for instructi
 
 - Line
 - Microsoft Entra ID
-- Spotify
 - Twitter
 
 ## OAuth 2.0 providers
