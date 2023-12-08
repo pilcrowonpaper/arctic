@@ -1,5 +1,4 @@
 import { OAuth2Client } from "oslo/oauth2";
-import { getOriginFromDomain } from "../url.js";
 
 import type { OAuth2Provider } from "../index.js";
 
@@ -22,7 +21,7 @@ export class Auth0 implements OAuth2Provider {
 			scope?: string[];
 		}
 	) {
-		this.appDomain = getOriginFromDomain(appDomain);
+		this.appDomain = appDomain
 		this.client = new OAuth2Client(
 			clientId,
 			this.appDomain + authorizeEndpoint,
