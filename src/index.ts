@@ -3,6 +3,7 @@ export { Auth0 } from "./providers/auth0.js";
 export { Bitbucket } from "./providers/bitbucket.js";
 export { Discord } from "./providers/discord.js";
 export { Facebook } from "./providers/facebook.js";
+export { Figma } from "./providers/figma.js";
 export { GitHub } from "./providers/github.js";
 export { Google } from "./providers/google.js";
 export { Kakao } from "./providers/kakao.js";
@@ -31,6 +32,7 @@ export type {
 } from "./providers/bitbucket.js";
 export type { DiscordTokens, DiscordUser } from "./providers/discord.js";
 export type { FacebookTokens, FacebookUser } from "./providers/facebook.js";
+export type { FigmaRefreshedTokens, FigmaTokens, FigmaUser } from "./providers/figma.js";
 export type {
 	GitHubTokens,
 	GitHubUser,

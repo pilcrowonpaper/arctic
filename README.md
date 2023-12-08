@@ -17,6 +17,7 @@ See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 - Bitbucket
 - Discord
 - Facebook
+- Figma
 - Github
 - GitLab
 - Kakao
