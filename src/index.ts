@@ -1,4 +1,5 @@
 export { Apple } from "./providers/apple.js";
+export { Atlassian } from "./providers/atlassian.js";
 export { Auth0 } from "./providers/auth0.js";
 export { Bitbucket } from "./providers/bitbucket.js";
 export { Discord } from "./providers/discord.js";
@@ -24,6 +25,7 @@ export type {
 	AppleRefreshedTokens,
 	AppleTokens
 } from "./providers/apple.js";
+export type { AtlassianTokens, AtlassianUser } from "./providers/atlassian.js";
 export type { Auth0Tokens, Auth0User } from "./providers/auth0.js";
 export type {
 	BitbucketLink,
