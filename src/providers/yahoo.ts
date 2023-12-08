@@ -1,13 +1,13 @@
 import { OAuth2Client } from "oslo/oauth2";
 import { TimeSpan, createDate } from "oslo";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://api.login.yahoo.com/oauth2/request_auth";
 const tokenEndpoint = "https://api.login.yahoo.com/oauth2/get_token";
 const userinfoEndpoint = "https://api.login.yahoo.com/openid/v1/userinfo";
 
-export class Yahoo implements OAuth2ProviderWithPKCE {
+export class Yahoo implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
 	private scope: string[];
@@ -28,18 +28,14 @@ export class Yahoo implements OAuth2ProviderWithPKCE {
 		this.scope.push("openid", "profile");
 	}
 
-	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
+	public async createAuthorizationURL(state: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
 			scope: this.scope,
-			codeVerifier
+			state
 		});
 	}
-	public async validateAuthorizationCode(
-		code: string,
-		codeVerifier: string
-	): Promise<YahooTokens> {
+	public async validateAuthorizationCode(code: string): Promise<YahooTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			codeVerifier,
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
