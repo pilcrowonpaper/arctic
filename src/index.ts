@@ -6,6 +6,7 @@ export { Facebook } from "./providers/facebook.js";
 export { GitHub } from "./providers/github.js";
 export { Google } from "./providers/google.js";
 export { Kakao } from "./providers/kakao.js";
+export { Keycloak } from "./providers/keycloak.js";
 export { Line } from "./providers/line.js";
 export { LinkedIn } from "./providers/linkedin.js";
 export { Reddit } from "./providers/reddit.js";
@@ -43,6 +44,7 @@ export type {
 	KakaoTokens,
 	KakaoUser
 } from "./providers/kakao.js";
+export type { KeycloakTokens, KeycloakUser } from "./providers/keycloak.js";
 export type {
 	LineIdTokenClaims,
 	LineRefreshedTokens,
