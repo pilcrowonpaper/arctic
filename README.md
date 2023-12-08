@@ -18,7 +18,9 @@ See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 - Github
 - GitLab
 - Google
+- Kakao
 - LinkedIn
+- Reddit
 - Spotify
 - Twitch
 
