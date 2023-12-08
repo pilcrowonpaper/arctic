@@ -14,6 +14,7 @@ See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 
 - Apple
 - Auth0
+- Bitbucket
 - Discord
 - Facebook
 - Github

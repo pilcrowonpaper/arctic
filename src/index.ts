@@ -1,6 +1,6 @@
 export { Apple } from "./providers/apple.js";
 export { Auth0 } from "./providers/auth0.js";
-export { MicrosoftEntraID } from "./providers/microsoft-entra-id.js";
+export { Bitbucket } from "./providers/bitbucket.js";
 export { Discord } from "./providers/discord.js";
 export { Facebook } from "./providers/facebook.js";
 export { GitHub } from "./providers/github.js";
@@ -9,6 +9,7 @@ export { Kakao } from "./providers/kakao.js";
 export { Keycloak } from "./providers/keycloak.js";
 export { Line } from "./providers/line.js";
 export { LinkedIn } from "./providers/linkedin.js";
+export { MicrosoftEntraID } from "./providers/microsoft-entra-id.js";
 export { Reddit } from "./providers/reddit.js";
 export { Slack } from "./providers/slack.js";
 export { Spotify } from "./providers/spotify.js";
@@ -23,10 +24,11 @@ export type {
 } from "./providers/apple.js";
 export type { Auth0Tokens, Auth0User } from "./providers/auth0.js";
 export type {
-	MicrosoftEntraIDIdTokenClaims,
-	MicrosoftEntraIDTokens,
-	MicrosoftEntraIDUser
-} from "./providers/microsoft-entra-id.js";
+	BitbucketLink,
+	BitbucketLinks,
+	BitbucketTokens,
+	BitbucketUser
+} from "./providers/bitbucket.js";
 export type { DiscordTokens, DiscordUser } from "./providers/discord.js";
 export type { FacebookTokens, FacebookUser } from "./providers/facebook.js";
 export type {
@@ -47,6 +49,11 @@ export type {
 export type { KeycloakTokens, KeycloakUser } from "./providers/keycloak.js";
 export type { LineRefreshedTokens, LineTokens, LineUser } from "./providers/line.js";
 export type { LinkedInTokens, LinkedInUser } from "./providers/linkedin.js";
+export type {
+	MicrosoftEntraIDIdTokenClaims,
+	MicrosoftEntraIDTokens,
+	MicrosoftEntraIDUser
+} from "./providers/microsoft-entra-id.js";
 export type { RedditTokens, RedditUser } from "./providers/reddit.js";
 export type { SlackTokens, SlackUser } from "./providers/slack.js";
 export type { SpotifyTokens, SpotifyUser } from "./providers/spotify.js";
