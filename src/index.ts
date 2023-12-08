@@ -8,6 +8,7 @@ export { Kakao } from "./providers/kakao.js";
 export { Line } from "./providers/line.js";
 export { LinkedIn } from "./providers/linkedin.js";
 export { Reddit } from "./providers/reddit.js";
+export { Slack } from "./providers/slack.js";
 export { Spotify } from "./providers/spotify.js";
 export { Twitch } from "./providers/twitch.js";
 export { Twitter } from "./providers/twitter.js";
@@ -48,6 +49,7 @@ export type {
 } from "./providers/line.js";
 export type { LinkedInTokens, LinkedInUser } from "./providers/linkedin.js";
 export type { RedditTokens, RedditUser } from "./providers/reddit.js";
+export type { SlackTokens, SlackUser } from "./providers/slack.js";
 export type { SpotifyTokens, SpotifyUser } from "./providers/spotify.js";
 export type { TwitchTokens, TwitchUser } from "./providers/twitch.js";
 export type { TwitterTokens, TwitterUser } from "./providers/twitter.js";
