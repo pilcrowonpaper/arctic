@@ -1,6 +1,6 @@
-import { TimeSpan, createDate } from "oslo";
-import { parseJWT } from "oslo/jwt";
 import { OAuth2Client, generateState } from "oslo/oauth2";
+import { TimeSpan, createDate } from "oslo";
+
 import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 const authorizeEndpoint = "https://access.line.me/oauth2/v2.1/authorize";
@@ -44,15 +44,11 @@ export class Line implements OAuth2ProviderWithPKCE {
 				codeVerifier
 			}
 		);
-		const parsedIdToken = parseJWT(result.id_token);
-		if (!parsedIdToken) throw new Error("Failed to parse ID token");
-		const idTokenClaims = parsedIdToken.payload as unknown as LineIdTokenClaims;
 		return {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token,
-			idTokenClaims
+			idToken: result.id_token
 		};
 	}
 
@@ -78,19 +74,6 @@ export class Line implements OAuth2ProviderWithPKCE {
 	}
 }
 
-export interface LineIdTokenClaims {
-	iss: "https://access.line.me";
-	sub: string;
-	aud: string;
-	exp: number;
-	iat: number;
-	auth_time?: number;
-	amr?: string[];
-	name: string;
-	picture: string;
-	email?: string;
-}
-
 interface AuthorizationCodeResponseBody {
 	access_token: string;
 	expires_in: number;
@@ -114,7 +97,6 @@ export interface LineTokens {
 	refreshToken: string;
 	accessTokenExpiresAt: Date;
 	idToken: string;
-	idTokenClaims: LineIdTokenClaims;
 }
 
 export interface LineUser {

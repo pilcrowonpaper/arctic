@@ -45,12 +45,7 @@ export type {
 	KakaoUser
 } from "./providers/kakao.js";
 export type { KeycloakTokens, KeycloakUser } from "./providers/keycloak.js";
-export type {
-	LineIdTokenClaims,
-	LineRefreshedTokens,
-	LineTokens,
-	LineUser
-} from "./providers/line.js";
+export type { LineRefreshedTokens, LineTokens, LineUser } from "./providers/line.js";
 export type { LinkedInTokens, LinkedInUser } from "./providers/linkedin.js";
 export type { RedditTokens, RedditUser } from "./providers/reddit.js";
 export type { SlackTokens, SlackUser } from "./providers/slack.js";
