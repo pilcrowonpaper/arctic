@@ -4,6 +4,7 @@ import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://www.linkedin.com/oauth/v2/authorization";
 const tokenEndpoint = "https://www.linkedin.com/oauth/v2/accessToken";
+const userinfoEndpoint = "https://api.linkedin.com/v2/userinfo";
 
 export class LinkedIn implements OAuth2Provider {
 	private client: OAuth2Client;
@@ -47,7 +48,7 @@ export class LinkedIn implements OAuth2Provider {
 	}
 
 	public async getUser(accessToken: string): Promise<LinkedInUser> {
-		const response = await fetch("https://api.linkedin.com/v2/userinfo", {
+		const response = await fetch(userinfoEndpoint, {
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}

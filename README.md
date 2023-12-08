@@ -18,7 +18,6 @@ See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 - Facebook
 - Github
 - GitLab
-- Google
 - Kakao
 - LinkedIn
 - Reddit
@@ -29,6 +28,7 @@ See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 
 See [OAuth 2.0 providers with PKCE](#oauth-20-providers-with-pkce) for instructions.
 
+- Google
 - Keycloak
 - Line
 - Microsoft Entra ID

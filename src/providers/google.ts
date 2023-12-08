@@ -2,12 +2,13 @@ import { TimeSpan, createDate } from "oslo";
 import { OAuth2Client } from "oslo/oauth2";
 import { sendRequest } from "../request.js";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 const authorizeEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 const tokenEndpoint = "https://oauth2.googleapis.com/token";
+const userinfoEndpoint = "https://openidconnect.googleapis.com/v1/userinfo";
 
-export class Google implements OAuth2Provider {
+export class Google implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private scope: string[];
 	private clientSecret: string;
@@ -26,37 +27,42 @@ export class Google implements OAuth2Provider {
 			redirectURI
 		});
 		this.scope = options?.scope ?? [];
-		this.scope.push("https://www.googleapis.com/auth/userinfo.profile");
+		this.scope.push("openid", "profile");
 		this.clientSecret = clientSecret;
 		this.accessType = options?.accessType ?? "online";
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
+	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
 		const url = await this.client.createAuthorizationURL({
 			scope: this.scope,
-			state
+			codeVerifier
 		});
 		url.searchParams.set("access_type", this.accessType);
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<GoogleTokens> {
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier: string
+	): Promise<GoogleTokens> {
 		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
 			code,
 			{
 				authenticateWith: "request_body",
-				credentials: this.clientSecret
+				credentials: this.clientSecret,
+				codeVerifier
 			}
 		);
 		return {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token ?? null,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
+			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
+			idToken: result.id_token
 		};
 	}
 
 	public async getUser(accessToken: string): Promise<GoogleUser> {
-		const request = new Request("https://www.googleapis.com/oauth2/v3/userinfo");
+		const request = new Request(userinfoEndpoint);
 		request.headers.set("Authorization", `Bearer ${accessToken}`);
 		return await sendRequest<GoogleUser>(request);
 	}
@@ -77,6 +83,7 @@ interface AuthorizationCodeResponseBody {
 	access_token: string;
 	refresh_token?: string;
 	expires_in: number;
+	id_token: string;
 }
 
 interface RefreshTokenResponseBody {
@@ -88,6 +95,7 @@ export interface GoogleTokens {
 	accessToken: string;
 	refreshToken: string | null;
 	accessTokenExpiresAt: Date;
+	idToken: string;
 }
 
 export interface GoogleRefreshedTokens {
