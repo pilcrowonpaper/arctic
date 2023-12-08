@@ -13,8 +13,10 @@ npm install arctic
 See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 
 - Apple
+- Atlassian
 - Auth0
 - Bitbucket
+- Box
 - Discord
 - Facebook
 - Figma

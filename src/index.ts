@@ -2,6 +2,7 @@ export { Apple } from "./providers/apple.js";
 export { Atlassian } from "./providers/atlassian.js";
 export { Auth0 } from "./providers/auth0.js";
 export { Bitbucket } from "./providers/bitbucket.js";
+export { Box } from "./providers/box.js";
 export { Discord } from "./providers/discord.js";
 export { Facebook } from "./providers/facebook.js";
 export { Figma } from "./providers/figma.js";
@@ -33,6 +34,7 @@ export type {
 	BitbucketTokens,
 	BitbucketUser
 } from "./providers/bitbucket.js";
+export type { BoxTokens, BoxUser } from "./providers/box.js";
 export type { DiscordTokens, DiscordUser } from "./providers/discord.js";
 export type { FacebookTokens, FacebookUser } from "./providers/facebook.js";
 export type { FigmaRefreshedTokens, FigmaTokens, FigmaUser } from "./providers/figma.js";
