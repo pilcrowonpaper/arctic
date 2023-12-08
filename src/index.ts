@@ -4,6 +4,7 @@ export { Auth0 } from "./providers/auth0.js";
 export { Bitbucket } from "./providers/bitbucket.js";
 export { Box } from "./providers/box.js";
 export { Discord } from "./providers/discord.js";
+export { Dropbox } from "./providers/dropbox.js";
 export { Facebook } from "./providers/facebook.js";
 export { Figma } from "./providers/figma.js";
 export { GitHub } from "./providers/github.js";
@@ -36,6 +37,7 @@ export type {
 } from "./providers/bitbucket.js";
 export type { BoxTokens, BoxUser } from "./providers/box.js";
 export type { DiscordTokens, DiscordUser } from "./providers/discord.js";
+export type { DropboxRefreshedTokens, DropboxTokens, DropboxUser } from "./providers/dropbox.js";
 export type { FacebookTokens, FacebookUser } from "./providers/facebook.js";
 export type { FigmaRefreshedTokens, FigmaTokens, FigmaUser } from "./providers/figma.js";
 export type {
