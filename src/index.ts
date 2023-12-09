@@ -18,6 +18,7 @@ export { Notion } from "./providers/notion.js";
 export { Reddit } from "./providers/reddit.js";
 export { Slack } from "./providers/slack.js";
 export { Spotify } from "./providers/spotify.js";
+export { Tumblr } from "./providers/tumblr.js";
 export { Twitch } from "./providers/twitch.js";
 export { Twitter } from "./providers/twitter.js";
 export { Yahoo } from "./providers/yahoo.js";
