@@ -39,6 +39,7 @@ See [OAuth 2.0 providers with PKCE](#oauth-20-providers-with-pkce) for instructi
 - Keycloak
 - Line
 - Microsoft Entra ID
+- Salesforce
 - Twitter
 
 ## OAuth 2.0 providers

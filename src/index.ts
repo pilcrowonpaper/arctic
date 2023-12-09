@@ -16,6 +16,7 @@ export { LinkedIn } from "./providers/linkedin.js";
 export { MicrosoftEntraID } from "./providers/microsoft-entra-id.js";
 export { Notion } from "./providers/notion.js";
 export { Reddit } from "./providers/reddit.js";
+export { Salesforce } from "./providers/salesforce.js";
 export { Slack } from "./providers/slack.js";
 export { Spotify } from "./providers/spotify.js";
 export { Twitch } from "./providers/twitch.js";
@@ -60,6 +61,7 @@ export type {
 } from "./providers/microsoft-entra-id.js";
 export type { NotionPersonUser, NotionTokens, NotionUser } from "./providers/notion.js";
 export type { RedditTokens, RedditUser } from "./providers/reddit.js";
+export type { SalesforceToken, SalesforceUser } from "./providers/salesforce.js";
 export type { SlackTokens, SlackUser } from "./providers/slack.js";
 export type { SpotifyTokens, SpotifyUser } from "./providers/spotify.js";
 export type { TwitchTokens, TwitchUser } from "./providers/twitch.js";
