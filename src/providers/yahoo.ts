@@ -5,56 +5,44 @@ import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://api.login.yahoo.com/oauth2/request_auth";
 const tokenEndpoint = "https://api.login.yahoo.com/oauth2/get_token";
-const userinfoEndpoint = "https://api.login.yahoo.com/openid/v1/userinfo";
 
 export class Yahoo implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
-	private scope: string[];
 
-	constructor(
-		clientId: string,
-		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			scope?: string[];
-		}
-	) {
+	constructor(clientId: string, clientSecret: string, redirectURI: string) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
 		this.clientSecret = clientSecret;
-		this.scope = options?.scope ?? [];
-		this.scope.push("openid", "profile");
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
+	public async createAuthorizationURL(
+		state: string,
+		options?: {
+			scope?: string[];
+		}
+	): Promise<URL> {
+		const scope = options?.scope ?? [];
+		scope.push("openid");
 		return await this.client.createAuthorizationURL({
-			scope: this.scope,
-			state
+			state,
+			scope: options?.scope ?? []
 		});
 	}
+
 	public async validateAuthorizationCode(code: string): Promise<YahooTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-
-		return {
+		const tokens: YahooTokens = {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			refreshToken: result.refresh_token,
 			idToken: result.id_token
 		};
-	}
-
-	public async getUser(accessToken: string): Promise<YahooUser> {
-		const response = await fetch(userinfoEndpoint, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		});
-		return await response.json();
+		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<YahooTokens> {
@@ -62,13 +50,13 @@ export class Yahoo implements OAuth2Provider {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-
-		return {
+		const tokens: YahooTokens = {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			refreshToken: result.refresh_token,
 			idToken: result.id_token
 		};
+		return tokens;
 	}
 }
 
@@ -84,14 +72,4 @@ export interface YahooTokens {
 	accessTokenExpiresAt: Date;
 	refreshToken: string | null;
 	idToken: string;
-}
-
-export interface YahooUser {
-	email?: string;
-	email_verified?: boolean;
-	family_name: string;
-	given_name: string;
-	locale: string;
-	name: string;
-	sub: string;
 }

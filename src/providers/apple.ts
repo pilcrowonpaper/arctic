@@ -10,30 +10,28 @@ const tokenEndpoint = "https://appleid.apple.com/auth/token";
 
 export class Apple implements OAuth2Provider {
 	private client: OAuth2Client;
-	private scope: string[];
 	private credentials: AppleCredentials;
 
-	constructor(
-		credentials: AppleCredentials,
-		redirectURI: string,
+	constructor(credentials: AppleCredentials, redirectURI: string) {
+		this.client = new OAuth2Client(credentials.clientId, authorizeEndpoint, tokenEndpoint, {
+			redirectURI
+		});
+		this.credentials = credentials;
+	}
+
+	public async createAuthorizationURL(
+		state: string,
 		options?: {
 			responseMode?: "query" | "form_post";
 			scope?: string[];
 		}
-	) {
-		this.client = new OAuth2Client(credentials.clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI,
-			responseMode: options?.responseMode
-		});
-		this.credentials = credentials;
-		this.scope = options?.scope ?? [];
-	}
-
-	public async createAuthorizationURL(state: string): Promise<URL> {
-		return await this.client.createAuthorizationURL({
+	): Promise<URL> {
+		const url = await this.client.createAuthorizationURL({
 			state,
-			scope: this.scope
+			scope: options?.scope ?? []
 		});
+		url.searchParams.set("response_mode", options?.responseMode ?? "query");
+		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<AppleTokens> {
@@ -44,12 +42,13 @@ export class Apple implements OAuth2Provider {
 				credentials: await this.createClientSecret()
 			}
 		);
-		return {
+		const tokens: AppleTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token ?? null,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			idToken: result.id_token
 		};
+		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<AppleRefreshedTokens> {
@@ -57,11 +56,12 @@ export class Apple implements OAuth2Provider {
 			authenticateWith: "request_body",
 			credentials: await this.createClientSecret()
 		});
-		return {
+		const tokens: AppleRefreshedTokens = {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			idToken: result.id_token
 		};
+		return tokens;
 	}
 
 	private async createClientSecret(): Promise<string> {
