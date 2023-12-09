@@ -3,34 +3,30 @@ import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2ProviderWithPKCE } from "../index.js";
 
-export class MicrosoftEntraID implements OAuth2ProviderWithPKCE {
+export class MicrosoftEntraId implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
-	private scope: string[];
 	private clientSecret: string;
 
-	constructor(
-		tenant: string,
-		clientId: string,
-		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			scope?: string[];
-		}
-	) {
+	constructor(tenant: string, clientId: string, clientSecret: string, redirectURI: string) {
 		const authorizeEndpoint = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize`;
 		const tokenEndpoint = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`;
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
-		this.scope = options?.scope ?? [];
-		this.scope.push("openid", "profile");
 		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
+	public async createAuthorizationURL(
+		codeVerifier: string,
+		options?: {
+			scope?: string[];
+		}
+	): Promise<URL> {
+		const scope = options?.scope ?? [];
+		scope.push("openid");
 		const url = await this.client.createAuthorizationURL({
-			scope: this.scope,
-			codeVerifier
+			codeVerifier,
+			scope
 		});
 		url.searchParams.set("nonce", "_");
 		return url;
@@ -39,40 +35,33 @@ export class MicrosoftEntraID implements OAuth2ProviderWithPKCE {
 	public async validateAuthorizationCode(
 		code: string,
 		codeVerifier: string
-	): Promise<MicrosoftEntraIDTokens> {
+	): Promise<MicrosoftEntraIdTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret,
 			codeVerifier
 		});
-		return {
+		const tokens: MicrosoftEntraIdTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token ?? null,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token,
+			idToken: result.id_token
 		};
+		return tokens;
 	}
 
-	public async getUser(accessToken: string): Promise<MicrosoftEntraIDUser> {
-		const response = await fetch("https://graph.microsoft.com/oidc/userinfo", {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		});
-		return await response.json();
-	}
-
-	public async refreshAccessToken(refreshToken: string): Promise<MicrosoftEntraIDTokens> {
+	public async refreshAccessToken(refreshToken: string): Promise<MicrosoftEntraIdTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-		return {
+		const tokens: MicrosoftEntraIdTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token ?? null,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token,
+			idToken: result.id_token
 		};
+		return tokens;
 	}
 }
 
@@ -83,18 +72,9 @@ interface TokenResponseBody {
 	id_token: string;
 }
 
-export interface MicrosoftEntraIDTokens {
+export interface MicrosoftEntraIdTokens {
 	idToken: string;
 	accessToken: string;
 	accessTokenExpiresAt: Date;
 	refreshToken: string | null;
-}
-
-export interface MicrosoftEntraIDUser {
-	sub: string;
-	name: string;
-	family_name: string;
-	given_name: string;
-	picture: string;
-	email?: string;
 }

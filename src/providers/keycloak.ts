@@ -7,17 +7,8 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private realmURL: string;
 	private clientSecret: string;
-	private scope: string[];
 
-	constructor(
-		realmURL: string,
-		clientId: string,
-		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			scope?: string[];
-		}
-	) {
+	constructor(realmURL: string, clientId: string, clientSecret: string, redirectURI: string) {
 		this.realmURL = realmURL;
 		const authorizeEndpoint = this.realmURL + "/protocol/openid-connect/auth";
 		const tokenEndpoint = this.realmURL + "/protocol/openid-connect/token";
@@ -25,14 +16,19 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 			redirectURI
 		});
 		this.clientSecret = clientSecret;
-		this.scope = options?.scope ?? [];
-		this.scope.push("openid", "profile");
 	}
 
-	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
+	public async createAuthorizationURL(
+		codeVerifier: string,
+		options?: {
+			scope?: string[];
+		}
+	): Promise<URL> {
+		const scope = options?.scope ?? [];
+		scope.push("openid");
 		return await this.client.createAuthorizationURL({
-			scope: this.scope,
-			codeVerifier
+			codeVerifier,
+			scope
 		});
 	}
 	public async validateAuthorizationCode(
@@ -44,24 +40,14 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-
-		return {
+		const tokens: KeycloakTokens = {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			refreshToken: result.refresh_token,
 			refreshTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			idToken: result.id_token
 		};
-	}
-
-	public async getUser(accessToken: string): Promise<KeycloakUser> {
-		const userinfoEndpoint = this.realmURL + "/protocol/openid-connect/userinfo";
-		const response = await fetch(userinfoEndpoint, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		});
-		return await response.json();
+		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<KeycloakTokens> {
@@ -69,14 +55,14 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-
-		return {
+		const tokens: KeycloakTokens = {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			refreshToken: result.refresh_token,
 			refreshTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			idToken: result.id_token
 		};
+		return tokens;
 	}
 }
 
@@ -94,29 +80,4 @@ export interface KeycloakTokens {
 	refreshToken: string | null;
 	refreshTokenExpiresAt: Date | null;
 	idToken: string;
-}
-
-export interface KeycloakUser {
-	exp: number;
-	iat: number;
-	auth_time: number;
-	jti: string;
-	iss: string;
-	aud: string;
-	sub: string; // user_id
-	typ: string;
-	azp: string;
-	session_state: string;
-	at_hash: string;
-	acr: string;
-	sid: string;
-	email_verified: boolean;
-	name: string;
-	preferred_username: string;
-	given_name: string;
-	locale: string;
-	family_name: string;
-	email: string;
-	picture: string;
-	user: any;
 }

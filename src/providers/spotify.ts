@@ -9,27 +9,23 @@ const tokenEndpoint = "https://accounts.spotify.com/api/token";
 export class Spotify implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
-	private scope: string[];
 
-	constructor(
-		clientId: string,
-		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			scope?: string[];
-		}
-	) {
+	constructor(clientId: string, clientSecret: string, redirectURI: string) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
 		this.clientSecret = clientSecret;
-		this.scope = options?.scope ?? [];
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
+	public async createAuthorizationURL(
+		state: string,
+		options?: {
+			scope?: string[];
+		}
+	): Promise<URL> {
 		return await this.client.createAuthorizationURL({
 			state,
-			scope: this.scope
+			scope: options?.scope ?? []
 		});
 	}
 
@@ -37,29 +33,22 @@ export class Spotify implements OAuth2Provider {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			credentials: this.clientSecret
 		});
-		return {
+		const tokens: SpotifyTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
-	}
-
-	public async getUser(accessToken: string): Promise<SpotifyUser> {
-		const response = await fetch("https://api.spotify.com/v1/me", {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		});
-		return await response.json();
+		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<SpotifyTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken);
-		return {
+		const tokens: SpotifyTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
+		return tokens;
 	}
 }
 
@@ -73,33 +62,4 @@ export interface SpotifyTokens {
 	accessToken: string;
 	refreshToken: string;
 	accessTokenExpiresAt: Date;
-}
-
-export interface SpotifyUser {
-	country?: string;
-	display_name: string | null;
-	email?: string;
-	explicit_content: {
-		filter_enabled?: boolean;
-		filter_locked?: boolean;
-	};
-	external_urls: {
-		spotify: string;
-	};
-	followers: {
-		href: string | null;
-		total: number;
-	};
-	href: string;
-	id: string;
-	images: [
-		{
-			url: string;
-			height: number | null;
-			width: number | null;
-		}
-	];
-	product?: string;
-	type: string;
-	uri: string;
 }

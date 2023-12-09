@@ -1,0 +1,31 @@
+# Discord
+
+For usage, see [OAuth 2.0 provider](../oauth2.md).
+
+```ts
+import { Discord } from "arctic";
+
+const discord = new Discord(clientId, clientSecret, redirectURI);
+```
+
+```ts
+const url: URL = await discord.createAuthorizationURL(state, {
+	// optional
+	scope
+});
+const tokens: DiscordTokens = await discord.validateAuthorizationCode(code);
+const tokens: DiscordTokens = await discord.refreshAccessToken(refreshToken);
+```
+
+## Get user profile
+
+Add the `identity` scope and use the [`/users/@me` endpoint`]().
+
+```ts
+const response = await fetch("https://discord.com/api/users/@me", {
+	headers: {
+		Authorization: `Bearer ${accessToken}`
+	}
+});
+const user = await response.json();
+```

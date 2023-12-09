@@ -1,0 +1,29 @@
+# Facebook
+
+For usage, see [OAuth 2.0 provider](../oauth2.md).
+
+```ts
+import { Facebook } from "arctic";
+
+const facebook = new Facebook(clientId, clientSecret, redirectURI);
+```
+
+```ts
+const url: URL = await facebook.createAuthorizationURL(state, {
+	// optional
+	scope,
+});
+const tokens: FacebookTokens = await facebook.validateAuthorizationCode(code);
+```
+
+## Get user profile
+
+Use the `/me` endpoint. See [fields](https://developers.facebook.com/docs/graph-api/reference/user#Reading).
+
+```ts
+const url = new Request("https://graph.facebook.com/me");
+url.searchParams.set("access_token", accessToken);
+url.searchParams.set("fields", ["id", "name", "picture", "email"].join(","));
+const response = await fetch(url);
+const user = await response.json();
+```

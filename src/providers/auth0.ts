@@ -6,17 +6,8 @@ export class Auth0 implements OAuth2Provider {
 	private client: OAuth2Client;
 	private appDomain: string;
 	private clientSecret: string;
-	private scope: string[];
 
-	constructor(
-		appDomain: string,
-		clientId: string,
-		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			scope?: string[];
-		}
-	) {
+	constructor(appDomain: string, clientId: string, clientSecret: string, redirectURI: string) {
 		this.appDomain = appDomain;
 		const authorizeEndpoint = this.appDomain + "/authorize";
 		const tokenEndpoint = this.appDomain + "/token";
@@ -24,37 +15,33 @@ export class Auth0 implements OAuth2Provider {
 			redirectURI
 		});
 		this.clientSecret = clientSecret;
-		this.scope = options?.scope ?? [];
-		this.scope.push("openid", "profile");
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
+	public async createAuthorizationURL(
+		state: string,
+		options?: {
+			scope?: string[];
+		}
+	): Promise<URL> {
+		const scope = options?.scope ?? [];
+		scope.push("openid");
 		return await this.client.createAuthorizationURL({
-			scope: this.scope,
-			state
+			state,
+			scope: options?.scope ?? []
 		});
 	}
+
 	public async validateAuthorizationCode(code: string): Promise<Auth0Tokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-
-		return {
+		const tokens: Auth0Tokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			idToken: result.id_token
 		};
-	}
-
-	public async getUser(accessToken: string): Promise<Auth0User> {
-		const userinfoEndpoint = this.appDomain + "/userinfo";
-		const response = await fetch(userinfoEndpoint, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		});
-		return await response.json();
+		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<Auth0Tokens> {
@@ -62,12 +49,12 @@ export class Auth0 implements OAuth2Provider {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-
-		return {
+		const tokens: Auth0Tokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			idToken: result.id_token
 		};
+		return tokens;
 	}
 }
 
@@ -81,25 +68,4 @@ export interface Auth0Tokens {
 	accessToken: string;
 	refreshToken: string;
 	idToken: string;
-}
-
-export interface Auth0User {
-	sub: string;
-	name: string;
-	picture: string;
-	locale: string;
-	updated_at: string;
-	given_name?: string;
-	family_name?: string;
-	middle_name?: string;
-	nickname?: string;
-	preferred_username?: string;
-	profile?: string;
-	email?: string;
-	email_verified?: boolean;
-	gender?: string;
-	birthdate?: string;
-	zoneinfo?: string;
-	phone_number?: string;
-	phone_number_verified?: boolean;
 }
