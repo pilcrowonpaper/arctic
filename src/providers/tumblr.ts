@@ -24,5 +24,8 @@ export class Tumblr implements OAuth2Provider {
 		});
 		this.clientSecret = clientSecret;
 		this.scope = options?.scope ?? [];
+		this.scope.push("basic");
 	}
+
+	
 }
