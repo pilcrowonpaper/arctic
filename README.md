@@ -1,6 +1,6 @@
 # Arctic
 
-Arctic is an OAuth 2.0 library for JavaScript/TypeScript that supports numerous providers. It's light weight, fully-typed, and runtime-agnostic.
+Arctic is an OAuth 2.0 library for JavaScript/TypeScript that supports numerous providers. It's light weight, fully-typed, and runtime-agnostic. [Read the documentation →](./docs/main.md)
 
 ```ts
 import { GitHub, generateState } from "arctic";
@@ -14,8 +14,6 @@ const authorizationURL = await github.createAuthorizationURL(state, {
 
 const tokens = await github.validateAuthorizationCode(code);
 ```
-
-[Read the documentation](./docs/main.md)
 
 > For a more flexible OAuth 2.0 client, see [`oslo/oauth2`](http://github.com/pilcrowonpaper/oslo).
 
