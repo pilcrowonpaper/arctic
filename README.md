@@ -25,6 +25,7 @@ See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 - GitLab
 - Kakao
 - LinkedIn
+- Naver
 - Notion
 - Reddit
 - Spotify

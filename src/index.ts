@@ -59,6 +59,7 @@ export type {
 	MicrosoftEntraIDTokens,
 	MicrosoftEntraIDUser
 } from "./providers/microsoft-entra-id.js";
+export type { NaverTokens, NaverUser, NaverUserResponse } from "./providers/naver.js";
 export type { NotionPersonUser, NotionTokens, NotionUser } from "./providers/notion.js";
 export type { RedditTokens, RedditUser } from "./providers/reddit.js";
 export type { SlackTokens, SlackUser } from "./providers/slack.js";
