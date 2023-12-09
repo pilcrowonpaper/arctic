@@ -28,6 +28,7 @@ See [OAuth 2.0 providers](#oauth-20-providers) for instructions.
 - Notion
 - Reddit
 - Spotify
+- Tumblr
 - Twitch
 - Yahoo
 

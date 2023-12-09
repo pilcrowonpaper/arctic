@@ -1,3 +1,4 @@
+import { TumblrTokens, TumblrUser, TumblrBlog } from "./providers/tumblr";
 export { Apple } from "./providers/apple.js";
 export { Atlassian } from "./providers/atlassian.js";
 export { Auth0 } from "./providers/auth0.js";
@@ -62,6 +63,7 @@ export type { NotionPersonUser, NotionTokens, NotionUser } from "./providers/not
 export type { RedditTokens, RedditUser } from "./providers/reddit.js";
 export type { SlackTokens, SlackUser } from "./providers/slack.js";
 export type { SpotifyTokens, SpotifyUser } from "./providers/spotify.js";
+export type { TumblrTokens, TumblrUser, TumblrBlog } from "./providers/tumblr.js";
 export type { TwitchTokens, TwitchUser } from "./providers/twitch.js";
 export type { TwitterTokens, TwitterUser } from "./providers/twitter.js";
 export type { YahooTokens, YahooUser } from "./providers/yahoo.js";
