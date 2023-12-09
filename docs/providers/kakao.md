@@ -11,7 +11,7 @@ const kakao = new Kakao(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await kakao.createAuthorizationURL(state, {
 	// optional
-	scope
+	scopes
 });
 const tokens: KakaoTokens = await kakao.validateAuthorizationCode(code);
 const tokens: KakaoTokens = await kakao.refreshAccessToken(refreshToken);

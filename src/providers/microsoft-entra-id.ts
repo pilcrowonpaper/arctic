@@ -19,14 +19,13 @@ export class MicrosoftEntraId implements OAuth2ProviderWithPKCE {
 	public async createAuthorizationURL(
 		codeVerifier: string,
 		options?: {
-			scope?: string[];
+			scopes?: string[];
 		}
 	): Promise<URL> {
-		const scope = options?.scope ?? [];
-		scope.push("openid");
+		const scopes = options?.scopes ?? [];
 		const url = await this.client.createAuthorizationURL({
 			codeVerifier,
-			scope
+			scopes: [...scopes, "openid"]
 		});
 		url.searchParams.set("nonce", "_");
 		return url;

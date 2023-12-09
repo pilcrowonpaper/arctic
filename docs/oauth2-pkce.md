@@ -12,7 +12,7 @@ const google = new Google(clientId, clientSecret, redirectURI);
 
 Generate a code verifier using `generateCodeVerifier()` and store it as a cookie. Use it to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
 
-You may optionally pass `scope`. For providers that implement OpenID Connect, `openid` is always included. There may be more options depending on the provider.
+You may optionally pass `scopes`. For providers that implement OpenID Connect, `openid` is always included. There may be more options depending on the provider.
 
 ```ts
 import { generateCodeVerifier } from "arctic";

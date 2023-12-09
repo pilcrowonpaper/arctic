@@ -15,7 +15,7 @@ const keycloak = new Keycloak(realmURL, clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await keycloak.createAuthorizationURL(state, {
 	// optional
-	scope
+	scopes
 });
 const tokens: KeycloakTokens = await keycloak.validateAuthorizationCode(code);
 const tokens: KeycloakTokens = await keycloak.refreshAccessToken(refreshToken);
@@ -23,11 +23,11 @@ const tokens: KeycloakTokens = await keycloak.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `profile` scope. Optionally add the `email` scope to get user email.
+Add the `profile` scopes. Optionally add the `email` scopes to get user email.
 
 ```ts
 const keycloak = new Keycloak(realmURL, clientId, clientSecret, redirectURI, {
-	scope: ["profile", "email"]
+	scopes: ["profile", "email"]
 });
 ```
 

@@ -13,7 +13,7 @@ const entraId = new MicrosoftEntraID(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await entraId.createAuthorizationURL(codeVerifier, {
 	// optional
-	scope // "openid" always included
+	scopes // "openid" always included
 });
 const tokens: MicrosoftEntraIdTokens = await entraId.validateAuthorizationCode(code, codeVerifier);
 const tokens: MicrosoftEntraIdTokens = await entraId.refreshAccessToken(refreshToken);
@@ -21,11 +21,11 @@ const tokens: MicrosoftEntraIdTokens = await entraId.refreshAccessToken(refreshT
 
 ## Get user profile
 
-Add the `profile` scope. Optionally add the `email` scope to get user email.
+Add the `profile` scopes. Optionally add the `email` scopes to get user email.
 
 ```ts
 const entraId = new MicrosoftEntraID(clientId, clientSecret, redirectURI, {
-	scope: ["profile", "email"]
+	scopes: ["profile", "email"]
 });
 ```
 

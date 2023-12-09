@@ -15,7 +15,7 @@ const auth0 = new Auth0(appDomain, clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await auth0.createAuthorizationURL(state, {
 	// optional
-	scope,
+	scopes,
 });
 const tokens: Auth0Tokens = await auth0.validateAuthorizationCode(code);
 const tokens: Auth0Tokens = await auth0.refreshAccessToken(refreshToken);
@@ -23,7 +23,7 @@ const tokens: Auth0Tokens = await auth0.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `profile` scope. Optionally add the `email` scope to get user email.
+Add the `profile` scopes. Optionally add the `email` scopes to get user email.
 
 Parse the ID token or use the `userinfo` endpoint. See [ID token structure](https://auth0.com/docs/secure/tokens/id-tokens/id-token-structure#sample-id-token).
 

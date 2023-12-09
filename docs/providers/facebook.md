@@ -11,7 +11,7 @@ const facebook = new Facebook(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await facebook.createAuthorizationURL(state, {
 	// optional
-	scope,
+	scopes,
 });
 const tokens: FacebookTokens = await facebook.validateAuthorizationCode(code);
 ```

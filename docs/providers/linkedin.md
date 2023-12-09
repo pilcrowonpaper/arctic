@@ -13,7 +13,7 @@ const linkedIn = new LinkedIn(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await linkedIn.createAuthorizationURL(state, {
 	// optional
-	scope // "openid" always included
+	scopes // "openid" always included
 });
 const tokens: LinkedInTokens = await linkedIn.validateAuthorizationCode(code);
 const tokens: LinkedInTokens = await linkedIn.refreshAccessToken(refreshToken);
@@ -21,7 +21,7 @@ const tokens: LinkedInTokens = await linkedIn.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `profile` scope, and optionally add the `email` scope to get user email.
+Add the `profile` scopes, and optionally add the `email` scopes to get user email.
 
 Parse the ID token or use the `userinfo` endpoint. See [ID token claims](https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2#response-body-schema).
 

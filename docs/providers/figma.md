@@ -11,7 +11,7 @@ const figma = new Figma(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await figma.createAuthorizationURL(state, {
 	// optional
-	scope
+	scopes
 });
 const tokens: FigmaTokens = await figma.validateAuthorizationCode(code);
 const tokens: FigmaRefreshedTokens = await figma.refreshAccessToken(refreshToken);

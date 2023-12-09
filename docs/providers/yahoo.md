@@ -13,7 +13,7 @@ const yahoo = new Yahoo(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await yahoo.createAuthorizationURL(state, {
 	// optional
-	scope
+	scopes
 });
 const tokens: YahooTokens = await yahoo.validateAuthorizationCode(code);
 const tokens: YahooTokens = await yahoo.refreshAccessToken(refreshToken);
@@ -21,7 +21,7 @@ const tokens: YahooTokens = await yahoo.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `profile` scope. Optionally add the `email` scope to get user email.
+Add the `profile` scopes. Optionally add the `email` scopes to get user email.
 
 Parse the ID token or use the `userinfo` endpoint. See [ID token claims](https://developer.yahoo.com/sign-in-with-yahoo/#get-user-info-api).
 

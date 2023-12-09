@@ -12,7 +12,7 @@ const apple = new Apple(clientId, clientSecret, redirectURI);
 
 Generate state using `generateState()` and store it as a cookie. Use it to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
 
-You may optionally pass `scope`. For providers that implement OpenID Connect, `openid` is always included. There may be more options depending on the provider.
+You may optionally pass `scopes`. For providers that implement OpenID Connect, `openid` is always included. There may be more options depending on the provider.
 
 ```ts
 import { generateState } from "arctic";
@@ -20,7 +20,7 @@ import { generateState } from "arctic";
 const state = generateState();
 
 const url = await github.createAuthorizationURL(state, {
-	scope: ["user:email"]
+	scopes: ["user:email"]
 });
 
 // store state as cookie

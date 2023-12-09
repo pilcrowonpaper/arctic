@@ -11,7 +11,7 @@ const twitch = new Twitch(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await twitch.createAuthorizationURL(state, {
 	// optional
-	scope
+	scopes
 });
 const tokens: TwitchTokens = await twitch.validateAuthorizationCode(code);
 const tokens: TwitchTokens = await twitch.refreshAccessToken(refreshToken);

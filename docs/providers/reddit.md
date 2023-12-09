@@ -11,8 +11,7 @@ const reddit = new Reddit(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await reddit.createAuthorizationURL(state, {
 	// optional
-	scope,
-	tokenDuration // "temporary" (default) or "permanent"
+	scopes
 });
 const tokens: RedditTokens = await reddit.validateAuthorizationCode(code);
 const tokens: RedditTokens = await reddit.refreshAccessToken(refreshToken);
@@ -31,7 +30,11 @@ const response = await fetch("https://oauth.reddit.com/api/v1/me", {
 const user = await response.json();
 ```
 
-
 ## Get refresh token
 
-Set `tokenDuration` option in `createAuthorizationURL()` to `permanent`.
+Set `duration` param to `permanent`.
+
+```ts
+const url = await dropbox.createAuthorizationURL();
+url.searchParams.set("duration", "permanent");
+```

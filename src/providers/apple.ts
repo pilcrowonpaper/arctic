@@ -22,15 +22,13 @@ export class Apple implements OAuth2Provider {
 	public async createAuthorizationURL(
 		state: string,
 		options?: {
-			responseMode?: "query" | "form_post";
-			scope?: string[];
+			scopes?: string[];
 		}
 	): Promise<URL> {
 		const url = await this.client.createAuthorizationURL({
-			state,
-			scope: options?.scope ?? []
+			scopes: options?.scopes
 		});
-		url.searchParams.set("response_mode", options?.responseMode ?? "query");
+		url.searchParams.set("state", state);
 		return url;
 	}
 

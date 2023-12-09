@@ -20,13 +20,13 @@ export class Figma implements OAuth2Provider {
 	public async createAuthorizationURL(
 		state: string,
 		options?: {
-			scope?: string[];
+			scopes?: string[];
 		}
 	): Promise<URL> {
 		const url = await this.client.createAuthorizationURL({
-			state,
-			scope: options?.scope ?? []
+			scopes: options?.scopes ?? []
 		});
+		url.searchParams.set("state", state);
 		return url;
 	}
 

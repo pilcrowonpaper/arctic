@@ -10,7 +10,7 @@ const box = new Box(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await box.createAuthorizationURL(state, {
 	// optional
-	scope
+	scopes
 });
 const tokens: BoxTokens = await box.validateAuthorizationCode(code);
 ```

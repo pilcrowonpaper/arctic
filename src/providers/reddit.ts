@@ -20,15 +20,13 @@ export class Reddit implements OAuth2Provider {
 	public async createAuthorizationURL(
 		state: string,
 		options?: {
-			tokenDuration?: "permanent" | "temporary";
-			scope?: string[];
+			scopes?: string[];
 		}
 	): Promise<URL> {
 		const url = await this.client.createAuthorizationURL({
-			state,
-			scope: options?.scope ?? []
+			scopes: options?.scopes ?? []
 		});
-		url.searchParams.set("duration", options?.tokenDuration ?? "temporary");
+		url.searchParams.set("state", state);
 		return url;
 	}
 

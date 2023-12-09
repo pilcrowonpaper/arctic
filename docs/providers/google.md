@@ -13,8 +13,7 @@ const google = new Google(clientId, clientSecret, redirectURI˝);
 ```ts
 const url: URL = await google.createAuthorizationURL(codeVerifier, {
 	// optional
-	scope, // `openid` always included
-	accessType // "online" (default) or "offline"
+	scopes // "openid" always included
 });
 const tokens: GoogleTokens = await google.validateAuthorizationCode(code, codeVerifier);
 const tokens: GoogleRefreshedTokens = await google.refreshAccessToken(refreshToken);
@@ -22,11 +21,11 @@ const tokens: GoogleRefreshedTokens = await google.refreshAccessToken(refreshTok
 
 ## Get user profile
 
-Add the `profile` scope. Optionally add the `email` scope to get user email.
+Add the `profile` scopes. Optionally add the `email` scopes to get user email.
 
 ```ts
 const google = new Google(clientId, clientSecret, redirectURI, {
-	scope: ["profile"]
+	scopes: ["profile"]
 });
 ```
 
@@ -43,12 +42,9 @@ const user = await response.json();
 
 ## Get refresh token
 
-Set the `accessType` option to `"offline"`. You will only get the refresh token only in the first sign in.
+Set the `access_type` param to `offline`. You will only get the refresh token only in the first sign in.
 
 ```ts
-import { Google } from "arctic";
-
-const google = new Google(clientId, clientSecret, redirectURI, {
-	accessType: "offline"
-});
+const url = await google.createAuthorizationURL();
+url.searchParams.set("access_type", "offline");
 ```

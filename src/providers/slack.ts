@@ -19,15 +19,15 @@ export class Slack implements OAuth2Provider {
 	public async createAuthorizationURL(
 		state: string,
 		options?: {
-			scope?: string[];
+			scopes?: string[];
 		}
 	): Promise<URL> {
-		const scope = options?.scope ?? [];
-		scope.push("openid");
-		return await this.client.createAuthorizationURL({
-			state,
-			scope
+		const scopes = options?.scopes ?? [];
+		const url = await this.client.createAuthorizationURL({
+			scopes: [...scopes, "openid"]
 		});
+		url.searchParams.set("state", state);
+		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<SlackTokens> {

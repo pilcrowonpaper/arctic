@@ -20,12 +20,12 @@ export class Atlassian implements OAuth2Provider {
 	public async createAuthorizationURL(
 		codeVerifier: string,
 		options?: {
-			scope?: string[];
+			scopes?: string[];
 		}
 	): Promise<URL> {
 		const url = await this.client.createAuthorizationURL({
 			codeVerifier,
-			scope: options?.scope ?? []
+			scopes: options?.scopes
 		});
 		url.searchParams.set("audience", "api.atlassian.com");
 		url.searchParams.set("prompt", "consent");

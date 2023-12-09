@@ -1,7 +1,7 @@
 {
 	"name": "arctic",
 	"type": "module",
-	"version": "0.8.1",
+	"version": "0.9.0",
 	"description": "OAuth 2.0 with built-in providers",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -30,6 +30,6 @@
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
-		"oslo": "0.23.5"
+		"oslo": "0.24.0"
 	}
 }

@@ -21,15 +21,15 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 	public async createAuthorizationURL(
 		codeVerifier: string,
 		options?: {
-			scope?: string[];
+			scopes?: string[];
 		}
 	): Promise<URL> {
-		const scope = options?.scope ?? [];
-		scope.push("openid");
-		return await this.client.createAuthorizationURL({
+		const scopes = options?.scopes ?? [];
+		const url = await this.client.createAuthorizationURL({
 			codeVerifier,
-			scope
+			scopes: [...scopes, "openid"]
 		});
+		return url;
 	}
 	public async validateAuthorizationCode(
 		code: string,

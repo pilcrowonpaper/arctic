@@ -22,8 +22,7 @@ const apple = new Apple(credentials, redirectURI);
 ```ts
 const url: URL = await apple.createAuthorizationURL(state, {
 	// optional
-	scope,
-	responseMode: "form_post" // "query" by default
+	scopes
 });
 const tokens: AppleTokens = await apple.validateAuthorizationCode(code);
 const tokens: AppleRefreshedTokens = await apple.refreshAccessToken(refreshToken);
@@ -35,12 +34,11 @@ Parse the ID token. See [ID token claims](https://developer.apple.com/documentat
 
 ## Requesting scopes
 
-When requesting scopes, the `responseMode` option must be set to `"form_post"`. Unlike the default `"query"` response mode, **Apple will send an application/x-www-form-urlencoded POST request as the callback,** and the user JSON object will be sent in the request body. This is only available the first time the user signs in.
+When requesting scopes, the `response_mode` param must be set to `form_post`. Unlike the default `"query"` response mode, **Apple will send an application/x-www-form-urlencoded POST request as the callback,** and the user JSON object will be sent in the request body. This is only available the first time the user signs in.
 
 ```ts
-const apple = new Apple(credentials, redirectURI, {
-	responseMode: "form_post"
-});
+const url = await apple.createAuthorizationURL();
+url.searchParams.set("response_mode", "query");
 ```
 
 ```ts

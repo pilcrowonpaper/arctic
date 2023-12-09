@@ -14,7 +14,7 @@ const gitlab = new GitLab(clientId, clientSecret, redirectURI, {
 ```ts
 const url: URL = await gitlab.createAuthorizationURL(state, {
 	// optional
-	scope
+	scopes
 });
 const tokens: GitLabTokens = await gitlab.validateAuthorizationCode(code);
 const tokens: GitLabTokens = await gitlab.refreshAccessToken(refreshToken);
@@ -22,7 +22,7 @@ const tokens: GitLabTokens = await gitlab.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `read_user` scope and use the [`/user` endpoint](https://docs.gitlab.com/ee/api/users.html#list-current-user).
+Add the `read_user` scopes and use the [`/user` endpoint](https://docs.gitlab.com/ee/api/users.html#list-current-user).
 
 ```ts
 const response = await fetch("https://gitlab.com/api/v4/user", {

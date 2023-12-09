@@ -20,17 +20,14 @@ export class Dropbox implements OAuth2Provider {
 	public async createAuthorizationURL(
 		state: string,
 		options?: {
-			scope?: string[];
-			accessType?: "online" | "offline";
+			scopes?: string[];
 		}
 	): Promise<URL> {
-		const scope = options?.scope ?? [];
-		scope.push("openid");
+		const scopes = options?.scopes ?? [];
 		const url = await this.client.createAuthorizationURL({
-			state,
-			scope
+			scopes: [...scopes, "openid"]
 		});
-		url.searchParams.set("token_access_type", options?.accessType ?? "online");
+		url.searchParams.set("state", state);
 		return url;
 	}
 

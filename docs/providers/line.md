@@ -13,7 +13,7 @@ const line = new Line(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await line.createAuthorizationURL(codeVerifier, {
 	// optional
-	scope // "openid" always included
+	scopes // "openid" always included
 });
 const tokens: LineTokens = await line.validateAuthorizationCode(code, codeVerifier);
 const tokens: LineRefreshedTokens = await line.refreshAccessToken(refreshToken);
@@ -21,11 +21,11 @@ const tokens: LineRefreshedTokens = await line.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `profile` scope. Optionally add the `email` scope to get user email.
+Add the `profile` scopes. Optionally add the `email` scopes to get user email.
 
 ```ts
 const line = new Line(clientId, clientSecret, redirectURI, {
-	scope: ["profile", "email"]
+	scopes: ["profile", "email"]
 });
 ```
 

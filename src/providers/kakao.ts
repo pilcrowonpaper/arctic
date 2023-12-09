@@ -20,13 +20,14 @@ export class Kakao implements OAuth2Provider {
 	public async createAuthorizationURL(
 		state: string,
 		options?: {
-			scope?: string[];
+			scopes?: string[];
 		}
 	): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state,
-			scope: options?.scope ?? []
+		const url = await this.client.createAuthorizationURL({
+			scopes: options?.scopes ?? []
 		});
+		url.searchParams.set("state", state);
+		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<KakaoTokens> {

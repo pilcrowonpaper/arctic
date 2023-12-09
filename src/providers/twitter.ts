@@ -19,14 +19,15 @@ export class Twitter implements OAuth2ProviderWithPKCE {
 	public async createAuthorizationURL(
 		codeVerifier: string,
 		options?: {
-			scope?: string[];
+			scopes?: string[];
 		}
 	): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state: generateState(),
+		const url = await this.client.createAuthorizationURL({
 			codeVerifier,
-			scope: options?.scope ?? []
+			scopes: options?.scopes
 		});
+		url.searchParams.set("state", generateState());
+		return url;
 	}
 
 	public async validateAuthorizationCode(

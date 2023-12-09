@@ -9,7 +9,7 @@ const github = new GitHub(clientId, clientSecret);
 
 const state = generateState();
 const authorizationURL = await github.createAuthorizationURL(state, {
-	scope: ["user:email"]
+	scopes: ["user:email"]
 });
 
 const tokens = await github.validateAuthorizationCode(code);

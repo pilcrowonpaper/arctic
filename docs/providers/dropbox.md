@@ -13,8 +13,7 @@ const dropbox = new Dropbox(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await dropbox.createAuthorizationURL(state, {
 	// optional
-	scope,
-	accessType: "offline" // "online" by default
+	scopes // "openid" is always included
 });
 const tokens: DropboxTokens = await dropbox.validateAuthorizationCode(code);
 const tokens: DropboxRefreshedTokens = await dropbox.refreshAccessToken(refreshToken);
@@ -22,7 +21,7 @@ const tokens: DropboxRefreshedTokens = await dropbox.refreshAccessToken(refreshT
 
 ## Get user profile
 
-Add the `profile` scope. Optionally add the `email` scope to get user email.
+Add the `profile` scopes. Optionally add the `email` scopes to get user email.
 
 Parse the ID token or use the `userinfo` endpoint. See [supported claims](https://developers.dropbox.com/oidc-guide#oidc-standard).
 
@@ -39,10 +38,9 @@ The [`/users/get_current_account` endpoint](https://www.dropbox.com/developers/d
 
 ## Get refresh token
 
-Set `accessType` option to `offline`.
+Set `access_type` params to `offline`.
 
 ```ts
-const dropbox = new Dropbox(clientId, clientSecret, redirectURI, {
-	accessType: "offline"
-});
+const url = await dropbox.createAuthorizationURL();
+url.searchParams.set("access_type", "offline");
 ```

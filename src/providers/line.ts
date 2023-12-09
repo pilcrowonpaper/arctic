@@ -21,16 +21,16 @@ export class Line implements OAuth2ProviderWithPKCE {
 	public async createAuthorizationURL(
 		codeVerifier: string,
 		options?: {
-			scope?: string[];
+			scopes?: string[];
 		}
 	): Promise<URL> {
-		const scope = options?.scope ?? [];
-		scope.push("openid");
-		return await this.client.createAuthorizationURL({
-			state: generateState(),
+		const scopes = options?.scopes ?? [];
+		const url = await this.client.createAuthorizationURL({
 			codeVerifier,
-			scope
+			scopes: [...scopes, "openid"]
 		});
+		url.searchParams.set("state", generateState());
+		return url;
 	}
 
 	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<LineTokens> {
