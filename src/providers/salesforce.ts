@@ -1,5 +1,4 @@
 import { OAuth2Client, generateState } from "oslo/oauth2";
-import { TimeSpan, createDate } from "oslo";
 
 import type { OAuth2ProviderWithPKCE } from "../index.js";
 
@@ -49,8 +48,28 @@ export class Salesforce implements OAuth2ProviderWithPKCE {
 			refreshToken: result.refresh_token ?? null,
 			idToken: result.id_token
 		};
-    }
-    
+	}
+
+	public async getUser(accesToken: string): Promise<SalesforceUser> {
+		const response = await fetch(userinfoEndpoint, {
+			headers: {
+				Authorization: `Bearer ${accesToken}`
+			}
+		});
+		return await response.json();
+	}
+
+	public async refreshAccessToken(refreshToken: string): Promise<SalesforceToken> {
+		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
+			authenticateWith: "request_body",
+			credentials: this.clientSecret
+		});
+		return {
+			accessToken: result.access_token,
+			refreshToken: result.refresh_token ?? null,
+			idToken: result.id_token
+		};
+	}
 }
 
 interface TokenResponseBody {
@@ -64,4 +83,28 @@ export interface SalesforceToken {
 	refreshToken: string | null;
 }
 
-export interface SalesforceUser {}
+export interface SalesforceUser {
+	sub: string; // URL
+	user_id: string;
+	organization_id: string;
+	name: string;
+	email?: string;
+	email_verified: boolean;
+	given_name: string;
+	family_name: string;
+	zoneinfo: string;
+	photos: {
+		picture: string;
+		thumbnail: string;
+	};
+	profile: string;
+	picture: string;
+	address?: Record<string, string>;
+	urls: Record<string, string>;
+	active: boolean;
+	user_type: string;
+	language: string;
+	locale: string;
+	utcOffset: number;
+	updated_at: string;
+}
