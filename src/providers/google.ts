@@ -30,6 +30,7 @@ export class Google implements OAuth2ProviderWithPKCE {
 			codeVerifier,
 			scope
 		});
+		url.searchParams.set("nonce", "_");
 		url.searchParams.set("access_type", options?.accessType ?? "online");
 		return url;
 	}
