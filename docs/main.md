@@ -1,6 +1,6 @@
 # Arctic documentation
 
-Arctic is an OAuth 2.0 library for JavaScript/TypeScript that supports numerous providers. It runs on any runtime, including Node.js, Bun, Deno, and Cloudflare Workers.
+Arctic is an OAuth 2.0 library for JavaScript/TypeScript that supports numerous providers. It runs on any runtime, including Node.js, Bun, Deno, and Cloudflare Workers.G
 
 ## Installation
 
@@ -23,7 +23,7 @@ globalThis.crypto = webcrypto as Crypto;
 - [OAuth 2.0](./oauth2.md)
 - [OAuth 2.0 with PKCE](./oauth2-pkce.md)
 
-## Provider
+## Providers
 
 - [Apple](./providers/apple.md)
 - [Atlassian](./providers/atlassian.md)
