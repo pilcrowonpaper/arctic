@@ -1,4 +1,4 @@
-import { OAuth2Client } from "oslo/oauth2";
+import { OAuth2Client, generateState } from "oslo/oauth2";
 import { TimeSpan, createDate } from "oslo";
 
 import type { OAuth2ProviderWithPKCE } from "../index.js";
@@ -27,4 +27,41 @@ export class Salesforce implements OAuth2ProviderWithPKCE {
 		this.scope.push("openid", "id", "profile");
 		this.clientSecret = clientSecret;
 	}
+
+	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
+		return await this.client.createAuthorizationURL({
+			state: generateState(),
+			scope: this.scope,
+			codeVerifier
+		});
+	}
+
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier: string
+	): Promise<SalesforceToken> {
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
+			credentials: this.clientSecret,
+			codeVerifier
+		});
+		return {
+			accessToken: result.access_token,
+			refreshToken: result.refresh_token ?? null,
+			idToken: result.id_token
+		};
+    }
+    
 }
+
+interface TokenResponseBody {
+	access_token: string;
+	refresh_token?: string;
+	id_token: string;
+}
+export interface SalesforceToken {
+	accessToken: string;
+	idToken: string;
+	refreshToken: string | null;
+}
+
+export interface SalesforceUser {}
