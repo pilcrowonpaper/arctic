@@ -14,6 +14,7 @@ export { Keycloak } from "./providers/keycloak.js";
 export { Line } from "./providers/line.js";
 export { LinkedIn } from "./providers/linkedin.js";
 export { MicrosoftEntraID } from "./providers/microsoft-entra-id.js";
+export { Naver } from "./providers/naver.js";
 export { Notion } from "./providers/notion.js";
 export { Reddit } from "./providers/reddit.js";
 export { Slack } from "./providers/slack.js";
