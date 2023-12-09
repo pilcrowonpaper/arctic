@@ -49,7 +49,7 @@ export class MicrosoftEntraID implements OAuth2ProviderWithPKCE {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token ?? null,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token,
+			idToken: result.id_token
 		};
 	}
 
@@ -71,7 +71,7 @@ export class MicrosoftEntraID implements OAuth2ProviderWithPKCE {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token ?? null,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token,
+			idToken: result.id_token
 		};
 	}
 }
