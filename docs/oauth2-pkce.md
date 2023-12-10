@@ -12,22 +12,34 @@ const google = new Google(clientId, clientSecret, redirectURI);
 
 Generate a code verifier using `generateCodeVerifier()` and store it as a cookie. Use it to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
 
+You can optionally (although recommended) pass `state` to protect against CSRF attacks and ensure the response has not been altered.
+
 You may optionally pass `scopes`. For providers that implement OpenID Connect, `openid` is always included. There may be more options depending on the provider.
 
 ```ts
-import { generateCodeVerifier } from "arctic";
+import { generateCodeVerifier, generateState } from "arctic";
 
 const codeVerifier = generateCodeVerifier();
+const state = generateState();
 
-const url = await github.createAuthorizationURL(state, codeVerifier);
+const url = await google.createAuthorizationURL(codeVerifier, state);
 
 // store code verifier as cookie
-setCookie("code_verifier", state, {
+setCookie("code_verifier", codeVerifier, {
 	secure: true, // set to false in localhost
 	path: "/",
 	httpOnly: true,
 	maxAge: 60 * 10 // 10 min
 });
+
+// store state verifier as cookie
+setCookie("state", state, {
+	secure: true, // set to false in localhost
+	path: "/",
+	httpOnly: true,
+	maxAge: 60 * 10 // 10 min
+});
+
 return redirect(url);
 ```
 
@@ -39,10 +51,18 @@ Use `validateAuthorizationCode()` to validate the authorization code with the co
 import { OAuth2RequestError } from "arctic";
 
 const code = request.url.searchParams.get("code");
-const codeVerifier = request.url.searchParams.get("code_verifier");
+const state = request.url.searchParams.get("state");
+
+const storedState = getCookie("state");
+const storedCodeVerifier = getCookie("code_verifier");
+
+if (!code || !storedState || !storedCodeVerifier || state !== storedState) {
+	// 400
+	throw new Error("Invalid request");
+}
 
 try {
-	const tokens = await github.validateAuthorizationCode(code, codeVerifier);
+	const tokens = await google.validateAuthorizationCode(code, codeVerifier);
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		// see https://oslo.js.org/reference/oauth2/OAuth2RequestError/
