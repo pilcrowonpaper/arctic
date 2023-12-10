@@ -18,6 +18,7 @@ export class Twitter implements OAuth2ProviderWithPKCE {
 
 	public async createAuthorizationURL(
 		codeVerifier: string,
+		state?: string,
 		options?: {
 			scopes?: string[];
 		}
@@ -26,7 +27,8 @@ export class Twitter implements OAuth2ProviderWithPKCE {
 			codeVerifier,
 			scopes: options?.scopes
 		});
-		url.searchParams.set("state", generateState());
+		if (!state) state = generateState();
+		url.searchParams.set("state", state);
 		return url;
 	}
 

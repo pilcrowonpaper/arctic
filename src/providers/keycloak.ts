@@ -20,6 +20,7 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 
 	public async createAuthorizationURL(
 		codeVerifier: string,
+		state?: string,
 		options?: {
 			scopes?: string[];
 		}
@@ -29,6 +30,7 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 			codeVerifier,
 			scopes: [...scopes, "openid"]
 		});
+		if (state) url.searchParams.set("state", state);
 		return url;
 	}
 	public async validateAuthorizationCode(
