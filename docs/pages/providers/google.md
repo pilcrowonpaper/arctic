@@ -15,7 +15,7 @@ const google = new Google(clientId, clientSecret, redirectURI˝);
 ```
 
 ```ts
-const url: URL = await google.createAuthorizationURL(codeVerifier, {
+const url: URL = await google.createAuthorizationURL(state, codeVerifier, {
 	// optional
 	scopes // "openid" always included
 });

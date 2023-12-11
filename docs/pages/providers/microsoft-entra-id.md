@@ -15,7 +15,7 @@ const entraId = new MicrosoftEntraID(clientId, clientSecret, redirectURI);
 ```
 
 ```ts
-const url: URL = await entraId.createAuthorizationURL(codeVerifier, {
+const url: URL = await entraId.createAuthorizationURL(state, codeVerifier, {
 	// optional
 	scopes // "openid" always included
 });

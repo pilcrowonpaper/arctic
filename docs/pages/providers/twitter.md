@@ -15,7 +15,7 @@ const twitter = new Twitter(clientId, clientSecret, redirectURI);
 ```
 
 ```ts
-const url: URL = await twitter.createAuthorizationURL(codeVerifier, {
+const url: URL = await twitter.createAuthorizationURL(state, codeVerifier, {
 	// optional
 	scopes
 });

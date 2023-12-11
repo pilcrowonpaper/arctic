@@ -14,30 +14,28 @@ const google = new Google(clientId, clientSecret, redirectURI);
 
 ### Create authorization URL
 
-Generate a code verifier using `generateCodeVerifier()` and store it as a cookie. Use it to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
-
-You can optionally (although recommended) pass `state` to protect against CSRF attacks and ensure the response has not been altered.
+Generate a state and code verifier using `generateState()` and `generateCodeVerifier()`. Use them to create an authorization URL with `createAuthorizationURL()`, store the state and code verifier as cookies, and redirect the user to the authorization url.
 
 You may optionally pass `scopes`. For providers that implement OpenID Connect, `openid` is always included. There may be more options depending on the provider.
 
 ```ts
 import { generateCodeVerifier, generateState } from "arctic";
 
-const codeVerifier = generateCodeVerifier();
 const state = generateState();
+const codeVerifier = generateCodeVerifier();
 
-const url = await google.createAuthorizationURL(codeVerifier, state);
+const url = await google.createAuthorizationURL(state, codeVerifier);
 
-// store code verifier as cookie
-setCookie("code_verifier", codeVerifier, {
+// store state verifier as cookie
+setCookie("state", state, {
 	secure: true, // set to false in localhost
 	path: "/",
 	httpOnly: true,
 	maxAge: 60 * 10 // 10 min
 });
 
-// store state verifier as cookie
-setCookie("state", state, {
+// store code verifier as cookie
+setCookie("code_verifier", codeVerifier, {
 	secure: true, // set to false in localhost
 	path: "/",
 	httpOnly: true,
@@ -49,7 +47,7 @@ return redirect(url);
 
 ### Validate authorization code
 
-Use `validateAuthorizationCode()` to validate the authorization code with the code verifier. This returns an object with an access token, and a refresh token if requested. If the code is invalid, it will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError/).
+Compare the state, and use `validateAuthorizationCode()` to validate the authorization code with the code verifier. This returns an object with an access token, and a refresh token if requested. If the code is invalid, it will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError/).
 
 ```ts
 import { OAuth2RequestError } from "arctic";

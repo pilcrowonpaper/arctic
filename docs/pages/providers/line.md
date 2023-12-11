@@ -15,7 +15,7 @@ const line = new Line(clientId, clientSecret, redirectURI);
 ```
 
 ```ts
-const url: URL = await line.createAuthorizationURL(codeVerifier, {
+const url: URL = await line.createAuthorizationURL(state, codeVerifier, {
 	// optional
 	scopes // "openid" always included
 });
