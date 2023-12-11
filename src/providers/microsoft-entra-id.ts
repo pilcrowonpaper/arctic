@@ -17,8 +17,8 @@ export class MicrosoftEntraId implements OAuth2ProviderWithPKCE {
 	}
 
 	public async createAuthorizationURL(
+		state: string,
 		codeVerifier: string,
-		state?: string,
 		options?: {
 			scopes?: string[];
 		}
@@ -28,8 +28,8 @@ export class MicrosoftEntraId implements OAuth2ProviderWithPKCE {
 			codeVerifier,
 			scopes: [...scopes, "openid"]
 		});
+		url.searchParams.set("state", state);
 		url.searchParams.set("nonce", "_");
-		if (state) url.searchParams.set("state", state);
 		return url;
 	}
 

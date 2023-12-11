@@ -19,8 +19,8 @@ export class Line implements OAuth2ProviderWithPKCE {
 	}
 
 	public async createAuthorizationURL(
+		state: string,
 		codeVerifier: string,
-		state?: string,
 		options?: {
 			scopes?: string[];
 		}
