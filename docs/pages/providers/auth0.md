@@ -1,3 +1,7 @@
+---
+title: "Auth0"
+---
+
 # Auth0
 
 Implements OpenID Connect.

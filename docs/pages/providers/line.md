@@ -1,3 +1,7 @@
+---
+title: "Line"
+---
+
 # Line
 
 Implements OpenID Connect.

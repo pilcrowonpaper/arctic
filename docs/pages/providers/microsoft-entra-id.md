@@ -1,3 +1,7 @@
+---
+title: "Microsoft Entra ID"
+---
+
 # Microsoft Entra ID
 
 Implements OpenID Connect. By default, `nonce` is set to `_`.

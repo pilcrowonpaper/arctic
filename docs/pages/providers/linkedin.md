@@ -1,3 +1,7 @@
+---
+title: "LinkedIn"
+---
+
 # LinkedIn
 
 Implements OpenID Connect.
