@@ -18,6 +18,7 @@ export class Google implements OAuth2ProviderWithPKCE {
 	}
 
 	public async createAuthorizationURL(
+		state: string,
 		codeVerifier: string,
 		options?: {
 			scopes?: string[];
@@ -28,6 +29,7 @@ export class Google implements OAuth2ProviderWithPKCE {
 			codeVerifier,
 			scopes: [...scopes, "openid"]
 		});
+		url.searchParams.set("state", state);
 		url.searchParams.set("nonce", "_");
 		return url;
 	}

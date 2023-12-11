@@ -56,7 +56,7 @@ export interface OAuth2Provider {
 }
 
 export interface OAuth2ProviderWithPKCE {
-	createAuthorizationURL(codeVerifier: string): Promise<URL>;
+	createAuthorizationURL(state: string, codeVerifier: string): Promise<URL>;
 	validateAuthorizationCode(code: string, codeVerifier: string): Promise<Tokens>;
 	refreshAccessToken?(refreshToken: string): Promise<Tokens>;
 }

@@ -1,4 +1,4 @@
-import { OAuth2Client, generateState } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2ProviderWithPKCE } from "../index.js";
 
@@ -17,6 +17,7 @@ export class Twitter implements OAuth2ProviderWithPKCE {
 	}
 
 	public async createAuthorizationURL(
+		state: string,
 		codeVerifier: string,
 		options?: {
 			scopes?: string[];
@@ -26,7 +27,7 @@ export class Twitter implements OAuth2ProviderWithPKCE {
 			codeVerifier,
 			scopes: options?.scopes
 		});
-		url.searchParams.set("state", generateState());
+		url.searchParams.set("state", state);
 		return url;
 	}
 

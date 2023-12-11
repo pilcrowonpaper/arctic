@@ -17,7 +17,7 @@ const keycloak = new Keycloak(realmURL, clientId, clientSecret, redirectURI);
 ```
 
 ```ts
-const url: URL = await keycloak.createAuthorizationURL(state, {
+const url: URL = await keycloak.createAuthorizationURL(state, codeVerifier, {
 	// optional
 	scopes
 });
