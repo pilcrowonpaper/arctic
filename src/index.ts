@@ -13,7 +13,7 @@ export { Kakao } from "./providers/kakao.js";
 export { Keycloak } from "./providers/keycloak.js";
 export { Line } from "./providers/line.js";
 export { LinkedIn } from "./providers/linkedin.js";
-export { MicrosoftEntraID } from "./providers/microsoft-entra-id.js";
+export { MicrosoftEntraId } from "./providers/microsoft-entra-id.js";
 export { Notion } from "./providers/notion.js";
 export { Reddit } from "./providers/reddit.js";
 export { Salesforce } from "./providers/salesforce.js";
@@ -24,49 +24,29 @@ export { Twitter } from "./providers/twitter.js";
 export { Yahoo } from "./providers/yahoo.js";
 
 export type { AppleCredentials, AppleRefreshedTokens, AppleTokens } from "./providers/apple.js";
-export type { AtlassianTokens, AtlassianUser } from "./providers/atlassian.js";
-export type { Auth0Tokens, Auth0User } from "./providers/auth0.js";
-export type {
-	BitbucketLink,
-	BitbucketLinks,
-	BitbucketTokens,
-	BitbucketUser
-} from "./providers/bitbucket.js";
-export type { BoxTokens, BoxUser } from "./providers/box.js";
-export type { DiscordTokens, DiscordUser } from "./providers/discord.js";
-export type { DropboxRefreshedTokens, DropboxTokens, DropboxUser } from "./providers/dropbox.js";
-export type { FacebookTokens, FacebookUser } from "./providers/facebook.js";
-export type { FigmaRefreshedTokens, FigmaTokens, FigmaUser } from "./providers/figma.js";
-export type {
-	GitHubTokens,
-	GitHubUser,
-	PrivateGitHubUser,
-	PublicGitHubUser
-} from "./providers/github.js";
-export type { GitLabTokens, GitLabUser } from "./providers/gitlab.js";
-export type { GoogleRefreshedTokens, GoogleTokens, GoogleUser } from "./providers/google.js";
-export type {
-	KakaoAccount,
-	KakaoPartner,
-	KakaoProfile,
-	KakaoTokens,
-	KakaoUser
-} from "./providers/kakao.js";
-export type { KeycloakTokens, KeycloakUser } from "./providers/keycloak.js";
-export type { LineRefreshedTokens, LineTokens, LineUser } from "./providers/line.js";
-export type { LinkedInTokens, LinkedInUser } from "./providers/linkedin.js";
-export type {
-	MicrosoftEntraIDTokens,
-	MicrosoftEntraIDUser
-} from "./providers/microsoft-entra-id.js";
-export type { NotionPersonUser, NotionTokens, NotionUser } from "./providers/notion.js";
-export type { RedditTokens, RedditUser } from "./providers/reddit.js";
-export type { SalesforceToken, SalesforceUser } from "./providers/salesforce.js";
-export type { SlackTokens, SlackUser } from "./providers/slack.js";
-export type { SpotifyTokens, SpotifyUser } from "./providers/spotify.js";
-export type { TwitchTokens, TwitchUser } from "./providers/twitch.js";
-export type { TwitterTokens, TwitterUser } from "./providers/twitter.js";
-export type { YahooTokens, YahooUser } from "./providers/yahoo.js";
+export type { AtlassianTokens } from "./providers/atlassian.js";
+export type { Auth0Tokens } from "./providers/auth0.js";
+export type { BitbucketTokens } from "./providers/bitbucket.js";
+export type { BoxTokens } from "./providers/box.js";
+export type { DiscordTokens } from "./providers/discord.js";
+export type { DropboxRefreshedTokens, DropboxTokens } from "./providers/dropbox.js";
+export type { FacebookTokens } from "./providers/facebook.js";
+export type { FigmaRefreshedTokens, FigmaTokens } from "./providers/figma.js";
+export type { GitHubTokens } from "./providers/github.js";
+export type { GitLabTokens } from "./providers/gitlab.js";
+export type { GoogleRefreshedTokens, GoogleTokens } from "./providers/google.js";
+export type { KakaoTokens } from "./providers/kakao.js";
+export type { KeycloakTokens } from "./providers/keycloak.js";
+export type { LineRefreshedTokens, LineTokens } from "./providers/line.js";
+export type { LinkedInTokens } from "./providers/linkedin.js";
+export type { MicrosoftEntraIdTokens } from "./providers/microsoft-entra-id.js";
+export type { NotionTokens } from "./providers/notion.js";
+export type { RedditTokens } from "./providers/reddit.js";
+export type { SlackTokens } from "./providers/slack.js";
+export type { SpotifyTokens } from "./providers/spotify.js";
+export type { TwitchTokens } from "./providers/twitch.js";
+export type { TwitterTokens } from "./providers/twitter.js";
+export type { YahooTokens } from "./providers/yahoo.js";
 
 export { generateCodeVerifier, generateState, OAuth2RequestError } from "oslo/oauth2";
 
@@ -74,16 +54,18 @@ export interface OAuth2Provider {
 	createAuthorizationURL(state: string): Promise<URL>;
 	validateAuthorizationCode(code: string): Promise<Tokens>;
 	refreshAccessToken?(refreshToken: string): Promise<Tokens>;
-	getUser?(accessToken: string): Promise<{}>;
 }
 
 export interface OAuth2ProviderWithPKCE {
-	createAuthorizationURL(codeVerifier: string): Promise<URL>;
+	createAuthorizationURL(state: string, codeVerifier: string): Promise<URL>;
 	validateAuthorizationCode(code: string, codeVerifier: string): Promise<Tokens>;
 	refreshAccessToken?(refreshToken: string): Promise<Tokens>;
-	getUser?(accessToken: string): Promise<{}>;
 }
 
 export interface Tokens {
 	accessToken: string;
+	refreshToken?: string | null;
+	accessTokenExpiresAt?: Date;
+	refreshTokenExpiresAt?: Date | null;
+	idToken?: string;
 }

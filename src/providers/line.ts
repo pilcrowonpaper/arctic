@@ -8,31 +8,31 @@ const tokenEndpoint = "https://api.line.me/oauth2/v2.1/token";
 
 export class Line implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
-	private scope: string[];
 	private clientSecret: string;
 
-	constructor(
-		clientId: string,
-		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			scope?: string[];
-		}
-	) {
+	constructor(clientId: string, clientSecret: string, redirectURI: string) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
-		this.scope = options?.scope ?? [];
-		this.scope.push("profile", "openid");
+
 		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state: generateState(),
+	public async createAuthorizationURL(
+		state: string,
+		codeVerifier: string,
+		options?: {
+			scopes?: string[];
+		}
+	): Promise<URL> {
+		const scopes = options?.scopes ?? [];
+		const url = await this.client.createAuthorizationURL({
 			codeVerifier,
-			scope: this.scope
+			scopes: [...scopes, "openid"]
 		});
+		if (!state) state = generateState();
+		url.searchParams.set("state", state);
+		return url;
 	}
 
 	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<LineTokens> {
@@ -44,21 +44,13 @@ export class Line implements OAuth2ProviderWithPKCE {
 				codeVerifier
 			}
 		);
-		return {
+		const tokens: LineTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			idToken: result.id_token
 		};
-	}
-
-	public async getUser(accessToken: string): Promise<LineUser> {
-		const response = await fetch("https://api.line.me/v2/profile", {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		});
-		return await response.json();
+		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<LineRefreshedTokens> {
@@ -66,11 +58,12 @@ export class Line implements OAuth2ProviderWithPKCE {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-		return {
+		const tokens: LineRefreshedTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
+		return tokens;
 	}
 }
 
@@ -97,10 +90,4 @@ export interface LineTokens {
 	refreshToken: string;
 	accessTokenExpiresAt: Date;
 	idToken: string;
-}
-
-export interface LineUser {
-	sub: string;
-	name: string;
-	picture: string;
 }

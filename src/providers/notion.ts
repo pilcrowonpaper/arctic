@@ -17,10 +17,8 @@ export class Notion implements OAuth2Provider {
 	}
 
 	public async createAuthorizationURL(state: string): Promise<URL> {
-		const url = await this.client.createAuthorizationURL({
-			state
-		});
-		url.searchParams.set("owner", "user");
+		const url = await this.client.createAuthorizationURL();
+		url.searchParams.set("state", state);
 		return url;
 	}
 
@@ -28,34 +26,17 @@ export class Notion implements OAuth2Provider {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			credentials: this.clientSecret
 		});
-		return {
-			accessToken: result.access_token,
-			user: result.owner,
-			botId: result.bot_id
+		const tokens: NotionTokens = {
+			accessToken: result.access_token
 		};
+		return tokens;
 	}
 }
 
 interface TokenResponseBody {
 	access_token: string;
-	owner: NotionUser;
-	bot_id: string;
 }
 
 export interface NotionTokens {
 	accessToken: string;
-	user: NotionUser;
-	botId: string;
-}
-
-export interface NotionUser {
-	type: "person";
-	id: string;
-	name: string;
-	avatar_url: string;
-	person: NotionPersonUser;
-}
-
-export interface NotionPersonUser {
-	email: string;
 }
