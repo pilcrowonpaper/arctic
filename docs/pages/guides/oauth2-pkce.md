@@ -12,7 +12,7 @@ import { Google } from "arctic";
 const google = new Google(clientId, clientSecret, redirectURI);
 ```
 
-### Create authorization URL
+## Create authorization URL
 
 Generate a state and code verifier using `generateState()` and `generateCodeVerifier()`. Use them to create an authorization URL with `createAuthorizationURL()`, store the state and code verifier as cookies, and redirect the user to the authorization url.
 
@@ -45,7 +45,7 @@ setCookie("code_verifier", codeVerifier, {
 return redirect(url);
 ```
 
-### Validate authorization code
+## Validate authorization code
 
 Compare the state, and use `validateAuthorizationCode()` to validate the authorization code with the code verifier. This returns an object with an access token, and a refresh token if requested. If the code is invalid, it will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError/).
 
@@ -74,7 +74,7 @@ try {
 }
 ```
 
-### Refresh access token
+## Refresh access token
 
 If the OAuth provider supports refresh tokens, `refreshAccessToken()` can be used to get a new access token using a refresh token. This will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError/) if the refresh token is invalid.
 

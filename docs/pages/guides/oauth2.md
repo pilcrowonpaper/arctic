@@ -12,7 +12,7 @@ import { Apple } from "arctic";
 const apple = new Apple(clientId, clientSecret, redirectURI);
 ```
 
-### Create authorization URL
+## Create authorization URL
 
 Generate state using `generateState()` and store it as a cookie. Use it to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
 
@@ -37,7 +37,7 @@ setCookie("state", state, {
 return redirect(url);
 ```
 
-### Validate authorization code
+## Validate authorization code
 
 Compare the state, and use `validateAuthorizationCode()` to validate the authorization code. This returns an object with an access token, and a refresh token if requested. If the code or your credentials are invalid, it will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError/).
 
@@ -64,7 +64,7 @@ try {
 }
 ```
 
-### Refresh access token
+## Refresh access token
 
 If the OAuth provider supports refresh tokens, `refreshAccessToken()` can be used to get a new access token using a refresh token. This will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError/) if the refresh token is invalid.
 
