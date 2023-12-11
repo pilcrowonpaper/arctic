@@ -42,6 +42,7 @@ export type { LinkedInTokens } from "./providers/linkedin.js";
 export type { MicrosoftEntraIdTokens } from "./providers/microsoft-entra-id.js";
 export type { NotionTokens } from "./providers/notion.js";
 export type { RedditTokens } from "./providers/reddit.js";
+export type { SalesforceTokens } from "./providers/salesforce.js";
 export type { SlackTokens } from "./providers/slack.js";
 export type { SpotifyTokens } from "./providers/spotify.js";
 export type { TwitchTokens } from "./providers/twitch.js";
