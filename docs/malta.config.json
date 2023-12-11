@@ -30,7 +30,7 @@
 				["Keycloak", "/providers/keycloak"],
 				["Line", "/providers/line"],
 				["LinkedIn", "/providers/linked"],
-				["Microsoft Entra ID", "/providers/microsoft-entra-d"],
+				["Microsoft Entra ID", "/providers/microsoft-entra-id"],
 				["Notion", "/providers/notion"],
 				["Reddit", "/providers/reddit"],
 				["Slack", "/providers/slack"],
