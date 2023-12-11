@@ -1,30 +1,32 @@
-# OAuth 2.0
+---
+title: "OAuth 2.0 with PKCE"
+---
+
+# OAuth 2.0 with PKCE
 
 Most providers require a client ID, client secret, and redirect URI.
 
 ```ts
-import { Apple } from "arctic";
+import { Google } from "arctic";
 
-const apple = new Apple(clientId, clientSecret, redirectURI);
+const google = new Google(clientId, clientSecret, redirectURI);
 ```
 
 ### Create authorization URL
 
-Generate state using `generateState()` and store it as a cookie. Use it to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
+Generate a code verifier using `generateCodeVerifier()` and store it as a cookie. Use it to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
 
 You may optionally pass `scopes`. For providers that implement OpenID Connect, `openid` is always included. There may be more options depending on the provider.
 
 ```ts
-import { generateState } from "arctic";
+import { generateCodeVerifier } from "arctic";
 
-const state = generateState();
+const codeVerifier = generateCodeVerifier();
 
-const url = await github.createAuthorizationURL(state, {
-	scopes: ["user:email"]
-});
+const url = await github.createAuthorizationURL(state, codeVerifier);
 
-// store state as cookie
-setCookie("state", state, {
+// store code verifier as cookie
+setCookie("code_verifier", state, {
 	secure: true, // set to false in localhost
 	path: "/",
 	httpOnly: true,
@@ -35,26 +37,20 @@ return redirect(url);
 
 ### Validate authorization code
 
-Compare the state, and use `validateAuthorizationCode()` to validate the authorization code. This returns an object with an access token, and a refresh token if requested. If the code or your credentials are invalid, it will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError/).
+Use `validateAuthorizationCode()` to validate the authorization code with the code verifier. This returns an object with an access token, and a refresh token if requested. If the code is invalid, it will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError/).
 
 ```ts
 import { OAuth2RequestError } from "arctic";
 
 const code = request.url.searchParams.get("code");
-const state = request.url.searchParams.get("state");
-
-const storedState = getCookie("state");
-
-if (!code || !storedState || state !== storedState) {
-	// 400
-	throw new Error("Invalid request");
-}
+const codeVerifier = request.url.searchParams.get("code_verifier");
 
 try {
-	const tokens = await github.validateAuthorizationCode(code);
+	const tokens = await github.validateAuthorizationCode(code, codeVerifier);
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
-		const { message, description, request } = e;
+		// see https://oslo.js.org/reference/oauth2/OAuth2RequestError/
+		const { request, message, description } = e;
 	}
 	// unknown error
 }

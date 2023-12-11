@@ -1,3 +1,7 @@
+---
+title: "Yahoo"
+---
+
 # Yahoo
 
 Implements OpenID Connect.

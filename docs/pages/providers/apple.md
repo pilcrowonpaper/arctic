@@ -1,3 +1,7 @@
+---
+title: "Apple"
+---
+
 # Apple
 
 Supported scopes are `email` and `name`.

@@ -1,3 +1,7 @@
+---
+title: "Google"
+---
+
 # Google
 
 Implements OpenID Connect. By default, `nonce` is set to `_`.
