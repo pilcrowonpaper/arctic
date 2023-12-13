@@ -4,7 +4,7 @@ title: "Facebook"
 
 # Facebook
 
-For usage, see [OAuth 2.0 provider](../oauth2.md).
+For usage, see [OAuth 2.0 provider](guides/oauth2).
 
 ```ts
 import { Facebook } from "arctic";
