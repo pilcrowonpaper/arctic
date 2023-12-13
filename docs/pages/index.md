@@ -4,7 +4,7 @@ title: "Arctic documentation"
 
 # Arctic documentation
 
-Arctic is an OAuth 2.0 library for JavaScript/TypeScript that supports numerous providers. It runs on any runtime, including Node.js, Bun, Deno, and Cloudflare Workers.G
+Arctic is an OAuth 2.0 library for JavaScript/TypeScript that supports numerous providers. It runs on any runtime, including Node.js, Bun, Deno, and Cloudflare Workers.
 
 ## Installation
 
