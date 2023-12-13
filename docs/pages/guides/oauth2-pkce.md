@@ -67,7 +67,6 @@ try {
 	const tokens = await google.validateAuthorizationCode(code, codeVerifier);
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
-		// see https://oslo.js.org/reference/oauth2/OAuth2RequestError/
 		const { request, message, description } = e;
 	}
 	// unknown error
@@ -85,7 +84,6 @@ try {
 	const tokens = await google.refreshAccessToken(refreshToken);
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
-		// see https://oslo.js.org/reference/oauth2/OAuth2RequestError/
 		const { request, message, description } = e;
 	}
 	// unknown error
