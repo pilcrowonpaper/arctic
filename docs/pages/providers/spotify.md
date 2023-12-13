@@ -9,7 +9,7 @@ For usage, see [OAuth 2.0 provider](../oauth2.md).
 ```ts
 import { Spotify } from "arctic";
 
-const spotify = new Spotify(clientId, clientSecret, redirectURI˝);
+const spotify = new Spotify(clientId, clientSecret, redirectURI);
 ```
 
 ```ts
