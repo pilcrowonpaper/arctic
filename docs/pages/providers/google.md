@@ -11,7 +11,7 @@ For usage, see [OAuth 2.0 provider with PKCE](../oauth2-pkce.md).
 ```ts
 import { Google } from "arctic";
 
-const google = new Google(clientId, clientSecret, redirectURI˝);
+const google = new Google(clientId, clientSecret, redirectURI);
 ```
 
 ```ts
