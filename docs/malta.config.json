@@ -29,7 +29,7 @@
 				["Kakao", "/providers/kakao"],
 				["Keycloak", "/providers/keycloak"],
 				["Line", "/providers/line"],
-				["LinkedIn", "/providers/linked"],
+				["LinkedIn", "/providers/linkedin"],
 				["Microsoft Entra ID", "/providers/microsoft-entra-id"],
 				["Notion", "/providers/notion"],
 				["Reddit", "/providers/reddit"],
