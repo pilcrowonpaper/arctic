@@ -6,7 +6,7 @@ title: "Slack"
 
 Implements OpenID Connect.
 
-For usage, see [OAuth 2.0 provider](guides/oauth2).
+For usage, see [OAuth 2.0 provider](/guides/oauth2).
 
 ```ts
 import { Slack } from "arctic";

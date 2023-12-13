@@ -6,7 +6,7 @@ title: "Google"
 
 Implements OpenID Connect. By default, `nonce` is set to `_`.
 
-For usage, see [OAuth 2.0 provider with PKCE](guides/oauth2-pkce).
+For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
 
 ```ts
 import { Google } from "arctic";

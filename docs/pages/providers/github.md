@@ -4,7 +4,7 @@ title: "GitHub"
 
 # GitHub
 
-For usage, see [OAuth 2.0 provider](guides/oauth2).
+For usage, see [OAuth 2.0 provider](/guides/oauth2).
 
 ```ts
 import { GitHub } from "arctic";

@@ -6,7 +6,7 @@ title: "Apple"
 
 Supported scopes are `email` and `name`.
 
-For usage, see [OAuth 2.0 provider](guides/oauth2).
+For usage, see [OAuth 2.0 provider](/guides/oauth2).
 
 ```ts
 import { Apple } from "arctic";
