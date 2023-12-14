@@ -1,4 +1,4 @@
-****# Arctic
+# Arctic
 
 Arctic is an OAuth 2.0 library for JavaScript/TypeScript that supports numerous providers. It's light weight, fully-typed, and runtime-agnostic. [Read the documentation →](https://arctic.pages.dev)
 
