@@ -15,12 +15,11 @@ const atlassian = new Atlassian(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await atlassian.createAuthorizationURL(state, {
 	// optional
-	scopes,
+	scopes
 });
 const tokens: AtlassianTokens = await atlassian.validateAuthorizationCode(code);
 const tokens: AtlassianTokens = await atlassian.refreshAccessToken(refreshToken);
 ```
-
 
 ## Get user profile
 
