@@ -1,0 +1,52 @@
+{
+	"name": "Arctic",
+	"description": "Arctic is an OAuth 2.0 library that supports numerous providers",
+	"domain": "https://arctic.js.org",
+	"twitter": "@pilcrowonpaper",
+	"sidebar": [
+		{
+			"title": "Guides",
+			"pages": [
+				["OAuth 2.0", "/guides/oauth2"],
+				["OAuth 2.0 with PKCE", "/guides/oauth2-pkce"]
+			]
+		},
+		{
+			"title": "Providers",
+			"pages": [
+				["Apple", "/providers/apple"],
+				["Atlassian", "/providers/atlassian"],
+				["Auth0", "/providers/auth0"],
+				["Bitbucket", "/providers/bitbucket"],
+				["Box", "/providers/box"],
+				["Discord", "/providers/discord"],
+				["Dropbox", "/providers/dropbox"],
+				["Facebook", "/providers/facebook"],
+				["Figma", "/providers/figma"],
+				["GitHub", "/providers/github"],
+				["GitLab", "/providers/gitlab"],
+				["Google", "/providers/google"],
+				["Kakao", "/providers/kakao"],
+				["Keycloak", "/providers/keycloak"],
+				["Line", "/providers/line"],
+				["LinkedIn", "/providers/linkedin"],
+				["Microsoft Entra ID", "/providers/microsoft-entra-id"],
+				["Notion", "/providers/notion"],
+				["Reddit", "/providers/reddit"],
+				["Salesforce", "/providers/salesforce"],
+				["Slack", "/providers/slack"],
+				["Spotify", "/providers/spotify"],
+				["Twitch", "/providers/twitch"],
+				["Twitter", "/providers/twitter"],
+				["Yahoo", "/providers/yahoo"]
+			]
+		},
+		{
+			"title": "Links",
+			"pages": [
+				["GitHub", "https://github.com/pilcrowonpaper/arctic"],
+				["Twitter", "https://twitter.com/pilcrowonpaper"]
+			]
+		}
+	]
+}

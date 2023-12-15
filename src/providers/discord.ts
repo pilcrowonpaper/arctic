@@ -8,30 +8,26 @@ const tokenEndpoint = "https://discord.com/api/oauth2/token";
 
 export class Discord implements OAuth2Provider {
 	private client: OAuth2Client;
-	private scope: string[];
 	private clientSecret: string;
 
-	constructor(
-		clientId: string,
-		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			scope?: string[];
-		}
-	) {
+	constructor(clientId: string, clientSecret: string, redirectURI: string) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
-		this.scope = options?.scope ?? [];
-		this.scope.push("identify");
 		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state,
-			scope: this.scope
+	public async createAuthorizationURL(
+		state: string,
+		options?: {
+			scopes?: string[];
+		}
+	): Promise<URL> {
+		const url = await this.client.createAuthorizationURL({
+			scopes: options?.scopes ?? []
 		});
+		url.searchParams.set("state", state);
+		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<DiscordTokens> {
@@ -39,20 +35,12 @@ export class Discord implements OAuth2Provider {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-		return {
+		const tokens: DiscordTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
-	}
-
-	public async getUser(accessToken: string): Promise<DiscordUser> {
-		const response = await fetch("https://discord.com/api/users/@me", {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		});
-		return await response.json();
+		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<DiscordTokens> {
@@ -60,11 +48,12 @@ export class Discord implements OAuth2Provider {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-		return {
+		const tokens: DiscordTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
+		return tokens;
 	}
 }
 
@@ -78,24 +67,4 @@ export interface DiscordTokens {
 	accessToken: string;
 	refreshToken: string;
 	accessTokenExpiresAt: Date;
-}
-
-export interface DiscordUser {
-	id: string;
-	username: string;
-	discriminator: string;
-	global_name: string | null;
-	avatar: string | null;
-	bot?: boolean;
-	system?: boolean;
-	mfa_enabled?: boolean;
-	verified?: boolean;
-	email?: string | null;
-	flags?: number;
-	banner?: string | null;
-	accent_color?: number | null;
-	premium_type?: number;
-	public_flags?: number;
-	locale?: string;
-	avatar_decoration?: string | null;
 }

@@ -1,38 +1,32 @@
 import { TimeSpan, createDate } from "oslo";
 import { OAuth2Client } from "oslo/oauth2";
-import { sendRequest } from "../request.js";
 
 import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://www.figma.com/oauth";
 const tokenEndpoint = "https://www.figma.com/api/oauth/token";
-const userEndpoint = "https://api.figma.com/v1/me";
 
 export class Figma implements OAuth2Provider {
 	private client: OAuth2Client;
-	private scope: string[];
 	private clientSecret: string;
 
-	constructor(
-		clientId: string,
-		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			scope?: string[];
-		}
-	) {
+	constructor(clientId: string, clientSecret: string, redirectURI: string) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
-		this.scope = options?.scope ?? [];
 		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
+	public async createAuthorizationURL(
+		state: string,
+		options?: {
+			scopes?: string[];
+		}
+	): Promise<URL> {
 		const url = await this.client.createAuthorizationURL({
-			scope: this.scope,
-			state
+			scopes: options?.scopes ?? []
 		});
+		url.searchParams.set("state", state);
 		return url;
 	}
 
@@ -44,18 +38,13 @@ export class Figma implements OAuth2Provider {
 				credentials: this.clientSecret
 			}
 		);
-		return {
+		const tokens: FigmaTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token ?? null,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			userId: result.user_id
 		};
-	}
-
-	public async getUser(accessToken: string): Promise<FigmaUser> {
-		const request = new Request(userEndpoint);
-		request.headers.set("Authorization", `Bearer ${accessToken}`);
-		return await sendRequest<FigmaUser>(request);
+		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<FigmaRefreshedTokens> {
@@ -63,10 +52,11 @@ export class Figma implements OAuth2Provider {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-		return {
+		const tokens: FigmaRefreshedTokens = {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
+		return tokens;
 	}
 }
 
@@ -92,11 +82,4 @@ export interface FigmaTokens {
 export interface FigmaRefreshedTokens {
 	accessToken: string;
 	accessTokenExpiresAt: Date;
-}
-
-export interface FigmaUser {
-	id: string;
-	handle: string;
-	img_url: string;
-	email: string;
 }
