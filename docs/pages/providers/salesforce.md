@@ -23,7 +23,6 @@ const tokens: SalesforceTokens = await salesforce.validateAuthorizationCode(code
 const tokens: SalesforceTokens = await salesforce.refreshAccessToken(refreshToken);
 ```
 
-
 ## Get user profile
 
 Add the `profile` scopes. Optionally add the `email` scopes to get user email.
