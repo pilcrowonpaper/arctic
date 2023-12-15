@@ -15,7 +15,7 @@ const spotify = new Spotify(clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await spotify.createAuthorizationURL(state, {
 	// optional
-	scopes,
+	scopes
 });
 const tokens: SpotifyTokens = await spotify.validateAuthorizationCode(code);
 const tokens: SpotifyTokens = await spotify.refreshAccessToken(refreshToken);

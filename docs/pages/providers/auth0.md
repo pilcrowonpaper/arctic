@@ -19,7 +19,7 @@ const auth0 = new Auth0(appDomain, clientId, clientSecret, redirectURI);
 ```ts
 const url: URL = await auth0.createAuthorizationURL(state, {
 	// optional
-	scopes,
+	scopes
 });
 const tokens: Auth0Tokens = await auth0.validateAuthorizationCode(code);
 const tokens: Auth0Tokens = await auth0.refreshAccessToken(refreshToken);

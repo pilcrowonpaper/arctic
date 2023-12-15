@@ -11,6 +11,7 @@ import { Box } from "arctic";
 
 const box = new Box(clientId, clientSecret, redirectURI);
 ```
+
 ```ts
 const url: URL = await box.createAuthorizationURL(state, {
 	// optional
