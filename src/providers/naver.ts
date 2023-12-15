@@ -50,11 +50,12 @@ export class Naver implements OAuth2Provider {
 			credentials: this.clientSecret
 		});
 
-		return {
+		const tokens: NaverTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
+		return tokens;
 	}
 }
 

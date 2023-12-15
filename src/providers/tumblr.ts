@@ -5,34 +5,30 @@ import { TimeSpan, createDate } from "oslo";
 
 const authorizeEndpoint = "https://www.tumblr.com/oauth2/authorize";
 const tokenEndpoint = "https://api.tumblr.com/v2/oauth2/token";
-const userinfoEndpoint = "https://api.tumblr.com/v2/user/info";
 
 export class Tumblr implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
-	private scope: string[];
 
-	constructor(
-		clientId: string,
-		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			scope?: string[];
-		}
-	) {
+	constructor(clientId: string, clientSecret: string, redirectURI: string) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
 		this.clientSecret = clientSecret;
-		this.scope = options?.scope ?? [];
-		this.scope.push("basic");
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state,
-			scope: this.scope
+	public async createAuthorizationURL(
+		state: string,
+		options?: {
+			scopes?: string[];
+		}
+	): Promise<URL> {
+		const scopes = options?.scopes ?? [];
+		const url = await this.client.createAuthorizationURL({
+			scopes: [...scopes, "basic"]
 		});
+		url.searchParams.set("state", state);
+		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<TumblrTokens> {
@@ -40,20 +36,12 @@ export class Tumblr implements OAuth2Provider {
 			credentials: this.clientSecret
 		});
 
-		return {
+		const tokens: TumblrTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
-	}
-
-	public async getUser(accessToken: string): Promise<TumblrUser> {
-		const response = await fetch(userinfoEndpoint, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		});
-		return await response.json();
+		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<TumblrTokens> {
@@ -62,11 +50,12 @@ export class Tumblr implements OAuth2Provider {
 			credentials: this.clientSecret
 		});
 
-		return {
+		const tokens: TumblrTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
+		return tokens;
 	}
 }
 
@@ -79,22 +68,4 @@ export interface TumblrTokens {
 	accessToken: string;
 	accessTokenExpiresAt: Date;
 	refreshToken: string;
-}
-
-export interface TumblrUser {
-	following: number;
-	default_post_format: "html" | "markdown" | "raw";
-	name: string;
-	likes: number;
-	blogs: TumblrBlog[];
-}
-
-export interface TumblrBlog {
-	name: string;
-	url: string;
-	title: string;
-	primary: boolean;
-	followers: number;
-	tweet: "auto" | "Y" | "N";
-	type: "public" | "private";
 }
