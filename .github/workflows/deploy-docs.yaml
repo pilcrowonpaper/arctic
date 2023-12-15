@@ -23,7 +23,7 @@ jobs:
           tar -xvzf malta.tgz          
       - name: build
         working-directory: docs
-        run: ./linux-amd64/malta
+        run: ./linux-amd64/malta build
       - name: upload pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
