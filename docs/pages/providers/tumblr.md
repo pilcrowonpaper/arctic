@@ -29,4 +29,5 @@ const response = await fetch("https://api.tumblr.com/v2/user/info", {
 });
 const user = await response.json();
 ```
-****
+
+---
