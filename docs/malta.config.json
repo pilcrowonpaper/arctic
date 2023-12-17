@@ -31,7 +31,6 @@
 				["Line", "/providers/line"],
 				["LinkedIn", "/providers/linkedin"],
 				["Microsoft Entra ID", "/providers/microsoft-entra-id"],
-				["Naver", "/providers/naver"],
 				["Notion", "/providers/notion"],
 				["Reddit", "/providers/reddit"],
 				["Salesforce", "/providers/salesforce"],
