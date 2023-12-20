@@ -10,9 +10,15 @@ export class Tumblr implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
 
-	constructor(clientId: string, clientSecret: string, redirectURI: string) {
+	constructor(
+		clientId: string,
+		clientSecret: string,
+		options?: {
+			redirectURI?: string;
+		}
+	) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
+			redirectURI: options?.redirectURI
 		});
 		this.clientSecret = clientSecret;
 	}
