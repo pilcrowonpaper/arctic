@@ -40,6 +40,7 @@ const tokens = await github.validateAuthorizationCode(code);
 - Reddit
 - Salesforce
 - Spotify
+- Tumblr
 - Twitch
 - Twitter
 - Yahoo
