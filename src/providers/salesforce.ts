@@ -33,7 +33,7 @@ export class Salesforce implements OAuth2ProviderWithPKCE {
 	public async validateAuthorizationCode(
 		code: string,
 		codeVerifier: string
-	): Promise<SalesforceToken> {
+	): Promise<SalesforceTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			credentials: this.clientSecret,
 			codeVerifier
@@ -45,7 +45,7 @@ export class Salesforce implements OAuth2ProviderWithPKCE {
 		};
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<SalesforceToken> {
+	public async refreshAccessToken(refreshToken: string): Promise<SalesforceTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret

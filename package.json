@@ -1,7 +1,7 @@
 {
 	"name": "arctic",
 	"type": "module",
-	"version": "0.10.0",
+	"version": "0.10.1G",
 	"description": "OAuth 2.0 with built-in providers",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
