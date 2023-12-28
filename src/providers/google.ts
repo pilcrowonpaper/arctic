@@ -22,14 +22,17 @@ export class Google implements OAuth2ProviderWithPKCE {
 		codeVerifier: string,
 		options?: {
 			scopes?: string[];
+			accessType?: "online" | "offline";
 		}
 	): Promise<URL> {
 		const scopes = options?.scopes ?? [];
+		const accessType = options?.accessType ?? "online";
 		const url = await this.client.createAuthorizationURL({
 			codeVerifier,
 			scopes: [...scopes, "openid"]
 		});
 		url.searchParams.set("state", state);
+		url.searchParams.set("access_type", accessType);
 		url.searchParams.set("nonce", "_");
 		return url;
 	}
