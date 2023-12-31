@@ -64,7 +64,7 @@ if (!code || !storedState || !storedCodeVerifier || state !== storedState) {
 }
 
 try {
-	const tokens = await google.validateAuthorizationCode(code, codeVerifier);
+	const tokens = await google.validateAuthorizationCode(code, storedCodeVerifier);
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		const { request, message, description } = e;
