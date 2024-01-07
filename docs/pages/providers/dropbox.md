@@ -27,10 +27,11 @@ const tokens: DropboxRefreshedTokens = await dropbox.refreshAccessToken(refreshT
 
 Add the `profile` scopes. Optionally add the `email` scopes to get user email.
 
-Parse the ID token or use the `userinfo` endpoint. See [supported claims](https://developers.dropbox.com/oidc-guide#oidc-standard).
+Parse the ID token or use the [`userinfo` endpoint](https://api.dropboxapi.com/2/openid/userinfo). See [supported claims](https://developers.dropbox.com/oidc-guide#oidc-standard).
 
 ```ts
-const response = await fetch("https://api.dropboxapi.com/2/users/get_current_account", {
+const response = await fetch("https://api.dropboxapi.com/2/openid/userinfo", {
+	method: "POST".
 	headers: {
 		Authorization: `Bearer ${accessToken}`
 	}

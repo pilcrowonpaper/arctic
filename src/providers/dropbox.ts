@@ -4,7 +4,7 @@ import { TimeSpan, createDate } from "oslo";
 import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://www.dropbox.com/oauth2/authorize";
-const tokenEndpoint = "https://www.dropbox.com/oauth2/token";
+const tokenEndpoint = "https://api.dropboxapi.com/oauth2/token";
 
 export class Dropbox implements OAuth2Provider {
 	private client: OAuth2Client;
