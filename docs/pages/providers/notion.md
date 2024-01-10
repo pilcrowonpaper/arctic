@@ -22,9 +22,10 @@ const tokens: NotionTokens = await notion.validateAuthorizationCode(code);
 Use the [`/users/me` endpoint](https://developers.notion.com/reference/get-self).
 
 ```ts
+const tokens = await notion.validateAuthorizationCode(code);
 const response = await fetch("https://api.notion.com/v1/users/me", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

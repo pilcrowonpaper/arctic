@@ -30,11 +30,10 @@ export class Tumblr implements OAuth2Provider {
 		}
 	): Promise<URL> {
 		const scopes = options?.scopes ?? [];
-		const url = await this.client.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
+			state,
 			scopes: [...scopes, "basic"]
 		});
-		url.searchParams.set("state", state);
-		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<TumblrTokens> {

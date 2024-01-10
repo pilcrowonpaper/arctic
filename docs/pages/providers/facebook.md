@@ -22,11 +22,13 @@ const tokens: FacebookTokens = await facebook.validateAuthorizationCode(code);
 
 ## Get user profile
 
-Use the `/me` endpoint. See [fields](https://developers.facebook.com/docs/graph-api/reference/user#Reading).
+Use the `/me` endpoint. See [user fields](https://developers.facebook.com/docs/graph-api/reference/user#Reading).
 
 ```ts
+const tokens = await facebook.validateAuthorizationCode(code);
+
 const url = new Request("https://graph.facebook.com/me");
-url.searchParams.set("access_token", accessToken);
+url.searchParams.set("access_token", tokens.accessToken);
 url.searchParams.set("fields", ["id", "name", "picture", "email"].join(","));
 const response = await fetch(url);
 const user = await response.json();

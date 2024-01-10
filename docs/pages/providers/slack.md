@@ -24,10 +24,10 @@ const tokens: SlackTokens = await slack.validateAuthorizationCode(code);
 
 ## Get user profile
 
-Add the `profile` scopes. Optionally add the `email` scopes to get user email.
+Add the `profile` scope. Optionally add the `email` scope to get user email.
 
 ```ts
-const slack = new Slack(clientId, clientSecret, redirectURI, {
+const url = await slack.createAuthorizationURL(state, {
 	scopes: ["profile", "email"]
 });
 ```
@@ -35,9 +35,10 @@ const slack = new Slack(clientId, clientSecret, redirectURI, {
 Parse the ID token or use the `userinfo` endpoint. See [example ID token claims](https://api.slack.com/authentication/sign-in-with-slack#response).
 
 ```ts
+const tokens = await slack.validateAuthorizationCode(code);
 const response = await fetch("https://slack.com/api/openid.connect.userInfo", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

@@ -27,14 +27,21 @@ const tokens: Auth0Tokens = await auth0.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `profile` scopes. Optionally add the `email` scopes to get user email.
+Add the `profile` scope. Optionally add the `email` scope to get user email.
+
+```ts
+const url = await auth0.createAuthorizationURL(state, {
+	scopes: ["profile", "email"]
+});
+```
 
 Parse the ID token or use the `userinfo` endpoint. See [ID token structure](https://auth0.com/docs/secure/tokens/id-tokens/id-token-structure#sample-id-token).
 
 ```ts
+const tokens = await auth0.validateAuthorizationCode(code);
 const response = await fetch("https://xxx.auth.com/userinfo", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

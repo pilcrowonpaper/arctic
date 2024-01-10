@@ -26,12 +26,19 @@ const tokens: GitLabTokens = await gitlab.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `read_user` scopes and use the [`/user` endpoint](https://docs.gitlab.com/ee/api/users.html#list-current-user).
+Add the `read_user` scope and use the [`/user` endpoint](https://docs.gitlab.com/ee/api/users.html#list-current-user).
 
 ```ts
+const url = await gitlab.createAuthorizationURL(state, {
+	scopes: ["read_user"]
+});
+```
+
+```ts
+const tokens = await gitlab.validateAuthorizationCode(code);
 const response = await fetch("https://gitlab.com/api/v4/user", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

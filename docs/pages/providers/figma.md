@@ -26,9 +26,10 @@ const tokens: FigmaRefreshedTokens = await figma.refreshAccessToken(refreshToken
 Use the [`/me` endpoint](https://www.figma.com/developers/api#get-me-endpoint).
 
 ```ts
+const figma = await discord.validateAuthorizationCode(code);
 const response = await fetch("https://api.figma.com/v1/me", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

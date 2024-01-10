@@ -26,9 +26,10 @@ const tokens: RedditTokens = await reddit.refreshAccessToken(refreshToken);
 Use the `/me` endpoint.
 
 ```ts
+const tokens = await reddit.validateAuthorizationCode(code);
 const response = await fetch("https://oauth.reddit.com/api/v1/me", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

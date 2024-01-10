@@ -25,10 +25,10 @@ const tokens: LineRefreshedTokens = await line.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `profile` scopes. Optionally add the `email` scopes to get user email.
+Add the `profile` scope. Optionally add the `email` scope to get user email.
 
 ```ts
-const line = new Line(clientId, clientSecret, redirectURI, {
+const url = await line.createAuthorizationURL(state, codeVerifier, {
 	scopes: ["profile", "email"]
 });
 ```
@@ -36,9 +36,10 @@ const line = new Line(clientId, clientSecret, redirectURI, {
 Parse the ID token or use the `userinfo` endpoint. See [ID token claims](https://developers.line.biz/en/docs/line-login/verify-id-token/#signature).
 
 ```ts
+const tokens = await line.validateAuthorizationCode(code, codeVerifier);
 const response = await fetch("https://api.line.me/oauth2/v2.1/userinfo", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

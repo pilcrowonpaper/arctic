@@ -25,14 +25,21 @@ const tokens: YahooTokens = await yahoo.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `profile` scopes. Optionally add the `email` scopes to get user email.
+Add the `profile` scope. Optionally add the `email` scope to get user email.
+
+```ts
+const url = await yahoo.createAuthorizationURL(state, {
+	scopes: ["profile", "email"]
+});
+```
 
 Parse the ID token or use the `userinfo` endpoint. See [ID token claims](https://developer.yahoo.com/sign-in-with-yahoo/#get-user-info-api).
 
 ```ts
+const tokens = await yahoo.validateAuthorizationCode(code);
 const response = await fetch("https://api.login.yahoo.com/openid/v1/userinfo", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

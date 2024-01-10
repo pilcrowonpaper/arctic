@@ -25,11 +25,10 @@ export class Apple implements OAuth2Provider {
 			scopes?: string[];
 		}
 	): Promise<URL> {
-		const url = await this.client.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
+			state,
 			scopes: options?.scopes
 		});
-		url.searchParams.set("state", state);
-		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<AppleTokens> {
@@ -72,7 +71,7 @@ export class Apple implements OAuth2Provider {
 			issuer: this.credentials.teamId,
 			includeIssuedTimestamp: true,
 			expiresIn: new TimeSpan(5, "m"),
-			audience,
+			audiences: [audience],
 			subject: this.credentials.clientId
 		});
 		return jwt;

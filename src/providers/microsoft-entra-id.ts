@@ -25,10 +25,10 @@ export class MicrosoftEntraId implements OAuth2ProviderWithPKCE {
 	): Promise<URL> {
 		const scopes = options?.scopes ?? [];
 		const url = await this.client.createAuthorizationURL({
+			state,
 			codeVerifier,
 			scopes: [...scopes, "openid"]
 		});
-		url.searchParams.set("state", state);
 		url.searchParams.set("nonce", "_");
 		return url;
 	}

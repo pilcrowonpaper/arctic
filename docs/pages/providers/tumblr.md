@@ -22,9 +22,10 @@ const tokens: TumblrTokens = await tumblr.validateAuthorizationCode(code);
 Use the [`/user/info` endpoint](https://www.tumblr.com/docs/en/api/v2#userinfo--get-a-users-information).
 
 ```ts
+const tokens = await tumblr.validateAuthorizationCode(code);
 const response = await fetch("https://api.tumblr.com/v2/user/info", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

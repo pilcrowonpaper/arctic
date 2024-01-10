@@ -25,20 +25,21 @@ const tokens: GoogleRefreshedTokens = await google.refreshAccessToken(refreshTok
 
 ## Get user profile
 
-Add the `profile` scopes. Optionally add the `email` scopes to get user email.
+Add the `profile` scope. Optionally add the `email` scope to get user email.
 
 ```ts
-const google = new Google(clientId, clientSecret, redirectURI, {
-	scopes: ["profile"]
+const url = await google.createAuthorizationURL(state, codeVerifier, {
+	scopes: ["profile", "email"]
 });
 ```
 
 Parse the ID token or use the `userinfo` endpoint. See [ID token claims](https://developers.google.com/identity/openid-connect/openid-connect#an-id-tokens-payload).
 
 ```ts
+const tokens = await google.validateAuthorizationCode(code, codeVerifier);
 const response = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();
