@@ -30,7 +30,7 @@ Use the [`/user` endpoint](https://docs.github.com/en/rest/users/users?apiVersio
 ```ts
 const response = await fetch("https://api.github.com/user", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();
@@ -38,12 +38,19 @@ const user = await response.json();
 
 ## Get email
 
-Add the `email` scopes and use the [`/user/emails` endpoint](https://docs.github.com/en/rest/users/emails?apiVersion=2022-11-28#list-email-addresses-for-the-authenticated-user).
+Add the `email` scope and use the [`/user/emails` endpoint](https://docs.github.com/en/rest/users/emails?apiVersion=2022-11-28#list-email-addresses-for-the-authenticated-user).
 
 ```ts
+const url = await github.createAuthorizationURL(state, {
+	scopes: ["email"]
+});
+```
+
+```ts
+const tokens = await github.validateAuthorizationCode(code);
 const response = await fetch("https://api.github.com/user/emails", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const emails = await response.json();

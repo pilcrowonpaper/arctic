@@ -26,12 +26,19 @@ const tokens: TwitchTokens = await twitch.refreshAccessToken(refreshToken);
 Use the [`/users` endpoint](https://dev.twitch.tv/docs/api/reference/#get-users) without passing any arguments.
 
 ```ts
+const tokens = await twitch.validateAuthorizationCode(code);
 const response = await fetch("https://api.twitch.tv/helix/users", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();
 ```
 
-Add the `user:read:email` to get the user's email.
+Add the `user:read:email` scope to get the user's email from the API.
+
+```ts
+const url = await twitch.createAuthorizationURL(state, {
+	scopes: ["user:read:email"]
+});
+```

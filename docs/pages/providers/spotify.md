@@ -26,9 +26,10 @@ const tokens: SpotifyTokens = await spotify.refreshAccessToken(refreshToken);
 Use the [`/users/me` endpoint](https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile).
 
 ```ts
+const tokens = await spotify.validateAuthorizationCode(code);
 const response = await fetch("https://api.spotify.com/v1/me", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

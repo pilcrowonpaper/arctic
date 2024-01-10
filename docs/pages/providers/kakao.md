@@ -26,9 +26,10 @@ const tokens: KakaoTokens = await kakao.refreshAccessToken(refreshToken);
 Use the [`/user/me` endpoint](https://developers.kakao.com/docs/latest/en/kakaologin/rest-api#req-user-info).
 
 ```ts
+const tokens = await kakao.validateAuthorizationCode(code);
 const response = await fetch("https://kapi.kakao.com/v2/user/me", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

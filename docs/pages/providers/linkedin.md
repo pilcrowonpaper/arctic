@@ -25,14 +25,21 @@ const tokens: LinkedInTokens = await linkedIn.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `profile` scopes, and optionally add the `email` scopes to get user email.
+Add the `profile` scopes, and optionally add the `email` scope to get user email.
+
+```ts
+const url = await linkedIn.createAuthorizationURL(state, {
+	scopes: ["profile", "email"]
+});
+```
 
 Parse the ID token or use the `userinfo` endpoint. See [ID token claims](https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2#response-body-schema).
 
 ```ts
+const tokens = await linkedIn.validateAuthorizationCode(code);
 const response = await fetch("https://api.linkedin.com/v2/userinfo", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

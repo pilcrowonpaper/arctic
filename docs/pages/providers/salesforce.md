@@ -25,10 +25,10 @@ const tokens: SalesforceTokens = await salesforce.refreshAccessToken(refreshToke
 
 ## Get user profile
 
-Add the `profile` scopes. Optionally add the `email` scopes to get user email.
+Add the `profile` scope. Optionally add the `email` scope to get user email.
 
 ```ts
-const salesforce = new Salesforce(clientId, clientSecret, redirectURI, {
+const url = await salesforce.createAuthorizationURL(state, {
 	scopes: ["profile", "email"]
 });
 ```
@@ -36,9 +36,10 @@ const salesforce = new Salesforce(clientId, clientSecret, redirectURI, {
 Use the [`/userinfo` endpoint](https://help.salesforce.com/s/articleView?id=sf.remoteaccess_using_userinfo_endpoint.htm&type=5).
 
 ```ts
+const tokens = await salesforce.validateAuthorizationCode(code);
 const response = await fetch("https://login.salesforce.com/services/oauth2/userinfo", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

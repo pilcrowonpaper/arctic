@@ -25,15 +25,16 @@ const tokens: DropboxRefreshedTokens = await dropbox.refreshAccessToken(refreshT
 
 ## Get user profile
 
-Add the `profile` scopes. Optionally add the `email` scopes to get user email.
+Add the `profile` scope. Optionally add the `email` scope to get user email.
 
 Parse the ID token or use the [`userinfo` endpoint](https://api.dropboxapi.com/2/openid/userinfo). See [supported claims](https://developers.dropbox.com/oidc-guide#oidc-standard).
 
 ```ts
+const tokens = await dropbox.validateAuthorizationCode(code);
 const response = await fetch("https://api.dropboxapi.com/2/openid/userinfo", {
 	method: "POST".
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();
@@ -48,4 +49,9 @@ Set `access_type` params to `offline`.
 ```ts
 const url = await dropbox.createAuthorizationURL();
 url.searchParams.set("access_type", "offline");
+```
+
+```ts
+const tokens = await dropbox.validateAuthorizationCode(code);
+const refreshToken: string | null = tokens.refreshToken;
 ```

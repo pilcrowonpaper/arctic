@@ -23,12 +23,19 @@ const tokens: DiscordTokens = await discord.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `identity` scopes and use the [`/users/@me` endpoint`]().
+Add the `identity` scope and use the [`/users/@me` endpoint`]().
 
 ```ts
+const url = await discord.createAuthorizationURL(state, {
+	scopes: ["identity"]
+});
+```
+
+```ts
+const tokens = await discord.validateAuthorizationCode(code);
 const response = await fetch("https://discord.com/api/users/@me", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();

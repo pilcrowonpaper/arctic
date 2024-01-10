@@ -25,21 +25,21 @@ const tokens: MicrosoftEntraIdTokens = await entraId.refreshAccessToken(refreshT
 
 ## Get user profile
 
-Add the `profile` scopes. Optionally add the `email` scopes to get user email.
+Add the `profile` scope. Optionally add the `email` scope to get user email.
 
 ```ts
-const url: URL = await entraId.createAuthorizationURL(state, codeVerifier, {
-	// optional
-	scopes: ["profile", "email"] // "openid" always included
+const url = await entraId.createAuthorizationURL(state, codeVerifier, {
+	scopes: ["profile", "email"]
 });
 ```
 
 Parse the ID token or use the `userinfo` endpoint. See [ID token claims](https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference).
 
 ```ts
+const tokens = await entraId.validateAuthorizationCode(code, codeVerifier);
 const response = await fetch("https://graph.microsoft.com/oidc/userinfo", {
 	headers: {
-		Authorization: `Bearer ${accessToken}`
+		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();
