@@ -37,6 +37,7 @@ const tokens = await github.validateAuthorizationCode(code);
 - LinkedIn
 - Microsoft Entra ID
 - Notion
+- Okta
 - Reddit
 - Salesforce
 - Spotify
