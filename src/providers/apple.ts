@@ -71,7 +71,7 @@ export class Apple implements OAuth2Provider {
 			issuer: this.credentials.teamId,
 			includeIssuedTimestamp: true,
 			expiresIn: new TimeSpan(5, "m"),
-			audience,
+			audiences: [audience],
 			subject: this.credentials.clientId
 		});
 		return jwt;
