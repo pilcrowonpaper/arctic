@@ -49,10 +49,17 @@ export class Okta implements OAuth2ProviderWithPKCE {
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<OktaTokens> {
+	public async refreshAccessToken(
+		refreshToken: string,
+		options?: {
+			scopes?: string[];
+		}
+	): Promise<OktaTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
 			authenticateWith: "request_body",
-			credentials: this.clientSecret
+			credentials: this.clientSecret,
+			// To get a refresh token in the first place the "offline_access" scope is needed, thus we can confidently add that here
+			scopes: [...(options?.scopes ?? []), "openid", "offline_access"]
 		});
 
 		const tokens: OktaTokens = {
