@@ -9,9 +9,9 @@ Implements OpenID Connect. By default, `nonce` is set to `_`.
 For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
 
 ```ts
-import { MicrosoftEntraID } from "arctic";
+import { MicrosoftEntraId } from "arctic";
 
-const entraId = new MicrosoftEntraID(clientId, clientSecret, redirectURI);
+const entraId = new MicrosoftEntraId(tenantId, clientId, clientSecret, redirectURI);
 ```
 
 ```ts
@@ -28,8 +28,9 @@ const tokens: MicrosoftEntraIdTokens = await entraId.refreshAccessToken(refreshT
 Add the `profile` scopes. Optionally add the `email` scopes to get user email.
 
 ```ts
-const entraId = new MicrosoftEntraID(clientId, clientSecret, redirectURI, {
-	scopes: ["profile", "email"]
+const url: URL = await entraId.createAuthorizationURL(state, codeVerifier, {
+	// optional
+	scopes: ["profile", "email"] // "openid" always included
 });
 ```
 
