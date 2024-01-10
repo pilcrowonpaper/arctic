@@ -1,4 +1,4 @@
-import { OAuth2Client, generateState } from "oslo/oauth2";
+import { OAuth2Client } from "oslo/oauth2";
 import { TimeSpan, createDate } from "oslo";
 
 import type { OAuth2ProviderWithPKCE } from "../index.js";
@@ -26,13 +26,11 @@ export class Line implements OAuth2ProviderWithPKCE {
 		}
 	): Promise<URL> {
 		const scopes = options?.scopes ?? [];
-		const url = await this.client.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
+			state,
 			codeVerifier,
 			scopes: [...scopes, "openid"]
 		});
-		if (!state) state = generateState();
-		url.searchParams.set("state", state);
-		return url;
 	}
 
 	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<LineTokens> {

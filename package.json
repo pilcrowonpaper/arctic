@@ -30,6 +30,6 @@
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
-		"oslo": "0.24.0"
+		"oslo": "0.27.1"
 	}
 }

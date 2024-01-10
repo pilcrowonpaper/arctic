@@ -16,9 +16,9 @@ export class Box implements OAuth2Provider {
 		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(codeVerifier: string): Promise<URL> {
+	public async createAuthorizationURL(state: string): Promise<URL> {
 		return await this.client.createAuthorizationURL({
-			codeVerifier
+			state
 		});
 	}
 

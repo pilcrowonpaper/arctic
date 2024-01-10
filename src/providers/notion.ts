@@ -17,9 +17,9 @@ export class Notion implements OAuth2Provider {
 	}
 
 	public async createAuthorizationURL(state: string): Promise<URL> {
-		const url = await this.client.createAuthorizationURL();
-		url.searchParams.set("state", state);
-		return url;
+		return await this.client.createAuthorizationURL({
+			state
+		});
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<NotionTokens> {

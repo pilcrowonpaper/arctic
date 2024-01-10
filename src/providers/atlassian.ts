@@ -24,9 +24,9 @@ export class Atlassian implements OAuth2Provider {
 		}
 	): Promise<URL> {
 		const url = await this.client.createAuthorizationURL({
+			state,
 			scopes: options?.scopes
 		});
-		url.searchParams.set("state", state);
 		url.searchParams.set("audience", "api.atlassian.com");
 		url.searchParams.set("prompt", "consent");
 		return url;

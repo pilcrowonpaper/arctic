@@ -23,11 +23,10 @@ export class Slack implements OAuth2Provider {
 		}
 	): Promise<URL> {
 		const scopes = options?.scopes ?? [];
-		const url = await this.client.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
+			state,
 			scopes: [...scopes, "openid"]
 		});
-		url.searchParams.set("state", state);
-		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<SlackTokens> {
