@@ -2,6 +2,8 @@
 title: "OpenID Connect"
 ---
 
+# OpenID Connect
+
 Arctic will use OpenID Connect if the provider supports it. `validateAuthorizationCode()` will return an ID token for OIDC providers, which can be parsed to get the user info.
 
 ```ts
