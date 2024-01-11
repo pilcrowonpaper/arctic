@@ -10,7 +10,7 @@ export class Auth0 implements OAuth2Provider {
 	constructor(appDomain: string, clientId: string, clientSecret: string, redirectURI: string) {
 		this.appDomain = appDomain;
 		const authorizeEndpoint = this.appDomain + "/authorize";
-		const tokenEndpoint = this.appDomain + "/token";
+		const tokenEndpoint = this.appDomain + "/oauth/token";
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
