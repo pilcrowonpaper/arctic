@@ -52,3 +52,13 @@ const response = await fetch("https://${oktaDomain}/oauth2/v1/userinfo", {
 });
 const user = await response.json();
 ```
+
+## Custom auhtorization server
+
+If you are using a [custom authorization server](https://developer.okta.com/docs/concepts/auth-servers/) pass the ID of it to the constructor.
+
+```ts
+import { Okta } from "arctic";
+
+const okta = new Okta(oktaDomain, clientId, clientSecret, redirectURI, authServerId);
+```

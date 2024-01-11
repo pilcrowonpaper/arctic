@@ -6,9 +6,19 @@ export class Okta implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private clientSecret: string;
 
-	constructor(oktaDomain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		const authorizeEndpoint = `https://${oktaDomain}/oauth2/v1/authorize`;
-		const tokenEndpoint = `https://${oktaDomain}/oauth2/v1/token`;
+	constructor(
+		oktaDomain: string,
+		clientId: string,
+		clientSecret: string,
+		redirectURI: string,
+		authServerId?: string
+	) {
+		const authorizeEndpoint = `https://${oktaDomain}/oauth2/${
+			authServerId ? `${authServerId}/` : ""
+		}v1/authorize`;
+		const tokenEndpoint = `https://${oktaDomain}/oauth2/${
+			authServerId ? `${authServerId}/` : ""
+		}v1/token`;
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
