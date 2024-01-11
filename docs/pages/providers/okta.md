@@ -28,8 +28,27 @@ const url: URL = await okta.createAuthorizationURL(state, codeVerifier, {
 
 const tokens: OktaTokens = await okta.validateAuthorizationCode(code, codeVerifier);
 
-const tokens: OktaTokens = await okta.refreshAccessToken(refreshToken, {
-	// optional
-	scopes // "openid" and "offline_access" always included
+const tokens: OktaTokens = await okta.refreshAccessToken(refreshToken);
+```
+
+## Get user profile
+
+Add the `profile` scope for basic information. Optionally add the `email` scope to get user email. See [Scopes](https://developer.okta.com/docs/reference/api/oidc/#scopes) for available scopes.
+
+```ts
+const url = await okta.createAuthorizationURL(state, codeVerifier, {
+	scopes: ["profile", "email"]
 });
+```
+
+Parse the ID token or use the [`userinfo` endpoint](https://developer.okta.com/docs/reference/api/oidc/#userinfo). See [ID token](https://developer.okta.com/docs/reference/api/oidc/#id-token).
+
+```ts
+const tokens = await okta.validateAuthorizationCode(code, codeVerifier);
+const response = await fetch("https://${oktaDomain}/oauth2/v1/userinfo", {
+	headers: {
+		Authorization: `Bearer ${tokens.accessToken}`
+	}
+});
+const user = await response.json();
 ```
