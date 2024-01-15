@@ -27,7 +27,7 @@ Add the `identity` scope and use the [`/users/@me` endpoint`]().
 
 ```ts
 const url = await discord.createAuthorizationURL(state, {
-	scopes: ["identity"]
+	scopes: ["identify"]
 });
 ```
 
