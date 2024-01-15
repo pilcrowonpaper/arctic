@@ -33,6 +33,7 @@
 				["LinkedIn", "/providers/linkedin"],
 				["Microsoft Entra ID", "/providers/microsoft-entra-id"],
 				["Notion", "/providers/notion"],
+				["Okta", "/providers/okta"],
 				["Reddit", "/providers/reddit"],
 				["Salesforce", "/providers/salesforce"],
 				["Slack", "/providers/slack"],
