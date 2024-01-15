@@ -11,13 +11,15 @@ export class Okta implements OAuth2ProviderWithPKCE {
 		clientId: string,
 		clientSecret: string,
 		redirectURI: string,
-		authServerId?: string
+		options: {
+			authServerId?: string;
+		}
 	) {
-		const authorizeEndpoint = `https://${oktaDomain}/oauth2/${
-			authServerId ? `${authServerId}/` : ""
+		const authorizeEndpoint = `${oktaDomain}/oauth2/${
+			options.authServerId ? `${options.authServerId}/` : ""
 		}v1/authorize`;
-		const tokenEndpoint = `https://${oktaDomain}/oauth2/${
-			authServerId ? `${authServerId}/` : ""
+		const tokenEndpoint = `${oktaDomain}/oauth2/${
+			options.authServerId ? `${options.authServerId}/` : ""
 		}v1/token`;
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
