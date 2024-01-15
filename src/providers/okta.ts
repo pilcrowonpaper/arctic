@@ -68,7 +68,7 @@ export class Okta implements OAuth2ProviderWithPKCE {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret,
-			scopes: [...(options?.scopes ?? [])]
+			scopes: options?.scopes ?? []
 		});
 
 		const tokens: OktaTokens = {
