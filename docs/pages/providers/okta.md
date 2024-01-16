@@ -53,7 +53,7 @@ Parse the ID token or use the [`userinfo` endpoint](https://developer.okta.com/d
 
 ```ts
 const tokens = await okta.validateAuthorizationCode(code, codeVerifier);
-const response = await fetch("https://${oktaDomain}/oauth2/v1/userinfo", {
+const response = await fetch(oktaDomain + "/oauth2/v1/userinfo", {
 	headers: {
 		Authorization: `Bearer ${tokens.accessToken}`
 	}
