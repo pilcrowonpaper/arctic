@@ -23,6 +23,7 @@ export { Tumblr } from "./providers/tumblr.js";
 export { Twitch } from "./providers/twitch.js";
 export { Twitter } from "./providers/twitter.js";
 export { Yahoo } from "./providers/yahoo.js";
+export { Okta } from "./providers/okta.js";
 
 export type { AppleCredentials, AppleRefreshedTokens, AppleTokens } from "./providers/apple.js";
 export type { AtlassianTokens } from "./providers/atlassian.js";
@@ -50,6 +51,7 @@ export type { TumblrTokens } from "./providers/tumblr.js";
 export type { TwitchTokens } from "./providers/twitch.js";
 export type { TwitterTokens } from "./providers/twitter.js";
 export type { YahooTokens } from "./providers/yahoo.js";
+export type { OktaTokens } from "./providers/okta.js";
 
 export { generateCodeVerifier, generateState, OAuth2RequestError } from "oslo/oauth2";
 
