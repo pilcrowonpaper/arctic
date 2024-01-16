@@ -33,7 +33,10 @@ const url: URL = await okta.createAuthorizationURL(state, codeVerifier, {
 
 const tokens: OktaTokens = await okta.validateAuthorizationCode(code, codeVerifier);
 
-const tokens: OktaTokens = await okta.refreshAccessToken(refreshToken);
+const tokens: OktaTokens = await okta.refreshAccessToken(refreshToken, {
+  // optional
+  scopes
+});
 ```
 
 ## Get user profile
