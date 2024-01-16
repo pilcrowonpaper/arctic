@@ -38,9 +38,7 @@ Parse the ID token. See [ID token claims](https://developer.apple.com/documentat
 
 ## Requesting scopes
 
-When requesting scopes, the `response_mode` param must be set to `form_post`. Unlike the default `"query"` response mode, **Apple will send an application/x-www-form-urlencoded POST request as the callback,** and the user JSON object will be sent in the request body. This is only available the first time the user signs in.
-
-You must allow cross origin requests from Apple (CORS) and set the state cookie with the `SameSite=None` attribute.
+When requesting scopes, the `response_mode` param must be set to `form_post`. Unlike the default `"query"` response mode, **Apple will send an application/x-www-form-urlencoded POST request as the callback,** and the user JSON object will be sent in the request body. This is only available the first time the user signs in. Make sure to set the state cookie with the `SameSite=None` attribute.
 
 ```ts
 import { generateState } from "arctic";
@@ -70,4 +68,22 @@ app.post("/login/apple/callback", async (request: Request) => {
 		} = user;
 	}
 });
+```
+
+If you have CSRF protection implemented, you must allow form submissions from Apple or disable CSRF protection for specific routes.
+
+```ts
+import { verifyRequestOrigin } from "lucia";
+
+const originHeader = request.headers.get("Origin");
+const hostHeader = request.headers.get("Host");
+if (
+	!originHeader ||
+	!hostHeader ||
+	!verifyRequestOrigin(originHeader, [hostHeader, "appleid.apple.com"])
+) {
+	return new Response(null, {
+		status: 403
+	});
+}
 ```
