@@ -40,9 +40,22 @@ Parse the ID token. See [ID token claims](https://developer.apple.com/documentat
 
 When requesting scopes, the `response_mode` param must be set to `form_post`. Unlike the default `"query"` response mode, **Apple will send an application/x-www-form-urlencoded POST request as the callback,** and the user JSON object will be sent in the request body. This is only available the first time the user signs in.
 
+You must allow cross origin requests from Apple (CORS) and set the state cookie with the `SameSite=None` attribute.
+
 ```ts
-const url = await apple.createAuthorizationURL();
+import { generateState } from "arctic";
+
+const state = generateState();
+const url = await apple.createAuthorizationURL(state);
 url.searchParams.set("response_mode", "query");
+
+setCookie("state", state, {
+	secure: true, // set to false in localhost
+	path: "/",
+	httpOnly: true,
+	maxAge: 60 * 10, // 10 min
+	sameSite: "none" // IMPORTANT!
+});
 ```
 
 ```ts
