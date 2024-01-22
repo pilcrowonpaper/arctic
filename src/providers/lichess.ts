@@ -1,5 +1,5 @@
 import { OAuth2Client } from "oslo/oauth2";
-import type { OAuth2ProviderWithPKCE} from "../index.js";
+import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 const authorizeEndpoint = "https://lichess.org/oauth";
 const tokenEndpoint = "https://lichess.org/api/token";
@@ -7,23 +7,23 @@ const tokenEndpoint = "https://lichess.org/api/token";
 export class Lichess implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private clientId: string;
-    private redirectURI: string;
+	private redirectURI: string;
 	private options?: {
 		scopes?: string[];
 	};
 
 	constructor(
 		clientId: string,
-        redirectURI: string,
+		redirectURI: string,
 		options?: {
-			scopes?: string[]
+			scopes?: string[];
 		}
 	) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
 		this.clientId = clientId;
-        this.redirectURI = redirectURI;
+		this.redirectURI = redirectURI;
 		this.options = options ?? {};
 	}
 
@@ -41,12 +41,14 @@ export class Lichess implements OAuth2ProviderWithPKCE {
 		});
 	}
 
-	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<LichessTokens> {
-		const result = await this.client.validateAuthorizationCode(code, 
-            {
-                authenticateWith: "request_body",
-                codeVerifier,
-            });
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier: string
+	): Promise<LichessTokens> {
+		const result = await this.client.validateAuthorizationCode(code, {
+			authenticateWith: "request_body",
+			codeVerifier
+		});
 		const tokens: LichessTokens = {
 			accessToken: result.access_token
 		};
