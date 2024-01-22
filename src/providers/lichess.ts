@@ -1,5 +1,5 @@
 import { OAuth2Client } from "oslo/oauth2";
-import type { OAuth2ProviderWithPKCE, Tokens } from "../index.js";
+import type { OAuth2ProviderWithPKCE} from "../index.js";
 
 const authorizeEndpoint = "https://lichess.org/oauth";
 const tokenEndpoint = "https://lichess.org/api/token";
