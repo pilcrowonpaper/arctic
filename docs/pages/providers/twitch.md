@@ -30,7 +30,7 @@ const tokens = await twitch.validateAuthorizationCode(code);
 const response = await fetch("https://api.twitch.tv/helix/users", {
 	headers: {
 		Authorization: `Bearer ${tokens.accessToken}`,
-		'Client-Id': clientId
+		"Client-Id": clientId
 	}
 });
 const user = await response.json();
