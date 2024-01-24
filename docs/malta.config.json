@@ -29,6 +29,7 @@
 				["Google", "/providers/google"],
 				["Kakao", "/providers/kakao"],
 				["Keycloak", "/providers/keycloak"],
+				["Lichess", "/providers/lichess"],
 				["Line", "/providers/line"],
 				["LinkedIn", "/providers/linkedin"],
 				["Microsoft Entra ID", "/providers/microsoft-entra-id"],

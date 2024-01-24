@@ -33,6 +33,7 @@ const tokens = await github.validateAuthorizationCode(code);
 - Google
 - Kakao
 - Keycloak
+- Lichess
 - Line
 - LinkedIn
 - Microsoft Entra ID
