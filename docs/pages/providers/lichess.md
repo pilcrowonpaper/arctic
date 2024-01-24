@@ -17,13 +17,15 @@ export const lichess = new Lichess(clientId, redirectURI);
 Use the [/api/account](https://lichess.org/api#tag/Account/operation/accountMe) endpoint
 
 ```ts
+import type { LichessUser } from "arctic";
+
 const tokens = await lichess.validateAuthorizationCode(code);
 const lichessUserResponse = await fetch("https://lichess.org/api/account/", {
 	headers: {
 		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
-const lichessUser = await lichessUserResponse.json();
+const lichessUser: LichessUser = await lichessUserResponse.json();
 ```
 
 ## Get user email

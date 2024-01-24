@@ -40,7 +40,7 @@ export type { GitLabTokens } from "./providers/gitlab.js";
 export type { GoogleRefreshedTokens, GoogleTokens } from "./providers/google.js";
 export type { KakaoTokens } from "./providers/kakao.js";
 export type { KeycloakTokens } from "./providers/keycloak.js";
-export type { LichessTokens } from "./providers/lichess.js";
+export type { LichessTokens, LichessUser } from "./providers/lichess.js";
 export type { LineRefreshedTokens, LineTokens } from "./providers/line.js";
 export type { LinkedInTokens } from "./providers/linkedin.js";
 export type { MicrosoftEntraIdTokens } from "./providers/microsoft-entra-id.js";
