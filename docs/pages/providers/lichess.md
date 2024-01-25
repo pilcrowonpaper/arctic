@@ -28,13 +28,14 @@ const user = await lichessUserResponse.json();
 
 ## Get user email
 
-Add the `email` scope and use the [/api/account/email](https://lichess.org/api#tag/Account/operation/accountEmail) endpoint
+Add the `email:read` scope and use the [/api/account/email](https://lichess.org/api#tag/Account/operation/accountEmail) endpoint
 
 ```ts
 const url = await lichess.createAuthorizationURL(state, codeVerifier, {
 	scopes: ["email:read"]
 });
 ```
+
 ```ts
 const tokens = await lichess.validateAuthorizationCode(code);
 const liichessEmailResponse = await fetch("https://lichess.org/api/account/email", {
@@ -42,5 +43,5 @@ const liichessEmailResponse = await fetch("https://lichess.org/api/account/email
 		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
-const { email } = await lichessUserResponse.json()
+const { email } = await lichessUserResponse.json();
 ```
