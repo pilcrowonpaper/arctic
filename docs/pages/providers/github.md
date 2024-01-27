@@ -11,7 +11,7 @@ import { GitHub } from "arctic";
 
 const github = new GitHub(clientId, clientSecret, {
 	// optional
-	redirectURI
+	redirectURI // required when multiple redirect URIs are defined
 });
 ```
 
