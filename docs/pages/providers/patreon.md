@@ -17,8 +17,8 @@ const url: URL = await patreon.createAuthorizationURL(state, {
 	// optional
 	scopes
 });
-const tokens: DiscordTokens = await patreon.validateAuthorizationCode(code);
-const tokens: DiscordTokens = await patreon.refreshAccessToken(refreshToken);
+const tokens: PatreonTokens = await patreon.validateAuthorizationCode(code);
+const tokens: PatreonTokens = await patreon.refreshAccessToken(refreshToken);
 ```
 
 ## Get user profile
