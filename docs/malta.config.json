@@ -35,6 +35,7 @@
 				["Microsoft Entra ID", "/providers/microsoft-entra-id"],
 				["Notion", "/providers/notion"],
 				["Okta", "/providers/okta"],
+				["Patreon", "/providers/patreon"],
 				["Reddit", "/providers/reddit"],
 				["Salesforce", "/providers/salesforce"],
 				["Slack", "/providers/slack"],
