@@ -53,5 +53,6 @@ For a flexible OAuth 2.0 client, see [`oslo/oauth2`](http://github.com/pilcrowon
 - Tumblr
 - Twitch
 - Twitter
+- WorkOS
 - Yahoo
 - Zoom

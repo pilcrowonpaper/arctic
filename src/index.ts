@@ -30,6 +30,7 @@ export { Strava } from "./providers/strava.js";
 export { Tumblr } from "./providers/tumblr.js";
 export { Twitch } from "./providers/twitch.js";
 export { Twitter } from "./providers/twitter.js";
+export { WorkOS } from "./providers/workos.js";
 export { Yahoo } from "./providers/yahoo.js";
 export { Zoom } from "./providers/zoom.js";
 
@@ -69,6 +70,7 @@ export type { StravaTokens } from "./providers/strava.js";
 export type { TumblrTokens } from "./providers/tumblr.js";
 export type { TwitchTokens } from "./providers/twitch.js";
 export type { TwitterTokens } from "./providers/twitter.js";
+export type { WorkOSTokens } from "./providers/workos.js";
 export type { YahooTokens } from "./providers/yahoo.js";
 export type { ZoomTokens } from "./providers/zoom.js";
 
