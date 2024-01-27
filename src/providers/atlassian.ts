@@ -4,7 +4,7 @@ import { TimeSpan, createDate } from "oslo";
 import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://auth.atlassian.com/authorize";
-const tokenEndpoint = "https://auth.atlassian.com/token";
+const tokenEndpoint = "https://auth.atlassian.com/oauth/token";
 
 export class Atlassian implements OAuth2Provider {
 	private client: OAuth2Client;
