@@ -50,3 +50,4 @@ const tokens = await github.validateAuthorizationCode(code);
 - Twitch
 - Twitter
 - Yahoo
+- Zoom

@@ -29,6 +29,7 @@ export { Tumblr } from "./providers/tumblr.js";
 export { Twitch } from "./providers/twitch.js";
 export { Twitter } from "./providers/twitter.js";
 export { Yahoo } from "./providers/yahoo.js";
+export { Zoom } from "./providers/zoom.js";
 
 export type {
 	AmazonCognitoRefreshedTokens,
@@ -65,6 +66,7 @@ export type { TumblrTokens } from "./providers/tumblr.js";
 export type { TwitchTokens } from "./providers/twitch.js";
 export type { TwitterTokens } from "./providers/twitter.js";
 export type { YahooTokens } from "./providers/yahoo.js";
+export type { ZoomTokens } from "./providers/zoom.js";
 
 export { generateCodeVerifier, generateState, OAuth2RequestError } from "oslo/oauth2";
 
