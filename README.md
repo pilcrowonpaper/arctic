@@ -25,6 +25,7 @@ const tokens = await github.validateAuthorizationCode(code);
 - Auth0
 - Bitbucket
 - Box
+- Coinbase
 - Discord
 - Dropbox
 - Facebook
