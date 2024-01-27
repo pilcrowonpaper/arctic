@@ -23,7 +23,7 @@ const tokens: DiscordTokens = await discord.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `identify` scope and use the [`/users/@me` endpoint`]().
+Add the `identify` scope and use the [`/users/@me` endpoint`](https://discord.com/developers/docs/resources/user#get-current-user).
 
 ```ts
 const url = await discord.createAuthorizationURL(state, {
