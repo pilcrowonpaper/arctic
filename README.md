@@ -15,7 +15,9 @@ const authorizationURL = await github.createAuthorizationURL(state, {
 const tokens = await github.validateAuthorizationCode(code);
 ```
 
-> For a more flexible OAuth 2.0 client, see [`oslo/oauth2`](http://github.com/pilcrowonpaper/oslo).
+For a flexible OAuth 2.0 client, see [`oslo/oauth2`](http://github.com/pilcrowonpaper/oslo).
+
+> Arctic only supports providers that strictly follow the OAuth 2.0 spec (including PKCEG).
 
 ## Supported providers
 
