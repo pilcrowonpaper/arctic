@@ -19,6 +19,7 @@ const tokens = await github.validateAuthorizationCode(code);
 
 ## Supported providers
 
+- Amazon Cognito
 - Apple
 - Atlassian
 - Auth0

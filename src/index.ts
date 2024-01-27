@@ -1,3 +1,4 @@
+export { AmazonCognito } from "./providers/amazon-cognito.js";
 export { Apple } from "./providers/apple.js";
 export { Atlassian } from "./providers/atlassian.js";
 export { Auth0 } from "./providers/auth0.js";
@@ -27,6 +28,10 @@ export { Twitch } from "./providers/twitch.js";
 export { Twitter } from "./providers/twitter.js";
 export { Yahoo } from "./providers/yahoo.js";
 
+export type {
+	AmazonCognitoRefreshedTokens,
+	AmazonCognitoTokens
+} from "./providers/amazon-cognito.js";
 export type { AppleCredentials, AppleRefreshedTokens, AppleTokens } from "./providers/apple.js";
 export type { AtlassianTokens } from "./providers/atlassian.js";
 export type { Auth0Tokens } from "./providers/auth0.js";
