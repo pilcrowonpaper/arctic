@@ -46,7 +46,8 @@
 				["Tumblr", "/providers/tumblr"],
 				["Twitch", "/providers/twitch"],
 				["Twitter", "/providers/twitter"],
-				["Yahoo", "/providers/yahoo"]
+				["Yahoo", "/providers/yahoo"],
+				["Zoom", "/providers/zoom"]
 			]
 		},
 		{

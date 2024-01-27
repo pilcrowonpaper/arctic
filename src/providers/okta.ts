@@ -1,6 +1,7 @@
 import { OAuth2Client } from "oslo/oauth2";
-import type { OAuth2ProviderWithPKCE } from "../index.js";
 import { TimeSpan, createDate } from "oslo";
+
+import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 export class Okta implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
