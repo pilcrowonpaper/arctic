@@ -21,6 +21,7 @@
 				["Auth0", "/providers/auth0"],
 				["Bitbucket", "/providers/bitbucket"],
 				["Box", "/providers/box"],
+				["Coinbase", "/providers/coinbase"],
 				["Discord", "/providers/discord"],
 				["Dropbox", "/providers/dropbox"],
 				["Facebook", "/providers/facebook"],
