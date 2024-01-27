@@ -32,6 +32,7 @@
 				["Keycloak", "/providers/keycloak"],
 				["Lichess", "/providers/lichess"],
 				["Line", "/providers/line"],
+				["Linear", "/providers/linear"],
 				["LinkedIn", "/providers/linkedin"],
 				["Microsoft Entra ID", "/providers/microsoft-entra-id"],
 				["Notion", "/providers/notion"],

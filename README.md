@@ -36,6 +36,7 @@ const tokens = await github.validateAuthorizationCode(code);
 - Keycloak
 - Lichess
 - Line
+- Linear
 - LinkedIn
 - Microsoft Entra ID
 - Notion
