@@ -4,7 +4,7 @@ import { TimeSpan, createDate } from "oslo";
 import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://www.coinbase.com/oauth/authorize";
-const tokenEndpoint = "https://www.coinbase.com/oauth/toke";
+const tokenEndpoint = "https://www.coinbase.com/oauth/token";
 
 export class Coinbase implements OAuth2Provider {
 	private client: OAuth2Client;
