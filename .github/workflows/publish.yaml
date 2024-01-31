@@ -2,7 +2,7 @@ name: "Publish package and docs"
 on: [push]
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -26,8 +26,8 @@ jobs:
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org/"
-      - name: Install Auri
-        run: npm install -g auri@1.0.2
+      - name: Install dependencies
+        run: npm install
       - name: Prepare release
         run: npx auri prepare ${{ github.ref_name }}
       - name: Publish package
