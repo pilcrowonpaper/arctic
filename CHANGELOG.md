@@ -1,5 +1,11 @@
 # arctic
 
+## 1.1.3
+
+### Patch changes
+
+- Fix: Use request body for sending credentials in Dropbox provider ([#55](https://github.com/pilcrowOnPaper/arctic/pull/55))
+
 ## 1.1.0
 
 - Add Patreon provider [#46](https://github.com/pilcrowOnPaper/arctic/pull/46)
