@@ -1,1 +1,0 @@
-Fix: Use request body for sending credentials in Dropbox provider
