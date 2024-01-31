@@ -1,5 +1,9 @@
 # arctic
 
+## 1.1.1
+
+Fix formatting
+
 ## 1.1.0
 
 - Add Patreon provider [#46](https://github.com/pilcrowOnPaper/arctic/pull/46)
