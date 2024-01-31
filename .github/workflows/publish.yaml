@@ -1,0 +1,71 @@
+name: "Publish package and docs"
+on: [push]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  AURI_GITHUB_TOKEN: ${{secrets.AURI_GITHUB_TOKEN}}
+  NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
+
+jobs:
+  publish-package:
+    name: Publish package
+    runs-on: ubuntu-latest
+    outputs:
+      changesets: ${{steps.check-changesets.outputs.changesets}}
+    steps:
+      - name: Setup actions
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org/"
+      - name: Install Auri
+        run: npm install -g auri@1.0.2
+      - name: Prepare release
+        run: npx auri prepare ${{ github.ref_name }}
+      - name: Publish package
+        run: npx auri publish ${{ github.ref_name }}
+
+  check-changesets:
+    name: Check changesets
+    needs: publish-package
+    runs-on: ubuntu-latest
+    outputs:
+      changesets: ${{steps.check-changesets.outputs.changesets}}
+    steps:
+      - name: Check if ".changesets" directory has files
+        id: check-changesets
+        run: |
+          if [ -z "$(ls -A .changesets)" ]; then
+            echo "changesets=0" >> "$GITHUB_OUTPUT"
+          else
+            echo "changesets=1" >> "$GITHUB_OUTPUT"
+          fi
+
+  publish-docs:
+    name: Publish docs
+    needs: check-changesets
+    if: needs.check-changesets.check-changesets.outputs.changesets == 0 && github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup actions
+        uses: actions/checkout@v3
+      - name: install malta
+        working-directory: docs
+        run: |
+          curl -o malta.tgz -L https://github.com/pilcrowonpaper/malta/releases/latest/download/linux-amd64.tgz
+          tar -xvzf malta.tgz
+      - name: build
+        working-directory: docs
+        run: ./linux-amd64/malta build
+      - name: upload pages artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: "docs/dist"
