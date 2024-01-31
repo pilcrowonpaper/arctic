@@ -1,4 +1,4 @@
-# Changelog
+# arctic
 
 ## 1.1.0
 
