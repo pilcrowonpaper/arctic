@@ -30,6 +30,7 @@
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
+		"auri": "1.0.2",
 		"oslo": "1.0.1"
 	}
 }
