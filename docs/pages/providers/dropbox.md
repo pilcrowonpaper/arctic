@@ -6,7 +6,7 @@ title: "Dropbox"
 
 Implements OpenID Connect.
 
-For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
+For usage, see [OAuth 2.0 provider](/guides/oauth2).
 
 ```ts
 import { Dropbox } from "arctic";
