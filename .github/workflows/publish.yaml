@@ -54,10 +54,13 @@ jobs:
     needs: check-changesets
     if: needs.check-changesets.check-changesets.outputs.changesets == 0 && github.ref_name == 'main'
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: setup actions
+      - name: Set up actions
         uses: actions/checkout@v3
-      - name: install malta
+      - name: Install malta
         working-directory: docs
         run: |
           curl -o malta.tgz -L https://github.com/pilcrowonpaper/malta/releases/latest/download/linux-amd64.tgz
@@ -65,7 +68,10 @@ jobs:
       - name: build
         working-directory: docs
         run: ./linux-amd64/malta build
-      - name: upload pages artifact
+      - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
           path: "docs/dist"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
