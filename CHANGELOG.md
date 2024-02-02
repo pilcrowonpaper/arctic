@@ -1,5 +1,11 @@
 # arctic
 
+## 1.1.4
+
+### Patch changes
+
+- Fix: Fix spotify provider refresh token not being passed the credentials ([#60](https://github.com/pilcrowOnPaper/arctic/pull/60))
+
 ## 1.1.3
 
 ### Patch changes
