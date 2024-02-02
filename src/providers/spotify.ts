@@ -42,7 +42,9 @@ export class Spotify implements OAuth2Provider {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<SpotifyTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken);
+		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
+			credentials: this.clientSecret
+		});
 		const tokens: SpotifyTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
