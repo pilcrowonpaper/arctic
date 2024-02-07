@@ -1,5 +1,11 @@
 # arctic
 
+## 1.1.5
+
+### Patch changes
+
+- Fix: Fix wrong refresh token expiration date in Keycloak provider ([#65](https://github.com/pilcrowOnPaper/arctic/pull/65))
+
 ## 1.1.4
 
 ### Patch changes
