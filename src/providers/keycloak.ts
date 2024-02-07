@@ -45,7 +45,7 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			refreshToken: result.refresh_token,
-			refreshTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
+			refreshTokenExpiresAt: createDate(new TimeSpan(result.refresh_expires_in, "s")),
 			idToken: result.id_token
 		};
 		return tokens;
@@ -60,7 +60,7 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			refreshToken: result.refresh_token,
-			refreshTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
+			refreshTokenExpiresAt: createDate(new TimeSpan(result.refresh_expires_in, "s")),
 			idToken: result.id_token
 		};
 		return tokens;
