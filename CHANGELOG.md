@@ -1,5 +1,11 @@
 # arctic
 
+## 1.1.6
+
+### Patch changes
+
+- Fix Atlassian refresh token method ([#67](https://github.com/pilcrowOnPaper/arctic/pull/67))
+
 ## 1.1.5
 
 ### Patch changes
