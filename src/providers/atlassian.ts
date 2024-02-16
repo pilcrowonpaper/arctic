@@ -46,7 +46,7 @@ export class Atlassian implements OAuth2Provider {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<AtlassianTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(refreshToken, {
+		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
