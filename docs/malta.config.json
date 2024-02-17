@@ -23,6 +23,7 @@
 				["Box", "/providers/box"],
 				["Coinbase", "/providers/coinbase"],
 				["Discord", "/providers/discord"],
+				["Dribbble", "/providers/dribbble"],
 				["Dropbox", "/providers/dropbox"],
 				["Facebook", "/providers/facebook"],
 				["Figma", "/providers/figma"],
