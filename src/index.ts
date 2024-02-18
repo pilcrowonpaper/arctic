@@ -11,6 +11,7 @@ export { Dropbox } from "./providers/dropbox.js";
 export { Facebook } from "./providers/facebook.js";
 export { Figma } from "./providers/figma.js";
 export { GitHub } from "./providers/github.js";
+export { GitLab } from "./providers/gitlab.js";
 export { Google } from "./providers/google.js";
 export { Kakao } from "./providers/kakao.js";
 export { Keycloak } from "./providers/keycloak.js";
