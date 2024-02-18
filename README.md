@@ -29,6 +29,7 @@ For a flexible OAuth 2.0 client, see [`oslo/oauth2`](http://github.com/pilcrowon
 - Box
 - Coinbase
 - Discord
+- Dribbble
 - Dropbox
 - Facebook
 - Figma
