@@ -29,22 +29,15 @@ export class Dribbble implements OAuth2Provider {
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<DribbbleTokens> {
-		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
-			code,
-			{
-				authenticateWith: "request_body",
-				credentials: this.clientSecret
-			}
-		);
+		const result = await this.client.validateAuthorizationCode(code, {
+			authenticateWith: "request_body",
+			credentials: this.clientSecret
+		});
 		const tokens: DribbbleTokens = {
-			accessToken: result.access_token,
+			accessToken: result.access_token
 		};
 		return tokens;
 	}
-}
-
-interface AuthorizationCodeResponseBody {
-	access_token: string;
 }
 
 export interface DribbbleTokens {
