@@ -1,5 +1,15 @@
 # arctic
 
+## 1.2.0
+
+### Minor changes
+
+- Add Dribbble provider ([#69](https://github.com/pilcrowOnPaper/arctic/pull/69))
+
+### Patch changes
+
+- Fix: Export GitLab provider ([#73](https://github.com/pilcrowOnPaper/arctic/pull/73))
+
 ## 1.1.6
 
 ### Patch changes
