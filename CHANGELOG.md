@@ -1,5 +1,11 @@
 # arctic
 
+## 1.2.1
+
+### Patch changes
+
+- Move `auri` to dev dependencies. ([#75](https://github.com/pilcrowOnPaper/arctic/pull/75))
+
 ## 1.2.0
 
 ### Minor changes
