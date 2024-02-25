@@ -1,0 +1,1 @@
+Move `auri` to dev dependencies.
