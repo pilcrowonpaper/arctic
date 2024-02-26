@@ -2,9 +2,6 @@ import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2Provider } from "../index.js";
 
-const authorizeEndpoint = "https://github.com/login/oauth/authorize";
-const tokenEndpoint = "https://github.com/login/oauth/access_token";
-
 export class GitHub implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
@@ -14,8 +11,18 @@ export class GitHub implements OAuth2Provider {
 		clientSecret: string,
 		options?: {
 			redirectURI?: string;
+			/** Configuration for usage with [GitHub Enterprise Server](https://docs.github.com/en/enterprise-server/get-started). */
+			enterprise?: {
+				/** The base URL of your GitHub Enterprise Server instance. */
+				baseUrl?: string;
+			};
 		}
 	) {
+		const baseUrl = options?.enterprise?.baseUrl ?? "https://github.com";
+
+		const authorizeEndpoint = `${baseUrl}/login/oauth/authorize`;
+		const tokenEndpoint = `${baseUrl}/login/oauth/access_token`;
+
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI: options?.redirectURI
 		});
