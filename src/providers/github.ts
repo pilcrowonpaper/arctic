@@ -11,14 +11,10 @@ export class GitHub implements OAuth2Provider {
 		clientSecret: string,
 		options?: {
 			redirectURI?: string;
-			/** Configuration for usage with [GitHub Enterprise Server](https://docs.github.com/en/enterprise-server/get-started). */
-			enterprise?: {
-				/** The base URL of your GitHub Enterprise Server instance. */
-				baseUrl?: string;
-			};
+			enterpriseDomain?: string;
 		}
 	) {
-		const baseUrl = options?.enterprise?.baseUrl ?? "https://github.com";
+		const baseUrl = options?.enterpriseDomain ?? "https://github.com";
 
 		const authorizeEndpoint = `${baseUrl}/login/oauth/authorize`;
 		const tokenEndpoint = `${baseUrl}/login/oauth/access_token`;
