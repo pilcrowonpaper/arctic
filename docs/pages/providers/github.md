@@ -42,7 +42,7 @@ Add the `email` scope and use the [`/user/emails` endpoint](https://docs.github.
 
 ```ts
 const url = await github.createAuthorizationURL(state, {
-	scopes: ["email"]
+	scopes: ["user:email"]
 });
 ```
 
