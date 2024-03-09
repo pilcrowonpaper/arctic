@@ -4,7 +4,7 @@ title: "Google"
 
 # Google
 
-Implements OpenID Connect. By default, `nonce` is set to `_`.
+Implements OpenID Connect.
 
 For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
 
