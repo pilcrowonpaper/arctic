@@ -11,8 +11,8 @@ import { GitHub } from "arctic";
 
 const github = new GitHub(clientId, clientSecret, {
 	// optional
-	redirectURI // required when multiple redirect URIs are defined
-    enterpriseDomain // the base URL of your GitHub Enterprise Server instance.
+	redirectURI, // required when multiple redirect URIs are defined
+	enterpriseDomain: "https://example.com" // the base URL of your GitHub Enterprise Server instance
 });
 ```
 
@@ -37,17 +37,6 @@ const response = await fetch("https://api.github.com/user", {
 const user = await response.json();
 ```
 
-With [GitHub Enterprise Server](https://docs.github.com/en/enterprise-server/get-started)
-
-```ts
-const response = await fetch("https://[GITHUB_ENTERPRISE_DOMAIN/api/v3/user", {
-	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
-	}
-});
-const user = await response.json();
-```
-
 ## Get email
 
 Add the `email` scope and use the [`/user/emails` endpoint](https://docs.github.com/en/rest/users/emails?apiVersion=2022-11-28#list-email-addresses-for-the-authenticated-user).
@@ -61,18 +50,6 @@ const url = await github.createAuthorizationURL(state, {
 ```ts
 const tokens = await github.validateAuthorizationCode(code);
 const response = await fetch("https://api.github.com/user/emails", {
-	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
-	}
-});
-const emails = await response.json();
-```
-
-With [GitHub Enterprise Server](https://docs.github.com/en/enterprise-server/get-started)
-
-```ts
-const tokens = await github.validateAuthorizationCode(code);
-const response = await fetch("https://[GITHUB_ENTERPRISE_DOMAIN/api/v3/user/emails", {
 	headers: {
 		Authorization: `Bearer ${tokens.accessToken}`
 	}
