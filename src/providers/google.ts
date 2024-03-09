@@ -25,13 +25,11 @@ export class Google implements OAuth2ProviderWithPKCE {
 		}
 	): Promise<URL> {
 		const scopes = options?.scopes ?? [];
-		const url = await this.client.createAuthorizationURL({
+		return await this.client.createAuthorizationURL({
 			state,
 			codeVerifier,
 			scopes: [...scopes, "openid"]
 		});
-		url.searchParams.set("nonce", "_");
-		return url;
 	}
 
 	public async validateAuthorizationCode(
