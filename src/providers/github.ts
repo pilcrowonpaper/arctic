@@ -16,8 +16,8 @@ export class GitHub implements OAuth2Provider {
 	) {
 		const baseUrl = options?.enterpriseDomain ?? "https://github.com";
 
-		const authorizeEndpoint = `${baseUrl}/login/oauth/authorize`;
-		const tokenEndpoint = `${baseUrl}/login/oauth/access_token`;
+		const authorizeEndpoint = baseUrl + "/login/oauth/authorize";
+		const tokenEndpoint = baseUrl + "/login/oauth/access_token";
 
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI: options?.redirectURI
