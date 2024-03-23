@@ -11,6 +11,8 @@ import { GitHub } from "arctic";
 
 const github = new GitHub(clientId, clientSecret, {
 	// optional
+	authorizeEndpoint, // can be overridden for usage with GitHub Enterprise
+	tokenEndpoint, // can be overridden for usage with GitHub Enterprise
 	redirectURI // required when multiple redirect URIs are defined
 });
 ```
@@ -35,6 +37,8 @@ const response = await fetch("https://api.github.com/user", {
 });
 const user = await response.json();
 ```
+
+Usage with an GitHub Enterprise instance would be as easy as changing the API-Endpoint URL to `http(s)://HOSTNAME/api/v3`.
 
 ## Get email
 
