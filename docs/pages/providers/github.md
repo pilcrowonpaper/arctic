@@ -11,7 +11,8 @@ import { GitHub } from "arctic";
 
 const github = new GitHub(clientId, clientSecret, {
 	// optional
-	redirectURI // required when multiple redirect URIs are defined
+	redirectURI, // required when multiple redirect URIs are defined
+	enterpriseDomain: "https://example.com" // the base URL of your GitHub Enterprise Server instance
 });
 ```
 
