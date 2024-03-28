@@ -42,8 +42,7 @@ export class MyAnimeList implements OAuth2ProviderWithPKCE {
 		const tokens: MyAnimeListTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token
+			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
 		return tokens;
 	}
@@ -55,8 +54,7 @@ export class MyAnimeList implements OAuth2ProviderWithPKCE {
 		const tokens: MyAnimeListTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token
+			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
 		return tokens;
 	}
@@ -66,12 +64,10 @@ interface TokenResponseBody {
 	access_token: string;
 	refresh_token: string;
 	expires_in: number;
-	id_token: string;
 }
 
 export interface MyAnimeListTokens {
 	accessToken: string;
 	refreshToken: string;
 	accessTokenExpiresAt: Date;
-	idToken: string;
 }
