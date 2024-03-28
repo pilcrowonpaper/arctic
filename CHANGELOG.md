@@ -1,5 +1,17 @@
 # arctic
 
+## 1.4.0
+
+### Minor changes
+
+- Add MyAnimeList provider. ([#89](https://github.com/pilcrowOnPaper/arctic/pull/89))
+- Add Roblox provider. ([#88](https://github.com/pilcrowOnPaper/arctic/pull/88))
+- Add VK provider. ([#88](https://github.com/pilcrowOnPaper/arctic/pull/88))
+
+### Patch changes
+
+- Update dependencies. ([#89](https://github.com/pilcrowOnPaper/arctic/pull/89))
+
 ## 1.3.0
 
 ### Minor changes
