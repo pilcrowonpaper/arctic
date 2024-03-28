@@ -1,5 +1,12 @@
 # arctic
 
+## 1.3.0
+
+### Minor changes
+
+- Add Yandex provider. ([#85](https://github.com/pilcrowOnPaper/arctic/pull/85))
+- Feat: Add support for Github Enterprise Server to `GitHub` Provider ([#77](https://github.com/pilcrowOnPaper/arctic/pull/77))
+
 ## 1.2.1
 
 ### Patch changes
