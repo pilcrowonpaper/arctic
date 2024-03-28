@@ -51,6 +51,7 @@
 				["Twitter", "/providers/twitter"],
 				["WorkOS", "/providers/workos"],
 				["Yahoo", "/providers/yahoo"],
+				["Yandex", "/providers/yandex"],
 				["Zoom", "/providers/zoom"]
 			]
 		},
