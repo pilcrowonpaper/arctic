@@ -10,9 +10,13 @@ export class Yandex implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
 
-	constructor(clientId: string, clientSecret: string, options?: {
-        redirectURI: string
-    }) {
+	constructor(
+		clientId: string,
+		clientSecret: string,
+		options?: {
+			redirectURI: string;
+		}
+	) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI: options?.redirectURI
 		});
@@ -27,7 +31,7 @@ export class Yandex implements OAuth2Provider {
 	): Promise<URL> {
 		return await this.client.createAuthorizationURL({
 			state,
-			scopes: options?.scopes ?? [],
+			scopes: options?.scopes ?? []
 		});
 	}
 

@@ -6,7 +6,7 @@ We welcome all contributions to the docs, especially grammar fixes. Arctic uses 
 
 ## Contributing to the source code
 
-We are open to most contributions, but please open a new issue before creating a pull request, especially for new features.  It's likely your PR will be rejected if not. We have intentionally limited the scope of the project and we would like to keep the package lean.
+We are open to most contributions, but please open a new issue before creating a pull request, especially for new features. It's likely your PR will be rejected if not. We have intentionally limited the scope of the project and we would like to keep the package lean.
 
 ### Set up
 

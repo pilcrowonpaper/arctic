@@ -42,6 +42,7 @@
 				["osu!", "/providers/osu"],
 				["Patreon", "/providers/patreon"],
 				["Reddit", "/providers/reddit"],
+				["Roblox", "/providers/roblox"],
 				["Salesforce", "/providers/salesforce"],
 				["Slack", "/providers/slack"],
 				["Spotify", "/providers/spotify"],
