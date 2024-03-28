@@ -26,6 +26,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 ## Supported providers
 
 - Amazon Cognito
+- AniList
 - Apple
 - Atlassian
 - Auth0
@@ -47,17 +48,22 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Linear
 - LinkedIn
 - Microsoft Entra ID
+- MyAnimeList
 - Notion
 - Okta
 - osu!
 - Patreon
 - Reddit
+- Roblox
 - Salesforce
+- Slack
 - Spotify
 - Strava
 - Tumblr
 - Twitch
 - Twitter
+- VK
 - WorkOS
 - Yahoo
+- Yandex
 - Zoom
