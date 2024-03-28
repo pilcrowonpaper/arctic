@@ -1,0 +1,1 @@
+Add AniList provider.

@@ -16,6 +16,7 @@
 			"title": "Providers",
 			"pages": [
 				["Amazon Cognito", "/providers/amazon-cognito"],
+				["AniList", "/providers/anilist"],
 				["Apple", "/providers/apple"],
 				["Atlassian", "/providers/atlassian"],
 				["Auth0", "/providers/auth0"],
