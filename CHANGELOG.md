@@ -1,5 +1,11 @@
 # arctic
 
+## 1.5.0
+
+### Minor changes
+
+- Add AniList provider. ([#92](https://github.com/pilcrowOnPaper/arctic/pull/92))
+
 ## 1.4.0
 
 ### Minor changes
