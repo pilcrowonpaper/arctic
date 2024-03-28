@@ -36,18 +36,15 @@ export class Roblox implements OAuth2ProviderWithPKCE {
 		code: string,
 		codeVerifier: string
 	): Promise<RobloxTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(
-			code,
-			{
-				credentials: this.clientSecret,
-				codeVerifier
-			}
-		);
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
+			credentials: this.clientSecret,
+			codeVerifier
+		});
 		const tokens: RobloxTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-            idToken: result.id_token
+			idToken: result.id_token
 		};
 		return tokens;
 	}
@@ -60,7 +57,7 @@ export class Roblox implements OAuth2ProviderWithPKCE {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-            idToken: result.id_token
+			idToken: result.id_token
 		};
 		return tokens;
 	}
@@ -70,12 +67,12 @@ interface TokenResponseBody {
 	access_token: string;
 	refresh_token: string;
 	expires_in: number;
-    id_token: string
+	id_token: string;
 }
 
 export interface RobloxTokens {
 	accessToken: string;
 	refreshToken: string;
 	accessTokenExpiresAt: Date;
-    idToken: string
+	idToken: string;
 }
