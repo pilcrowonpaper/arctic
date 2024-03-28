@@ -15,8 +15,10 @@ export class AniList implements OAuth2Provider {
 		this.clientSecret = clientSecret;
 	}
 
-	public async createAuthorizationURL(): Promise<URL> {
-		return await this.client.createAuthorizationURL();
+	public async createAuthorizationURL(state: string): Promise<URL> {
+		return await this.client.createAuthorizationURL({
+			state
+		});
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<AniListTokens> {
