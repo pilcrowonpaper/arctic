@@ -1,4 +1,5 @@
 export { AmazonCognito } from "./providers/amazon-cognito.js";
+export { AniList } from "./providers/anilist.js";
 export { Apple } from "./providers/apple.js";
 export { Atlassian } from "./providers/atlassian.js";
 export { Auth0 } from "./providers/auth0.js";
@@ -44,6 +45,7 @@ export type {
 	AmazonCognitoRefreshedTokens,
 	AmazonCognitoTokens
 } from "./providers/amazon-cognito.js";
+export type { AniListTokens } from "./providers/anilist.js";
 export type { AppleCredentials, AppleRefreshedTokens, AppleTokens } from "./providers/apple.js";
 export type { AtlassianTokens } from "./providers/atlassian.js";
 export type { Auth0Tokens } from "./providers/auth0.js";
