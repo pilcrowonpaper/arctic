@@ -32,7 +32,7 @@ const url = await atlassian.createAuthorizationURL(state, {
 ```
 
 ```ts
-const tokens = await apple.validateAuthorizationCode(code);
+const tokens = await atlassian.validateAuthorizationCode(code);
 const response = await fetch("https://api.atlassian.com/me", {
 	headers: {
 		Authorization: `Bearer ${tokens.accessToken}`
