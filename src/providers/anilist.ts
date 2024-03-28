@@ -4,36 +4,36 @@ import type { OAuth2Provider } from "../index.js";
 const authorizeEndpoint = "https://anilist.co/api/v2/oauth/authorize";
 const tokenEndpoint = "https://anilist.co/api/v2/oauth/token";
 
-export class Anilist implements OAuth2Provider {
-  private client: OAuth2Client;
-  private clientSecret: string;
+export class AniList implements OAuth2Provider {
+	private client: OAuth2Client;
+	private clientSecret: string;
 
-  constructor(clientId: string, clientSecret: string, redirectURI: string) {
-    this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-      redirectURI
-    });
-    this.clientSecret = clientSecret;
-  }
+	constructor(clientId: string, clientSecret: string, redirectURI: string) {
+		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
+			redirectURI
+		});
+		this.clientSecret = clientSecret;
+	}
 
-  public async createAuthorizationURL(): Promise<URL> {
-    return await this.client.createAuthorizationURL();
-  }
+	public async createAuthorizationURL(): Promise<URL> {
+		return await this.client.createAuthorizationURL();
+	}
 
-    public async validateAuthorizationCode(code: string): Promise<AnilistTokens> {
-        const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-            credentials: this.clientSecret
-        });
-        const tokens: AnilistTokens = {
-            accessToken: result.access_token
-        };
-        return tokens;
-    }
+	public async validateAuthorizationCode(code: string): Promise<AniListTokens> {
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
+			credentials: this.clientSecret
+		});
+		const tokens: AniListTokens = {
+			accessToken: result.access_token
+		};
+		return tokens;
+	}
 }
 
 interface TokenResponseBody {
-    access_token: string;
+	access_token: string;
 }
 
-export interface AnilistTokens {
-    accessToken: string;
+export interface AniListTokens {
+	accessToken: string;
 }
