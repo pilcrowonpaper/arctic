@@ -46,6 +46,7 @@
 				["Reddit", "/providers/reddit"],
 				["Roblox", "/providers/roblox"],
 				["Salesforce", "/providers/salesforce"],
+				["Shikimori", "/providers/shikimori"],
 				["Slack", "/providers/slack"],
 				["Spotify", "/providers/spotify"],
 				["Strava", "/providers/strava"],
