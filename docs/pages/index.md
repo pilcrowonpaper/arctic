@@ -23,3 +23,7 @@ import { webcrypto } from "node:crypto";
 
 globalThis.crypto = webcrypto as Crypto;
 ```
+
+## Semver
+
+Arctic does not strictly follow semantic versioning. While we aim to only introduce breaking changes in major versions, we may introduce them in a minor update if a provider updates their API in a non-backward compatible way. However, they will never be introduced in a patch update.
