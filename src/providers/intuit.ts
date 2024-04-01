@@ -39,7 +39,8 @@ export class Intuit implements OAuth2Provider {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			refreshToken: result.refresh_token,
-			refreshTokenExpiresAt: createDate(new TimeSpan(result.x_refresh_token_expires_in, "s"))
+			refreshTokenExpiresAt: createDate(new TimeSpan(result.x_refresh_token_expires_in, "s")),
+			idToken: result.id_token
 		};
 		return tokens;
 	}
@@ -53,7 +54,8 @@ export class Intuit implements OAuth2Provider {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			refreshToken: result.refresh_token,
-			refreshTokenExpiresAt: createDate(new TimeSpan(result.x_refresh_token_expires_in, "s"))
+			refreshTokenExpiresAt: createDate(new TimeSpan(result.x_refresh_token_expires_in, "s")),
+			idToken: result.id_token
 		};
 		return tokens;
 	}
@@ -65,6 +67,7 @@ interface TokenResponseBody {
 	refresh_token: string;
 	x_refresh_token_expires_in: number;
 	access_token: string;
+	id_token: string;
 }
 
 export interface IntuitTokens {
@@ -72,4 +75,5 @@ export interface IntuitTokens {
 	accessTokenExpiresAt: Date;
 	refreshToken: string;
 	refreshTokenExpiresAt: Date;
+	idToken: string;
 }
