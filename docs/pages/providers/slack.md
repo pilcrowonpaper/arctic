@@ -20,6 +20,7 @@ const url: URL = await slack.createAuthorizationURL(state, {
 	scopes // "openid" always included
 });
 const tokens: SlackTokens = await slack.validateAuthorizationCode(code);
+const tokens: SlackRefreshedTokens = await slack.refreshAccessToken(refreshToken);
 ```
 
 ## Get user profile
