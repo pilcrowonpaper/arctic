@@ -39,7 +39,7 @@ export class Slack implements OAuth2Provider {
 			accessToken: result.access_token,
 			idToken: result.id_token,
 			refreshToken: result.refresh_token ?? null,
-			accessTokenExpiresAt: typeof result.expires_in !== "undefined" && createDate(new TimeSpan(result.expires_in, "s")) || null
+			accessTokenExpiresAt: "expires_in" in result ? createDate(new TimeSpan(result.expires_in, "s")) : null
 		};
 		return tokens;
 	}
