@@ -104,7 +104,7 @@ export interface OAuth2ProviderWithPKCE {
 export interface Tokens {
 	accessToken: string;
 	refreshToken?: string | null;
-	accessTokenExpiresAt?: Date;
+	accessTokenExpiresAt?: Date | null;
 	refreshTokenExpiresAt?: Date | null;
 	idToken?: string;
 }
