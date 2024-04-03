@@ -32,7 +32,6 @@ export class Intuit implements OAuth2Provider {
 
 	public async validateAuthorizationCode(code: string): Promise<IntuitTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: IntuitTokens = {
@@ -47,7 +46,6 @@ export class Intuit implements OAuth2Provider {
 
 	public async refreshAccessToken(accessToken: string): Promise<IntuitTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(accessToken, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: IntuitTokens = {
