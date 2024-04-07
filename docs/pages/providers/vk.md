@@ -22,7 +22,7 @@ const tokens: VKTokens = await vk.validateAuthorizationCode(code);
 
 ## Get user profile
 
-Use the [`users.get` endpoint`](https://dev.vk.com/en/method/users.get).
+Use the [`users.get` endpoint](https://dev.vk.com/en/method/users.get).
 
 ```ts
 const tokens = await vk.validateAuthorizationCode(code);

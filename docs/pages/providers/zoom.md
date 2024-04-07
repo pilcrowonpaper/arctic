@@ -25,7 +25,7 @@ const tokens: ZoomTokens = await zoom.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `user:read` scope and use the [`/users/me` endpoint`](https://developers.zoom.us/docs/api/rest/reference/user/methods/#operation/user).
+Add the `user:read` scope and use the [`/users/me` endpoint](https://developers.zoom.us/docs/api/rest/reference/user/methods/#operation/user).
 
 ```ts
 const url = await zoom.createAuthorizationURL(state, {
