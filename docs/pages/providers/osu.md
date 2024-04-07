@@ -26,7 +26,7 @@ const tokens: OsuTokens = await osu.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Use the [`/me` endpoint`](https://osu.ppy.sh/docs/index.html#get-own-data).
+Use the [`/me` endpoint](https://osu.ppy.sh/docs/index.html#get-own-data).
 
 ```ts
 const url = await osu.createAuthorizationURL(state, {

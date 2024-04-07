@@ -23,7 +23,7 @@ const tokens: StravaTokens = await strava.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `read` scope and use the [`/athlete` endpoint`](https://developers.strava.com/docs/reference/#api-Athletes-getLoggedInAthlete). Alternatively, use the `read_all` scope to get all private data.
+Add the `read` scope and use the [`/athlete` endpoint](https://developers.strava.com/docs/reference/#api-Athletes-getLoggedInAthlete). Alternatively, use the `read_all` scope to get all private data.
 
 ```ts
 const url = await strava.createAuthorizationURL(state, {
