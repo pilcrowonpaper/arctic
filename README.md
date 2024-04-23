@@ -24,7 +24,7 @@ For a flexible OAuth 2.0 client, see [`oslo/oauth2`](http://github.com/pilcrowon
 Arctic does not strictly follow semantic versioning. While we aim to only introduce breaking changes in major versions, we may introduce them in a minor update if a provider updates their API in a non-backward compatible way. However, they will never be introduced in a patch update.
 
 ## Supported providers
-
+- 42 School
 - Amazon Cognito
 - AniList
 - Apple
