@@ -2,6 +2,9 @@ import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2Provider } from "../index.js";
 
+const authorizeEndpoint = "https://api.intra.42.fr/oauth/authorize";
+const tokenEndpoint = "https://api.intra.42.fr/oauth/token";
+
 export class FortyTwo implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
@@ -13,11 +16,6 @@ export class FortyTwo implements OAuth2Provider {
 			redirectURI?: string;
 		}
 	) {
-		const baseUrl = "https://api.intra.42.fr";
-
-		const authorizeEndpoint = baseUrl + "/oauth/authorize";
-		const tokenEndpoint = baseUrl + "/oauth/token";
-
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI: options?.redirectURI
 		});
