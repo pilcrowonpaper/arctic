@@ -89,7 +89,7 @@ export type { WorkOSTokens } from "./providers/workos.js";
 export type { YahooTokens } from "./providers/yahoo.js";
 export type { YandexTokens } from "./providers/yandex.js";
 export type { ZoomTokens } from "./providers/zoom.js";
-export type { FortyTwoTokens, Scope } from "./providers/42.js";
+export type { FortyTwoTokens } from "./providers/42.js";
 
 export { generateCodeVerifier, generateState, OAuth2RequestError } from "oslo/oauth2";
 
