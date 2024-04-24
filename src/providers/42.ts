@@ -9,15 +9,9 @@ export class FortyTwo implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
 
-	constructor(
-		clientId: string,
-		clientSecret: string,
-		options?: {
-			redirectURI?: string;
-		}
-	) {
+	constructor(clientId: string, clientSecret: string, redirectURI: string) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI: options?.redirectURI
+			redirectURI
 		});
 		this.clientSecret = clientSecret;
 	}
