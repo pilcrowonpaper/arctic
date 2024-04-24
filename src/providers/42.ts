@@ -27,9 +27,7 @@ export class FortyTwo implements OAuth2Provider {
 	public async createAuthorizationURL(
 		state: string,
 		options?: {
-			// add the type scope for typescript intellisense
-			// add string for the scope to be able to add custom scopes
-			scopes?: (Scope | string)[];
+			scopes?: string[];
 		}
 	): Promise<URL> {
 		return await this.client.createAuthorizationURL({
@@ -53,14 +51,6 @@ export class FortyTwo implements OAuth2Provider {
 		return tokens;
 	}
 }
-
-export type Scope =
-	| "public" // access the user public data
-	| "projects" // manage teams, slots and all projects related stuff
-	| "profile" // manage user data
-	| "elearning" // manage media related stuff
-	| "tig" // manage community services
-	| "forum"; // manage topics and messages
 
 export interface FortyTwoTokens {
 	accessToken: string;
