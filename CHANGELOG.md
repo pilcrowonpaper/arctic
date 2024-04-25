@@ -1,5 +1,11 @@
 # arctic
 
+## 1.6.1
+
+### Patch changes
+
+- Fix Roblox provider and reverted API changes introduced in 1.6.0 ([#111](https://github.com/pilcrowOnPaper/arctic/pull/111))
+
 ## 1.6.0
 
 ### Minor changes
