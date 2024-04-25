@@ -31,7 +31,6 @@ export class Slack implements OAuth2Provider {
 
 	public async validateAuthorizationCode(code: string): Promise<SlackTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: SlackTokens = {

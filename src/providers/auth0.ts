@@ -32,7 +32,6 @@ export class Auth0 implements OAuth2Provider {
 
 	public async validateAuthorizationCode(code: string): Promise<Auth0Tokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: Auth0Tokens = {
@@ -45,7 +44,6 @@ export class Auth0 implements OAuth2Provider {
 
 	public async refreshAccessToken(refreshToken: string): Promise<Auth0Tokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: Auth0Tokens = {

@@ -47,7 +47,6 @@ export class Twitter implements OAuth2ProviderWithPKCE {
 
 	public async refreshAccessToken(refreshToken: string): Promise<TwitterTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: TwitterTokens = {

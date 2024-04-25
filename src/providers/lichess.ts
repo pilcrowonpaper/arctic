@@ -32,7 +32,6 @@ export class Lichess implements OAuth2ProviderWithPKCE {
 		codeVerifier: string
 	): Promise<LichessTokens> {
 		const result = await this.client.validateAuthorizationCode(code, {
-			authenticateWith: "request_body",
 			codeVerifier
 		});
 		const tokens: LichessTokens = {
