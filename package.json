@@ -1,7 +1,7 @@
 {
 	"name": "arctic",
 	"type": "module",
-	"version": "1.5.0",
+	"version": "1.6.0",
 	"description": "OAuth 2.0 clients for popular providers",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
