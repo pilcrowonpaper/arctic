@@ -1,0 +1,2 @@
+Feat: Add `id_token` to the return value of LinkedIn's `validateAuthorizationCode(code: string)`
+Fix: Make `refreshToken` optional for the return value of LinkedIn's `validateAuthorizationCode(code: string)` because `refreshToken` is available only if your application is authorized for programmatic refresh tokens
