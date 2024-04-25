@@ -1,12 +1,12 @@
 import { TimeSpan, createDate } from "oslo";
 import { OAuth2Client } from "oslo/oauth2";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 const authorizeEndpoint = "https://apis.roblox.com/oauth/v1/authorize";
 const tokenEndpoint = "https://apis.roblox.com/oauth/v1/token";
 
-export class Roblox implements OAuth2Provider {
+export class Roblox implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private clientSecret: string;
 
@@ -19,6 +19,7 @@ export class Roblox implements OAuth2Provider {
 
 	public async createAuthorizationURL(
 		state: string,
+		codeVerifier: string,
 		options?: {
 			scopes?: string[];
 		}
@@ -26,13 +27,19 @@ export class Roblox implements OAuth2Provider {
 		const scopes = options?.scopes ?? [];
 		return await this.client.createAuthorizationURL({
 			state,
+			codeVerifier,
 			scopes: [...scopes, "openid"]
 		});
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<RobloxTokens> {
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier: string
+	): Promise<RobloxTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret
+			credentials: this.clientSecret,
+			codeVerifier,
+			authenticateWith: "request_body" // Roblox doesn't support HTTP basic auth
 		});
 		const tokens: RobloxTokens = {
 			accessToken: result.access_token,
