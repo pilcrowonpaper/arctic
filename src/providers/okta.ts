@@ -51,7 +51,6 @@ export class Okta implements OAuth2ProviderWithPKCE {
 
 	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<OktaTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			authenticateWith: "request_body",
 			codeVerifier,
 			credentials: this.clientSecret
 		});
@@ -74,7 +73,6 @@ export class Okta implements OAuth2ProviderWithPKCE {
 		}
 	): Promise<OktaTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret,
 			scopes: options?.scopes ?? []
 		});

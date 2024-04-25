@@ -32,7 +32,6 @@ export class Yahoo implements OAuth2Provider {
 
 	public async validateAuthorizationCode(code: string): Promise<YahooTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: YahooTokens = {
@@ -46,7 +45,6 @@ export class Yahoo implements OAuth2Provider {
 
 	public async refreshAccessToken(refreshToken: string): Promise<YahooTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: YahooTokens = {

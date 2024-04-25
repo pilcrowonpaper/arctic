@@ -47,7 +47,6 @@ export class Salesforce implements OAuth2ProviderWithPKCE {
 
 	public async refreshAccessToken(refreshToken: string): Promise<SalesforceTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		return {

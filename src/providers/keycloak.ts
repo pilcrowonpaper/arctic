@@ -38,7 +38,6 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 	): Promise<KeycloakTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			codeVerifier,
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: KeycloakTokens = {
@@ -53,7 +52,6 @@ export class Keycloak implements OAuth2ProviderWithPKCE {
 
 	public async refreshAccessToken(refreshToken: string): Promise<KeycloakTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: KeycloakTokens = {

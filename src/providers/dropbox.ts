@@ -34,7 +34,6 @@ export class Dropbox implements OAuth2Provider {
 		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
 			code,
 			{
-				authenticateWith: "request_body",
 				credentials: this.clientSecret
 			}
 		);
@@ -49,7 +48,6 @@ export class Dropbox implements OAuth2Provider {
 
 	public async refreshAccessToken(refreshToken: string): Promise<DropboxRefreshedTokens> {
 		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(refreshToken, {
-			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: DropboxRefreshedTokens = {
