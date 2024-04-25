@@ -1,5 +1,11 @@
 # arctic
 
+## 1.6.2
+
+### Patch changes
+
+- Use HTTP basic auth for sending client credentials if supported ([#113](https://github.com/pilcrowOnPaper/arctic/pull/113))
+
 ## 1.6.1
 
 ### Patch changes
