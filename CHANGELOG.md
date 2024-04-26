@@ -1,5 +1,12 @@
 # arctic
 
+## 1.7.0
+
+### Minor changes
+
+- Add Shikimori provider. ([#95](https://github.com/pilcrowOnPaper/arctic/pull/95))
+- Feat: add 42 school provider ([#109](https://github.com/pilcrowOnPaper/arctic/pull/109))
+
 ## 1.6.2
 
 ### Patch changes
