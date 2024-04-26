@@ -35,9 +35,9 @@ export class FortyTwo implements OAuth2Provider {
 		});
 		const tokens: FortyTwoTokens = {
 			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			expiresIn: result.expires_in,
-			tokenType: result.token_type
+			refreshToken: result.refresh_token ?? null,
+			expiresIn: result.expires_in ?? null,
+			tokenType: result.token_type ?? null
 		};
 		return tokens;
 	}
@@ -45,7 +45,7 @@ export class FortyTwo implements OAuth2Provider {
 
 export interface FortyTwoTokens {
 	accessToken: string;
-	refreshToken?: string | null;
-	expiresIn?: number;
-	tokenType?: string;
+	refreshToken: string | null;
+	expiresIn: number | null;
+	tokenType: string | null;
 }
