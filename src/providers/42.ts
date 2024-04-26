@@ -47,7 +47,7 @@ interface TokenResponseBody {
 	token_type: string;
 	expires_in: number;
 	scope: string;
-	create_at: number;
+	created_at: number;
 }
 
 export interface FortyTwoTokens {
