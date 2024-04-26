@@ -1,0 +1,1 @@
+Add Shikimori provider.
