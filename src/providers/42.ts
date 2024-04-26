@@ -1,6 +1,7 @@
 import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2Provider } from "../index.js";
+import { createDate, TimeSpan } from "oslo";
 
 const authorizeEndpoint = "https://api.intra.42.fr/oauth/authorize";
 const tokenEndpoint = "https://api.intra.42.fr/oauth/token";
@@ -29,23 +30,27 @@ export class FortyTwo implements OAuth2Provider {
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<FortyTwoTokens> {
-		const result = await this.client.validateAuthorizationCode(code, {
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: FortyTwoTokens = {
 			accessToken: result.access_token,
-			refreshToken: result.refresh_token ?? null,
-			expiresIn: result.expires_in ?? null,
-			tokenType: result.token_type ?? null
+			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
 		return tokens;
 	}
 }
 
+interface TokenResponseBody {
+	access_token: string;
+	token_type: string;
+	expires_in: number;
+	scope: string;
+	create_at: number;
+}
+
 export interface FortyTwoTokens {
 	accessToken: string;
-	refreshToken: string | null;
-	expiresIn: number | null;
-	tokenType: string | null;
+	accessTokenExpiresAt: Date;
 }
