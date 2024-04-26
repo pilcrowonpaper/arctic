@@ -13,9 +13,9 @@ const shikimori = new Shikimori(clientId, clientSecret, redirectURI);
 ```
 
 ```ts
-import type { Tokens } from "arctic";
+import type { ShikimoriTokens } from "arctic";
 
 const url: URL = await shikimori.createAuthorizationURL(state);
-const tokens: Tokens = await shikimori.validateAuthorizationCode(code);
-const refreshedTokens: Tokens = await shikimori.refreshAccessToken(refreshToken);
+const tokens: ShikimoriTokens = await shikimori.validateAuthorizationCode(code);
+const refreshedTokens: ShikimoriTokens = await shikimori.refreshAccessToken(refreshToken);
 ```

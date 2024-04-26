@@ -56,6 +56,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Reddit
 - Roblox
 - Salesforce
+- Shikimori
 - Slack
 - Spotify
 - Strava
