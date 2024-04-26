@@ -1,5 +1,5 @@
 import { OAuth2Client } from "oslo/oauth2";
-import type { OAuth2Provider, Tokens } from "../index.js";
+import type { OAuth2Provider } from "../index.js";
 
 const authorizeEndpoint = "https://shikimori.one/oauth/authorize";
 const tokenEndpoint = "https://shikimori.one/oauth/token";
@@ -32,7 +32,7 @@ export class Shikimori implements OAuth2Provider {
     };
   }
 
-  async refreshAccessToken(refreshToken: string): Promise<Tokens> {
+  async refreshAccessToken(refreshToken: string): Promise<ShikimoriTokens> {
     const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
       authenticateWith: "request_body",
       credentials: this.clientSecret
