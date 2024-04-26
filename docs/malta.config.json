@@ -15,6 +15,7 @@
 		{
 			"title": "Providers",
 			"pages": [
+				["42 School", "/providers/42"],
 				["Amazon Cognito", "/providers/amazon-cognito"],
 				["AniList", "/providers/anilist"],
 				["Apple", "/providers/apple"],

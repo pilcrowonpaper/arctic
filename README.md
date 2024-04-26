@@ -25,6 +25,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 
 ## Supported providers
 
+- 42 School
 - Amazon Cognito
 - AniList
 - Apple

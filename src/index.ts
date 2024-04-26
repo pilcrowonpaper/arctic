@@ -42,6 +42,7 @@ export { WorkOS } from "./providers/workos.js";
 export { Yahoo } from "./providers/yahoo.js";
 export { Yandex } from "./providers/yandex.js";
 export { Zoom } from "./providers/zoom.js";
+export { FortyTwo } from "./providers/42.js";
 
 export type {
 	AmazonCognitoRefreshedTokens,
@@ -90,6 +91,7 @@ export type { WorkOSTokens } from "./providers/workos.js";
 export type { YahooTokens } from "./providers/yahoo.js";
 export type { YandexTokens } from "./providers/yandex.js";
 export type { ZoomTokens } from "./providers/zoom.js";
+export type { FortyTwoTokens } from "./providers/42.js";
 
 export { generateCodeVerifier, generateState, OAuth2RequestError } from "oslo/oauth2";
 
