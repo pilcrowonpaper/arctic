@@ -1,1 +1,1 @@
-Feat: Add `id_token` to the return value of LinkedIn's `validateAuthorizationCode(code: string)`   
+Feat: Add `idToken` to the return value of LinkedIn's `validateAuthorizationCode(code: string)`   
