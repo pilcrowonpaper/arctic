@@ -83,6 +83,7 @@ export type { ShikimoriTokens } from "./providers/shikimori.js";
 export type { SlackTokens } from "./providers/slack.js";
 export type { SpotifyTokens } from "./providers/spotify.js";
 export type { StravaTokens } from "./providers/strava.js";
+export type { TiltifyTokens } from "./providers/tiltify.js";
 export type { TumblrTokens } from "./providers/tumblr.js";
 export type { TwitchTokens } from "./providers/twitch.js";
 export type { TwitterTokens } from "./providers/twitter.js";
