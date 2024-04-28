@@ -34,6 +34,7 @@ export { Shikimori } from "./providers/shikimori.js";
 export { Slack } from "./providers/slack.js";
 export { Spotify } from "./providers/spotify.js";
 export { Strava } from "./providers/strava.js";
+export { Tiltify } from "./providers/tiltify.js";
 export { Tumblr } from "./providers/tumblr.js";
 export { Twitch } from "./providers/twitch.js";
 export { Twitter } from "./providers/twitter.js";
