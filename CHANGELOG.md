@@ -1,5 +1,16 @@
 # arctic
 
+## 1.8.0
+
+### Minor changes
+
+- Feat: Add `idToken` to the return value of LinkedIn's `validateAuthorizationCode(code: string)` ([#105](https://github.com/pilcrowOnPaper/arctic/pull/105))
+- Feat: Add Tiltify provider. ([#118](https://github.com/pilcrowOnPaper/arctic/pull/118))
+
+### Patch changes
+
+- Fix: Make `refreshToken` optional for the return value of LinkedIn's `validateAuthorizationCode(code: string)` ([#105](https://github.com/pilcrowOnPaper/arctic/pull/105))
+
 ## 1.7.0
 
 ### Minor changes
