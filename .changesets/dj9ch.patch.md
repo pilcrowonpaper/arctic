@@ -1,1 +1,0 @@
-Fix: Make `refreshToken` optional for the return value of LinkedIn's `validateAuthorizationCode(code: string)`
