@@ -62,6 +62,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Slack
 - Spotify
 - Strava
+- Tiltify
 - Tumblr
 - Twitch
 - Twitter
