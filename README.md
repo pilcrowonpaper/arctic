@@ -31,6 +31,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Apple
 - Atlassian
 - Auth0
+- Authentik
 - Bitbucket
 - Box
 - Coinbase

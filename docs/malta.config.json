@@ -21,6 +21,7 @@
 				["Apple", "/providers/apple"],
 				["Atlassian", "/providers/atlassian"],
 				["Auth0", "/providers/auth0"],
+				["Authentik", "/providers/authentik"],
 				["Bitbucket", "/providers/bitbucket"],
 				["Box", "/providers/box"],
 				["Coinbase", "/providers/coinbase"],
