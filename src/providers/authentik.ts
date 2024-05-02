@@ -76,7 +76,6 @@ interface TokenResponseBody {
 export interface AuthentikTokens {
 	accessToken: string;
 	accessTokenExpiresAt: Date;
-	tokenType: string;
 	refreshToken: string;
 	idToken: string;
 }
