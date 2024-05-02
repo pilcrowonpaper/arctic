@@ -4,13 +4,11 @@ import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 export class Authentik implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
-	private realmURL: string;
 	private clientSecret: string;
 
 	constructor(realmURL: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.realmURL = realmURL;
-		const authorizeEndpoint = this.realmURL + "/application/o/authorize/";
-		const tokenEndpoint = this.realmURL + "/application/o/token/";
+		const authorizeEndpoint = realmURL + "/application/o/authorize/";
+		const tokenEndpoint = realmURL + "/application/o/token/";
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
@@ -44,7 +42,6 @@ export class Authentik implements OAuth2ProviderWithPKCE {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			refreshToken: result.refresh_token,
-			tokenType: result.token_type,
 			idToken: result.id_token
 		};
 		return tokens;
@@ -57,7 +54,6 @@ export class Authentik implements OAuth2ProviderWithPKCE {
 		const tokens: AuthentikTokens = {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			tokenType: result.token_type,
 			refreshToken: result.refresh_token,
 			idToken: result.id_token
 		};
@@ -68,7 +64,6 @@ export class Authentik implements OAuth2ProviderWithPKCE {
 interface TokenResponseBody {
 	access_token: string;
 	expires_in: number;
-	token_type: string;
 	refresh_token: string;
 	id_token: string;
 }
