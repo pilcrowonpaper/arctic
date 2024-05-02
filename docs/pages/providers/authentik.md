@@ -19,7 +19,7 @@ export const authentik = new Authentik(
 );
 ```
 
-Authentik with version 2024.2 and higher receive only access token. To get the refresh token as well, you need to include scope `offline_access` in the request. The scope also needs to be enabled in the provider advanced settings.
+Authentik with version 2024.2 and higher only provides the access token by default. To get the refresh token as well, you'll need to include the `offline_access` scope. The scope also needs to be enabled in your app's advanced settings (Application > Providers > Edit > Advanced protocol settings > Scopes).
 
 
 ```ts
