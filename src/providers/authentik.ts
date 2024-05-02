@@ -28,7 +28,7 @@ export class Authentik implements OAuth2ProviderWithPKCE {
 		return await this.client.createAuthorizationURL({
 			state,
 			codeVerifier,
-			scopes: [...scopes]
+			scopes
 		});
 	}
 
