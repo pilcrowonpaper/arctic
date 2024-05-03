@@ -18,10 +18,8 @@ Authentik with version 2024.2 and higher only provides the access token by defau
 
 
 ```ts
-const scopes = ["profile", "email", "openid", "offline_access"];
-
 const url: URL = await authentik.createAuthorizationURL(state, codeVerifier, {
-	scopes
+	scopes: ["profile", "email", "openid", "offline_access"]
 });
 ```
 
