@@ -1,0 +1,1 @@
+Fix Slack provider
