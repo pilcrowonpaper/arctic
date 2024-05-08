@@ -1,5 +1,12 @@
 # arctic
 
+## 1.8.1
+
+### Patch changes
+
+- Fix Slack provider ([#122](https://github.com/pilcrowOnPaper/arctic/pull/122))
+- Fix Okta provider ([#124](https://github.com/pilcrowOnPaper/arctic/pull/124))
+
 ## 1.8.0
 
 ### Minor changes
