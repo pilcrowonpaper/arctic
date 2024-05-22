@@ -1,0 +1,1 @@
+Added Authentik auth provider
