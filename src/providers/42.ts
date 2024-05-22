@@ -1,11 +1,12 @@
 import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2Provider } from "../index.js";
+import { createDate, TimeSpan } from "oslo";
 
-const authorizeEndpoint = "https://slack.com/openid/connect/authorize";
-const tokenEndpoint = "https://slack.com/api/openid.connect.token";
+const authorizeEndpoint = "https://api.intra.42.fr/oauth/authorize";
+const tokenEndpoint = "https://api.intra.42.fr/oauth/token";
 
-export class Slack implements OAuth2Provider {
+export class FortyTwo implements OAuth2Provider {
 	private client: OAuth2Client;
 	private clientSecret: string;
 
@@ -22,21 +23,20 @@ export class Slack implements OAuth2Provider {
 			scopes?: string[];
 		}
 	): Promise<URL> {
-		const scopes = options?.scopes ?? [];
 		return await this.client.createAuthorizationURL({
 			state,
-			scopes: [...scopes, "openid"]
+			scopes: options?.scopes ?? []
 		});
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<SlackTokens> {
+	public async validateAuthorizationCode(code: string): Promise<FortyTwoTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret,
-			authenticateWith: "request_body"
+			authenticateWith: "request_body",
+			credentials: this.clientSecret
 		});
-		const tokens: SlackTokens = {
+		const tokens: FortyTwoTokens = {
 			accessToken: result.access_token,
-			idToken: result.id_token
+			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
 		return tokens;
 	}
@@ -44,10 +44,13 @@ export class Slack implements OAuth2Provider {
 
 interface TokenResponseBody {
 	access_token: string;
-	id_token: string;
+	token_type: string;
+	expires_in: number;
+	scope: string;
+	created_at: number;
 }
 
-export interface SlackTokens {
+export interface FortyTwoTokens {
 	accessToken: string;
-	idToken: string;
+	accessTokenExpiresAt: Date;
 }

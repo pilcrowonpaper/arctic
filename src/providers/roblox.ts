@@ -38,7 +38,8 @@ export class Roblox implements OAuth2ProviderWithPKCE {
 	): Promise<RobloxTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			credentials: this.clientSecret,
-			codeVerifier
+			codeVerifier,
+			authenticateWith: "request_body" // Roblox doesn't support HTTP basic auth
 		});
 		const tokens: RobloxTokens = {
 			accessToken: result.access_token,

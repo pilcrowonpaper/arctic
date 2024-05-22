@@ -1,5 +1,52 @@
 # arctic
 
+## 1.8.1
+
+### Patch changes
+
+- Fix Slack provider ([#122](https://github.com/pilcrowOnPaper/arctic/pull/122))
+- Fix Okta provider ([#124](https://github.com/pilcrowOnPaper/arctic/pull/124))
+
+## 1.8.0
+
+### Minor changes
+
+- Feat: Add `idToken` to the return value of LinkedIn's `validateAuthorizationCode(code: string)` ([#105](https://github.com/pilcrowOnPaper/arctic/pull/105))
+- Feat: Add Tiltify provider. ([#118](https://github.com/pilcrowOnPaper/arctic/pull/118))
+
+### Patch changes
+
+- Fix: Make `refreshToken` optional for the return value of LinkedIn's `validateAuthorizationCode(code: string)` ([#105](https://github.com/pilcrowOnPaper/arctic/pull/105))
+
+## 1.7.0
+
+### Minor changes
+
+- Add Shikimori provider. ([#95](https://github.com/pilcrowOnPaper/arctic/pull/95))
+- Feat: add 42 school provider ([#109](https://github.com/pilcrowOnPaper/arctic/pull/109))
+
+## 1.6.2
+
+### Patch changes
+
+- Use HTTP basic auth for sending client credentials if supported ([#113](https://github.com/pilcrowOnPaper/arctic/pull/113))
+
+## 1.6.1
+
+### Patch changes
+
+- Fix Roblox provider and reverted API changes introduced in 1.6.0 ([#111](https://github.com/pilcrowOnPaper/arctic/pull/111))
+
+## 1.6.0
+
+### Minor changes
+
+- Add Intuit provider. ([#97](https://github.com/pilcrowOnPaper/arctic/pull/97))
+
+### Patch changes
+
+- Fix Roblox provider (see docs for API changes) ([#110](https://github.com/pilcrowOnPaper/arctic/pull/110))
+
 ## 1.5.0
 
 ### Minor changes

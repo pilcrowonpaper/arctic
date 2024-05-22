@@ -15,6 +15,7 @@
 		{
 			"title": "Providers",
 			"pages": [
+				["42 School", "/providers/42"],
 				["Amazon Cognito", "/providers/amazon-cognito"],
 				["AniList", "/providers/anilist"],
 				["Apple", "/providers/apple"],
@@ -48,9 +49,11 @@
 				["Reddit", "/providers/reddit"],
 				["Roblox", "/providers/roblox"],
 				["Salesforce", "/providers/salesforce"],
+				["Shikimori", "/providers/shikimori"],
 				["Slack", "/providers/slack"],
 				["Spotify", "/providers/spotify"],
 				["Strava", "/providers/strava"],
+				["Tiltify", "/providers/tiltify"],
 				["Tumblr", "/providers/tumblr"],
 				["Twitch", "/providers/twitch"],
 				["Twitter", "/providers/twitter"],

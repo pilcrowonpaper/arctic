@@ -1,16 +1,16 @@
+import { TimeSpan, createDate } from "oslo";
 import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2Provider } from "../index.js";
 
-export class Auth0 implements OAuth2Provider {
+const authorizeEndpoint = "https://v5api.tiltify.com/oauth/authorizeze";
+const tokenEndpoint = "https://v5api.tiltify.com/oauth/token";
+
+export class Tiltify implements OAuth2Provider {
 	private client: OAuth2Client;
-	private appDomain: string;
 	private clientSecret: string;
 
-	constructor(appDomain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.appDomain = appDomain;
-		const authorizeEndpoint = this.appDomain + "/authorize";
-		const tokenEndpoint = this.appDomain + "/oauth/token";
+	constructor(clientId: string, clientSecret: string, redirectURI: string) {
 		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
 			redirectURI
 		});
@@ -23,33 +23,34 @@ export class Auth0 implements OAuth2Provider {
 			scopes?: string[];
 		}
 	): Promise<URL> {
-		const scopes = options?.scopes ?? [];
 		return await this.client.createAuthorizationURL({
 			state,
-			scopes: [...scopes, "openid"]
+			scopes: options?.scopes ?? []
 		});
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<Auth0Tokens> {
+	public async validateAuthorizationCode(code: string): Promise<TiltifyTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
+			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-		const tokens: Auth0Tokens = {
+		const tokens: TiltifyTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
-			idToken: result.id_token
+			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<Auth0Tokens> {
+	public async refreshAccessToken(refreshToken: string): Promise<TiltifyTokens> {
 		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
+			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
-		const tokens: Auth0Tokens = {
+		const tokens: TiltifyTokens = {
 			accessToken: result.access_token,
 			refreshToken: result.refresh_token,
-			idToken: result.id_token
+			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
 		};
 		return tokens;
 	}
@@ -57,12 +58,12 @@ export class Auth0 implements OAuth2Provider {
 
 interface TokenResponseBody {
 	access_token: string;
+	expires_in: number;
 	refresh_token: string;
-	id_token: string;
 }
 
-export interface Auth0Tokens {
+export interface TiltifyTokens {
 	accessToken: string;
 	refreshToken: string;
-	idToken: string;
+	accessTokenExpiresAt: Date;
 }

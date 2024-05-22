@@ -4,7 +4,7 @@ title: "Roblox"
 
 # Roblox
 
-Implements OpenID Connect. For confidential clients and not public clients.
+Implements OpenID Connect.
 
 For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
 

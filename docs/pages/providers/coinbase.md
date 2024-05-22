@@ -26,7 +26,7 @@ const tokens: CoinbaseTokens = await coinbase.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Use the [`/user` endpoint`](https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/api-users#show-current-user).
+Use the [`/user` endpoint](https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/api-users#show-current-user).
 
 ```ts
 const tokens = await coinbase.validateAuthorizationCode(code);

@@ -25,6 +25,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 
 ## Supported providers
 
+- 42 School
 - Amazon Cognito
 - AniList
 - Apple
@@ -57,9 +58,11 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Reddit
 - Roblox
 - Salesforce
+- Shikimori
 - Slack
 - Spotify
 - Strava
+- Tiltify
 - Tumblr
 - Twitch
 - Twitter

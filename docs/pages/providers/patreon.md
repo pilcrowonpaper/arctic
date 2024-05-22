@@ -23,7 +23,7 @@ const tokens: PatreonTokens = await patreon.refreshAccessToken(refreshToken);
 
 ## Get user profile
 
-Add the `identity` scope and use the [`/api/oauth2/v2/identity` endpoint`](https://docs.patreon.com/#get-api-oauth2-v2-identity). Optionally add the `identity[email]` scope to get user email.
+Add the `identity` scope and use the [`/api/oauth2/v2/identity` endpoint](https://docs.patreon.com/#get-api-oauth2-v2-identity). Optionally add the `identity[email]` scope to get user email.
 
 ```ts
 const url = await patreon.createAuthorizationURL(state, {
