@@ -10,9 +10,19 @@ For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
 import { Authentik } from "arctic";
 
 const realmURL = "http://example.com";
-
-export const authentik = new Authentik(realmURL, clientId, clientSecret, redirectURI);
+const authentik = new Authentik(realmURL, clientId, clientSecret, redirectURI);
 ```
+
+```ts
+const url: URL = await authentik.createAuthorizationURL(state, codeVerifier, {
+	// optional
+	scopes // "openid" always included
+});
+const tokens: AuthentikTokens = await authentik.validateAuthorizationCode(code, codeVerifier);
+const tokens: AuthentikTokens = await authentik.refreshAccessToken(refreshToken);
+```
+
+## Get refresh token
 
 Authentik with version 2024.2 and higher only provides the access token by default. To get the refresh token as well, you'll need to include the `offline_access` scope. The scope also needs to be enabled in your app's advanced settings (Application > Providers > Edit > Advanced protocol settings > Scopes).
 
