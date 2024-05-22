@@ -1,7 +1,7 @@
 import { OAuth2Client } from "oslo/oauth2";
 import { TimeSpan, createDate } from "oslo";
 
-import type { OAuth2Provider } from "../index.js";
+import type {OAuth2Provider} from "../index.js";
 
 const authorizeEndpoint = "https://www.bungie.net/en/oauth/authorize";
 const tokenEndpoint = "https://www.bungie.net/platform/app/oauth/token/";
@@ -20,84 +20,43 @@ export class Bungie implements OAuth2Provider {
 	public async createAuthorizationURL(
 		state: string,
 	): Promise<URL> {
-		const url = new URL(authorizeEndpoint);
-		url.searchParams.append("response_type", "code");
-		url.searchParams.append("client_id", this.client.clientId);
-		url.searchParams.append("state", state);
-		return url;
+		return await this.client.createAuthorizationURL({
+			state
+		})
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<BungieTokens> {
-		const response = await fetch(tokenEndpoint, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded",
-				...(this.clientSecret && {
-					"Authorization": `Basic ${this.encodeClientCredentials()}`
-				})
-			},
-			body: new URLSearchParams({
-				grant_type: "authorization_code",
-				code,
-			})
+		const result = await this.client.validateAuthorizationCode<BungieTokenResponse>(code, {
+			authenticateWith: "http_basic_auth",
+			credentials: this.clientSecret
 		});
-
-		const result: BungieTokenResponse | BungieErrorResponse = await response.json();
-
-		if ("error" in result) {
-			throw new Error(result.error_description);
-		}
-
-		if ('refresh_token' in result) {
-			return {
-				accessToken: result.access_token,
-				refreshToken: result.refresh_token,
-				accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-				refreshTokenExpiresAt: result.refresh_expires_in ? createDate(new TimeSpan(result.refresh_expires_in, "s")) : undefined,
-				membershipId: result.membership_id
-			} as BungieTokensConfidential;
-		}
-
-		return {
+		const tokens: BungieTokens = {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
 			membershipId: result.membership_id
-		} as BungieTokensPublic;
+		};
+		if ('refresh_token' in result) {
+			(tokens as BungieTokensConfidential).refreshToken = result.refresh_token;
+			(tokens as BungieTokensConfidential).refreshTokenExpiresAt = createDate(new TimeSpan(result.refresh_expires_in, "s"));
+		}
+		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<BungieTokensConfidential> {
-		if (!this.clientSecret) {
-			throw new Error("Cannot refresh access token for public client");
-		}
-
-		const response = await fetch(tokenEndpoint, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded",
-				"Authorization": `Basic ${this.encodeClientCredentials()}`
-			},
-			body: `grant_type=refresh_token&refresh_token=${refreshToken}`
+		const result = await this.client.refreshAccessToken<BungieTokenResponseConfidential>(refreshToken, {
+			authenticateWith: "http_basic_auth",
+			credentials: this.clientSecret
 		});
-		const result: BungieTokenResponseConfidential | BungieErrorResponse = await response.json();
 
-		if ("error" in result) {
-			throw new Error(result.error_description);
-		}
-
-		return {
+		const tokens: BungieTokensConfidential = {
 			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			refreshTokenExpiresAt: createDate(new TimeSpan(result.refresh_expires_in, "s")),
-			membershipId: result.membership_id
+			membershipId: result.membership_id,
+			refreshToken: result.refresh_token,
+			refreshTokenExpiresAt: createDate(new TimeSpan(result.refresh_expires_in, "s"))
 		};
-	}
 
-	private encodeClientCredentials(): string {
-		if (!this.clientSecret) {
-			throw new Error("Client secret is required for confidential client");
-		}
-		return Buffer.from(`${this.client.clientId}:${this.clientSecret}`).toString('base64');
+		return tokens;
 	}
 }
 
@@ -123,11 +82,6 @@ interface BungieTokenResponsePublic {
 interface BungieTokenResponseConfidential extends BungieTokenResponsePublic {
 	refresh_token: string;
 	refresh_expires_in: number;
-}
-
-interface BungieErrorResponse {
-	error: string;
-	error_description: string;
 }
 
 type BungieTokenResponse = BungieTokenResponsePublic | BungieTokenResponseConfidential;
