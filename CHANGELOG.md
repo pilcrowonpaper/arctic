@@ -1,5 +1,11 @@
 # arctic
 
+## 1.9.0
+
+### Minor changes
+
+- Added Authentik auth provider ([#120](https://github.com/pilcrowOnPaper/arctic/pull/120))
+
 ## 1.8.1
 
 ### Patch changes
