@@ -26,7 +26,7 @@ export class Authentik implements OAuth2ProviderWithPKCE {
 		return await this.client.createAuthorizationURL({
 			state,
 			codeVerifier,
-			scopes
+			scopes: [...scopes, "openid"]
 		});
 	}
 
@@ -41,7 +41,7 @@ export class Authentik implements OAuth2ProviderWithPKCE {
 		const tokens: AuthentikTokens = {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			refreshToken: result.refresh_token,
+			refreshToken: result.refresh_token ?? null,
 			idToken: result.id_token
 		};
 		return tokens;
@@ -54,7 +54,7 @@ export class Authentik implements OAuth2ProviderWithPKCE {
 		const tokens: AuthentikTokens = {
 			accessToken: result.access_token,
 			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			refreshToken: result.refresh_token,
+			refreshToken: result.refresh_token ?? null,
 			idToken: result.id_token
 		};
 		return tokens;
@@ -64,13 +64,13 @@ export class Authentik implements OAuth2ProviderWithPKCE {
 interface TokenResponseBody {
 	access_token: string;
 	expires_in: number;
-	refresh_token: string;
+	refresh_token?: string;
 	id_token: string;
 }
 
 export interface AuthentikTokens {
 	accessToken: string;
 	accessTokenExpiresAt: Date;
-	refreshToken: string;
+	refreshToken: string | null;
 	idToken: string;
 }
