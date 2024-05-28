@@ -52,6 +52,7 @@
 				["Shikimori", "/providers/shikimori"],
 				["Slack", "/providers/slack"],
 				["Spotify", "/providers/spotify"],
+				["Start.gg", "/providers/startgg"],
 				["Strava", "/providers/strava"],
 				["Tiltify", "/providers/tiltify"],
 				["Tumblr", "/providers/tumblr"],
