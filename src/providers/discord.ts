@@ -20,7 +20,7 @@ export class Discord implements OAuth2Provider {
 	public async createAuthorizationURL(
 		state: string,
 		options?: {
-			scopes?: string[];
+			scopes?: DiscordScope[];
 		}
 	): Promise<URL> {
 		return await this.client.createAuthorizationURL({
@@ -65,3 +65,33 @@ export interface DiscordTokens {
 	refreshToken: string;
 	accessTokenExpiresAt: Date;
 }
+
+type DiscordScope =
+	| "activities.read"
+	| "activities.write"
+	| "applications.builds.read"
+	| "applications.builds.upload"
+	| "applications.commands"
+	| "applications.commands.update"
+	| "applications.commands.permissions.update"
+	| "applications.entitlements"
+	| "applications.store.update"
+	| "bot"
+	| "connections"
+	| "dm_channels.read"
+	| "email"
+	| "gdm.join"
+	| "guilds"
+	| "guilds.join"
+	| "guilds.members.read"
+	| "identify"
+	| "messages.read"
+	| "relationships.read"
+	| "role_connections.write"
+	| "rpc"
+	| "rpc.activities.write"
+	| "rpc.notifications.read"
+	| "rpc.voice.read"
+	| "rpc.voice.write"
+	| "voice"
+	| "webhook.incoming";
