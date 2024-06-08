@@ -1,5 +1,5 @@
 import { TimeSpan, createDate } from "oslo";
-import { decodeBase64 } from "oslo/encoding";
+import { base64 } from "oslo/encoding";
 import { createJWT } from "oslo/jwt";
 import { OAuth2Client } from "oslo/oauth2";
 
@@ -113,10 +113,14 @@ export interface AppleCredentials {
 }
 
 function parsePKCS8PEM(pkcs8: string): Uint8Array {
-	return decodeBase64(
+	return base64.decode(
 		pkcs8
-			.replace(/-----BEGIN PRIVATE KEY-----/, "")
-			.replace(/-----END PRIVATE KEY-----/, "")
-			.trim()
+			.replace("-----BEGIN PRIVATE KEY-----", "")
+			.replace("-----END PRIVATE KEY-----", "")
+			.replace(/\r?\n|\r/g, "")
+			.trim(),
+		{
+			strict: false
+		}
 	);
 }
