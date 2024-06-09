@@ -1,1 +1,0 @@
-Fix: Remove new lines when parsing Apple certificate
