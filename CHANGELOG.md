@@ -1,5 +1,11 @@
 # arctic
 
+## 1.9.1
+
+### Patch changes
+
+- Fix: Remove new lines when parsing Apple certificate ([#139](https://github.com/pilcrowOnPaper/arctic/pull/139))
+
 ## 1.9.0
 
 ### Minor changes
