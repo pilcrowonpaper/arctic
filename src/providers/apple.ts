@@ -117,7 +117,8 @@ function parsePKCS8PEM(pkcs8: string): Uint8Array {
 		pkcs8
 			.replace("-----BEGIN PRIVATE KEY-----", "")
 			.replace("-----END PRIVATE KEY-----", "")
-			.replace(/\r?\n|\r/g, "")
+			.replaceAll("\r", "")
+			.replaceAll("\n", "")
 			.trim(),
 		{
 			strict: false
