@@ -55,7 +55,7 @@ url.searchParams.set("access_type", "offline");
 ```
 
 ## Optimize the login experience for a Google Cloud organization
-If your application is designed specifically for an organization that owns the Google accounts of the user (for instance an enterprise or an academic institution using Google Workspace), you can make the Google account selection UI only show the accounts of this organization by using the `hostedDomain` parameter when generating the authorization URL:
+If your application is designed specifically for an organization that owns the Google accounts of the user (such as an enterprise or an academic institution using Google Workspace), you can make the Google account selection UI show only the accounts of this organization by using the `hostedDomain` parameter when generating the authorization URL:
 
 ```ts
 const url: URL = await google.createAuthorizationURL(state, codeVerifier, {
@@ -63,4 +63,4 @@ const url: URL = await google.createAuthorizationURL(state, codeVerifier, {
 });
 ```
 
-You will still need to verify manually that the email address belongs to someone in your organization when processing the validation code, as malicious users could modify the URL parameter on the client side.
+You still need to verify manually that the email address belongs to your organization when processing the validation code, as malicious users could modify the URL parameter on the client side.
