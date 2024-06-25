@@ -1,6 +1,7 @@
 import { OAuth2Client } from "oslo/oauth2";
 
 import type { OAuth2Provider } from "../index.js";
+import { TimeSpan, createDate } from "oslo";
 
 export class GitHub implements OAuth2Provider {
 	private client: OAuth2Client;
@@ -38,18 +39,45 @@ export class GitHub implements OAuth2Provider {
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<GitHubTokens> {
-		const result = await this.client.validateAuthorizationCode(code, {
+		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
 			authenticateWith: "request_body",
 			credentials: this.clientSecret
 		});
 		const tokens: GitHubTokens = {
-			accessToken: result.access_token
+			accessToken: result.access_token,
+			refreshToken: result.refresh_token ?? null,
+			accessTokenExpiresAt: result.expires_in ? createDate(new TimeSpan(result.expires_in, "s")) : undefined,
+			refreshTokenExpiresAt: result.refresh_token_expires_in ? createDate(new TimeSpan(result.refresh_token_expires_in, "s")) : undefined
+		};
+		return tokens;
+	}
+
+	public async refreshAccessToken(refreshToken: string): Promise<GitHubTokens> {
+		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
+			authenticateWith: "request_body",
+			credentials: this.clientSecret
+		});
+		const tokens: GitHubTokens = {
+			accessToken: result.access_token,
+			refreshToken: result.refresh_token ?? null,
+			accessTokenExpiresAt: result.expires_in ? createDate(new TimeSpan(result.expires_in, "s")) : undefined,
+			refreshTokenExpiresAt: result.refresh_token_expires_in ? createDate(new TimeSpan(result.refresh_token_expires_in, "s")) : undefined
 		};
 		return tokens;
 	}
 }
 
+interface TokenResponseBody {
+  access_token: string,
+	expires_in?: number;
+	refresh_token?: string;
+	refresh_token_expires_in?: number,
+}
+
 export interface GitHubTokens {
 	accessToken: string;
+	refreshToken?: string | null;
+	accessTokenExpiresAt?: Date;
+	refreshTokenExpiresAt?: Date | null;
 }
 
