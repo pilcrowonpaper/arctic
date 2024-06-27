@@ -1,14 +1,19 @@
-import { TimeSpan, createDate } from "oslo";
-import { OAuth2Client } from "oslo/oauth2";
+import {
+	AuthorizationCodeAuthorizationURL,
+	AuthorizationCodeTokenRequestContext,
+	RefreshRequestContext
+} from "@oslojs/oauth2";
+import { sendTokenRequest } from "../request.js";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizeEndpoint = "https://myanimelist.net/v1/oauth2/authorize";
 const tokenEndpoint = "https://myanimelist.net/v1/oauth2/token";
 
-export class MyAnimeList implements OAuth2ProviderWithPKCE {
-	private client: OAuth2Client;
+export class MyAnimeList {
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string | null;
 
 	constructor(
 		clientId: string,
@@ -17,57 +22,42 @@ export class MyAnimeList implements OAuth2ProviderWithPKCE {
 			redirectURI?: string;
 		}
 	) {
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI: options?.redirectURI
-		});
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = options?.redirectURI ?? null;
 	}
 
-	public async createAuthorizationURL(state: string, codeVerifier: string): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state,
-			codeVerifier,
-			codeChallengeMethod: "plain"
-		});
+	public createAuthorizationURL(
+		state: string,
+		codeVerifier: string
+	): AuthorizationCodeAuthorizationURL {
+		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		if (this.redirectURI !== null) {
+			url.setRedirectURI(this.redirectURI);
+		}
+		url.setState(state);
+		url.setPlainCodeChallenge(codeVerifier);
+		return url;
 	}
 
 	public async validateAuthorizationCode(
 		code: string,
 		codeVerifier: string
-	): Promise<MyAnimeListTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret,
-			codeVerifier
-		});
-		const tokens: MyAnimeListTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
-		};
+	): Promise<OAuth2Tokens> {
+		const context = new AuthorizationCodeTokenRequestContext(code);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		if (this.redirectURI !== null) {
+			context.setRedirectURI(this.redirectURI);
+		}
+		context.setCodeVerifier(codeVerifier);
+		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<MyAnimeListTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			credentials: this.clientSecret
-		});
-		const tokens: MyAnimeListTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
-		};
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const context = new RefreshRequestContext(refreshToken);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
 	}
-}
-
-interface TokenResponseBody {
-	access_token: string;
-	refresh_token: string;
-	expires_in: number;
-}
-
-export interface MyAnimeListTokens {
-	accessToken: string;
-	refreshToken: string;
-	accessTokenExpiresAt: Date;
 }

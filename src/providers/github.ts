@@ -1,55 +1,50 @@
-import { OAuth2Client } from "oslo/oauth2";
+import {
+	AuthorizationCodeAuthorizationURL,
+	AuthorizationCodeTokenRequestContext,
+	RefreshRequestContext
+} from "@oslojs/oauth2";
+import { sendTokenRequest } from "../request.js";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-export class GitHub implements OAuth2Provider {
-	private client: OAuth2Client;
+const authorizeEndpoint = "https://github.com/login/oauth/authorize";
+const tokenEndpoint = "https://github.com/login/oauth/access_token";
+
+export class GitHub {
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string | null;
 
-	constructor(
-		clientId: string,
-		clientSecret: string,
-		options?: {
-			redirectURI?: string;
-			enterpriseDomain?: string;
-		}
-	) {
-		const baseUrl = options?.enterpriseDomain ?? "https://github.com";
+	constructor(clientId: string, clientSecret: string, redirectURI: string | null) {
+		this.clientId = clientId;
 
-		const authorizeEndpoint = baseUrl + "/login/oauth/authorize";
-		const tokenEndpoint = baseUrl + "/login/oauth/access_token";
-
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI: options?.redirectURI
-		});
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		options?: {
-			scopes?: string[];
+	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
+		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		url.setState(state);
+		if (this.redirectURI !== null) {
+			url.setRedirectURI(this.redirectURI);
 		}
-	): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state,
-			scopes: options?.scopes ?? []
-		});
+		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<GitHubTokens> {
-		const result = await this.client.validateAuthorizationCode(code, {
-			authenticateWith: "request_body",
-			credentials: this.clientSecret
-		});
-		const tokens: GitHubTokens = {
-			accessToken: result.access_token
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const context = new AuthorizationCodeTokenRequestContext(code);
+		context.authenticateWithRequestBody(this.clientId, this.clientSecret);
+		if (this.redirectURI !== null) {
+			context.setRedirectURI(this.redirectURI);
+		}
+		const tokens = await sendTokenRequest(tokenEndpoint, context);
+		return tokens;
+	}
+
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const context = new RefreshRequestContext(refreshToken);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
 	}
 }
-
-export interface GitHubTokens {
-	accessToken: string;
-}
-

@@ -1,79 +1,61 @@
-import { TimeSpan, createDate } from "oslo";
-import { OAuth2Client } from "oslo/oauth2";
+import {
+	AuthorizationCodeAuthorizationURL,
+	AuthorizationCodeTokenRequestContext,
+	RefreshRequestContext
+} from "@oslojs/oauth2";
+import { sendTokenRequest } from "../request.js";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-export class MicrosoftEntraId implements OAuth2ProviderWithPKCE {
-	private client: OAuth2Client;
+export class MicrosoftEntraId {
+	private authorizeEndpoint: string;
+	private tokenEndpoint: string;
+
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
-	constructor(tenant: string, clientId: string, clientSecret: string, redirectURI: string) {
-		const authorizeEndpoint = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize`;
-		const tokenEndpoint = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`;
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+	constructor(
+		authorizeEndpoint: string,
+		tokenEndpoint: string,
+		clientId: string,
+		clientSecret: string,
+		redirectURI: string
+	) {
+		this.authorizeEndpoint = authorizeEndpoint;
+		this.tokenEndpoint = tokenEndpoint;
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
+	public createAuthorizationURL(
 		state: string,
-		codeVerifier: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		const scopes = options?.scopes ?? [];
-		const url = await this.client.createAuthorizationURL({
-			state,
-			codeVerifier,
-			scopes: [...scopes, "openid"]
-		});
-		url.searchParams.set("nonce", "_");
+		codeVerifier: string
+	): AuthorizationCodeAuthorizationURL {
+		const url = new AuthorizationCodeAuthorizationURL(this.authorizeEndpoint, this.clientId);
+		url.setRedirectURI(this.redirectURI);
+		url.setState(state);
+		url.setS256CodeChallenge(codeVerifier);
 		return url;
 	}
 
 	public async validateAuthorizationCode(
 		code: string,
 		codeVerifier: string
-	): Promise<MicrosoftEntraIdTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret,
-			codeVerifier
-		});
-		const tokens: MicrosoftEntraIdTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token ?? null,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token
-		};
+	): Promise<OAuth2Tokens> {
+		const context = new AuthorizationCodeTokenRequestContext(code);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		context.setRedirectURI(this.redirectURI);
+		context.setCodeVerifier(codeVerifier);
+		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<MicrosoftEntraIdTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			credentials: this.clientSecret
-		});
-		const tokens: MicrosoftEntraIdTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token ?? null,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token
-		};
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const context = new RefreshRequestContext(refreshToken);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
 	}
-}
-
-interface TokenResponseBody {
-	access_token: string;
-	expires_in: number;
-	refresh_token?: string;
-	id_token: string;
-}
-
-export interface MicrosoftEntraIdTokens {
-	idToken: string;
-	accessToken: string;
-	accessTokenExpiresAt: Date;
-	refreshToken: string | null;
 }

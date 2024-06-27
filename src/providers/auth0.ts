@@ -1,68 +1,47 @@
-import { OAuth2Client } from "oslo/oauth2";
+import {
+	AuthorizationCodeAuthorizationURL,
+	AuthorizationCodeTokenRequestContext,
+	RefreshRequestContext
+} from "@oslojs/oauth2";
+import { sendTokenRequest } from "../request.js";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-export class Auth0 implements OAuth2Provider {
-	private client: OAuth2Client;
-	private appDomain: string;
+export class Auth0 {
+	private authorizeEndpoint: string;
+	private tokenEndpoint: string;
+
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
-	constructor(appDomain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.appDomain = appDomain;
-		const authorizeEndpoint = this.appDomain + "/authorize";
-		const tokenEndpoint = this.appDomain + "/oauth/token";
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
+		this.authorizeEndpoint = domain + "/authorize";
+		this.tokenEndpoint = domain + "/oauth/token";
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		const scopes = options?.scopes ?? [];
-		return await this.client.createAuthorizationURL({
-			state,
-			scopes: [...scopes, "openid"]
-		});
+	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
+		const url = new AuthorizationCodeAuthorizationURL(this.authorizeEndpoint, this.clientId);
+		url.setRedirectURI(this.redirectURI);
+		url.setState(state);
+		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<Auth0Tokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret
-		});
-		const tokens: Auth0Tokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			idToken: result.id_token
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const context = new AuthorizationCodeTokenRequestContext(code);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		context.setRedirectURI(this.redirectURI);
+		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<Auth0Tokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			credentials: this.clientSecret
-		});
-		const tokens: Auth0Tokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			idToken: result.id_token
-		};
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const context = new RefreshRequestContext(refreshToken);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
 	}
-}
-
-interface TokenResponseBody {
-	access_token: string;
-	refresh_token: string;
-	id_token: string;
-}
-
-export interface Auth0Tokens {
-	accessToken: string;
-	refreshToken: string;
-	idToken: string;
 }

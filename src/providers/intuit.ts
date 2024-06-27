@@ -1,77 +1,45 @@
-import { OAuth2Client } from "oslo/oauth2";
-import { TimeSpan, createDate } from "oslo";
+import {
+	AuthorizationCodeAuthorizationURL,
+	AuthorizationCodeTokenRequestContext,
+	RefreshRequestContext
+} from "@oslojs/oauth2";
+import { sendTokenRequest } from "../request.js";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizeEndpoint = "https://appcenter.intuit.com/connect/oauth2";
 const tokenEndpoint = "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer";
 
-export class Intuit implements OAuth2Provider {
-	private client: OAuth2Client;
+export class Intuit {
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
 	constructor(clientId: string, clientSecret: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		const scopes = options?.scopes ?? [];
-		return await this.client.createAuthorizationURL({
-			state,
-			scopes: [...scopes, "openid"]
-		});
+	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
+		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		url.setRedirectURI(this.redirectURI);
+		url.setState(state);
+		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<IntuitTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret
-		});
-		const tokens: IntuitTokens = {
-			accessToken: result.access_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			refreshToken: result.refresh_token,
-			refreshTokenExpiresAt: createDate(new TimeSpan(result.x_refresh_token_expires_in, "s")),
-			idToken: result.id_token
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const context = new AuthorizationCodeTokenRequestContext(code);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		context.setRedirectURI(this.redirectURI);
+		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
 	}
 
-	public async refreshAccessToken(accessToken: string): Promise<IntuitTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(accessToken, {
-			credentials: this.clientSecret
-		});
-		const tokens: IntuitTokens = {
-			accessToken: result.access_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			refreshToken: result.refresh_token,
-			refreshTokenExpiresAt: createDate(new TimeSpan(result.x_refresh_token_expires_in, "s")),
-			idToken: result.id_token
-		};
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const context = new RefreshRequestContext(refreshToken);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
 	}
-}
-
-interface TokenResponseBody {
-	token_type: "bearer";
-	expires_in: number;
-	refresh_token: string;
-	x_refresh_token_expires_in: number;
-	access_token: string;
-	id_token: string;
-}
-
-export interface IntuitTokens {
-	accessToken: string;
-	accessTokenExpiresAt: Date;
-	refreshToken: string;
-	refreshTokenExpiresAt: Date;
-	idToken: string;
 }

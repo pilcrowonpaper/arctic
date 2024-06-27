@@ -1,42 +1,37 @@
-import { OAuth2Client } from "oslo/oauth2";
+import {
+	AuthorizationCodeAuthorizationURL,
+	AuthorizationCodeTokenRequestContext
+} from "@oslojs/oauth2";
+import { sendTokenRequest } from "../request.js";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizeEndpoint = "https://api.notion.com/v1/oauth/authorize";
 const tokenEndpoint = "https://api.notion.com/v1/oauth/token";
 
-export class Notion implements OAuth2Provider {
-	private client: OAuth2Client;
+export class Notion {
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
 	constructor(clientId: string, clientSecret: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state
-		});
+	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
+		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		url.setRedirectURI(this.redirectURI);
+		url.setState(state);
+		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<NotionTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret
-		});
-		const tokens: NotionTokens = {
-			accessToken: result.access_token
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const context = new AuthorizationCodeTokenRequestContext(code);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		context.setRedirectURI(this.redirectURI);
+		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
 	}
-}
-
-interface TokenResponseBody {
-	access_token: string;
-}
-
-export interface NotionTokens {
-	accessToken: string;
 }

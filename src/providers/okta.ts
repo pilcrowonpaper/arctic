@@ -1,110 +1,62 @@
-import { OAuth2Client } from "oslo/oauth2";
-import { TimeSpan, createDate } from "oslo";
+import {
+	AuthorizationCodeAuthorizationURL,
+	AuthorizationCodeTokenRequestContext,
+	RefreshRequestContext
+} from "@oslojs/oauth2";
+import { sendTokenRequest } from "../request.js";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-export class Okta implements OAuth2ProviderWithPKCE {
-	private client: OAuth2Client;
+export class Okta {
+	private authorizeEndpoint: string;
+	private tokenEndpoint: string;
+
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
 	constructor(
-		oktaDomain: string,
+		authorizeEndpoint: string,
+		tokenEndpoint: string,
 		clientId: string,
 		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			authorizationServerId?: string;
-		}
+		redirectURI: string
 	) {
-		let authorizeEndpoint;
-		let tokenEndpoint;
-
-		if (options?.authorizationServerId) {
-			authorizeEndpoint = `${oktaDomain}/oauth2/${options.authorizationServerId}/v1/authorize`;
-			tokenEndpoint = `${oktaDomain}/oauth2/${options.authorizationServerId}/v1/token`;
-		} else {
-			authorizeEndpoint = `${oktaDomain}/oauth2/v1/authorize`;
-			tokenEndpoint = `${oktaDomain}/oauth2/v1/token`;
-		}
-
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.authorizeEndpoint = authorizeEndpoint;
+		this.tokenEndpoint = tokenEndpoint;
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
+	public createAuthorizationURL(
 		state: string,
-		codeVerifier: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		const url = await this.client.createAuthorizationURL({
-			codeVerifier,
-			scopes: [...(options?.scopes ?? []), "openid"]
-		});
-		url.searchParams.set("state", state);
-
+		codeVerifier: string
+	): AuthorizationCodeAuthorizationURL {
+		const url = new AuthorizationCodeAuthorizationURL(this.authorizeEndpoint, this.clientId);
+		url.setRedirectURI(this.redirectURI);
+		url.setState(state);
+		url.setS256CodeChallenge(codeVerifier);
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<OktaTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			codeVerifier,
-			credentials: this.clientSecret,
-			authenticateWith: "request_body"
-		});
-
-		const tokens: OktaTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token ?? null,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token,
-			deviceSecret: result.device_secret ?? null
-		};
-
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier: string
+	): Promise<OAuth2Tokens> {
+		const context = new AuthorizationCodeTokenRequestContext(code);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		context.setRedirectURI(this.redirectURI);
+		context.setCodeVerifier(codeVerifier);
+		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
 	}
 
-	public async refreshAccessToken(
-		refreshToken: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<OktaTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			credentials: this.clientSecret,
-			authenticateWith: "request_body",
-			scopes: options?.scopes ?? []
-		});
-
-		const tokens: OktaTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token ?? null,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token,
-			deviceSecret: result.device_secret ?? null
-		};
-
+	public async refreshAccessToken(refreshToken: string, scopes: string[]): Promise<OAuth2Tokens> {
+		const context = new RefreshRequestContext(refreshToken);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		context.setScopes(...scopes);
+		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
 	}
-}
-
-interface TokenResponseBody {
-	access_token: string;
-	token_type: string;
-	expires_in: number;
-	scope: string;
-	refresh_token?: string;
-	id_token: string;
-	device_secret?: string;
-}
-
-export interface OktaTokens {
-	idToken: string;
-	accessToken: string;
-	accessTokenExpiresAt: Date;
-	refreshToken: string | null;
-	deviceSecret: string | null;
 }

@@ -1,91 +1,61 @@
-import { TimeSpan, createDate } from "oslo";
-import { OAuth2Client } from "oslo/oauth2";
+import {
+	AuthorizationCodeAuthorizationURL,
+	AuthorizationCodeTokenRequestContext,
+	RefreshRequestContext
+} from "@oslojs/oauth2";
+import { sendTokenRequest } from "../request.js";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-export class AmazonCognito implements OAuth2ProviderWithPKCE {
-	private client: OAuth2Client;
+export class AmazonCognito {
+	private authorizeEndpoint: string;
+	private tokenEndpoint: string;
+
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
-	constructor(userPoolDomain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		const authorizeEndpoint = userPoolDomain + "/oauth2/authorize";
-		const tokenEndpoint = userPoolDomain + "/oauth2/token";
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+	constructor(
+		authorizeEndpoint: string,
+		tokenEndpoint: string,
+		clientId: string,
+		clientSecret: string,
+		redirectURI: string
+	) {
+		this.authorizeEndpoint = authorizeEndpoint;
+		this.tokenEndpoint = tokenEndpoint;
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
+	public createAuthorizationURL(
 		state: string,
-		codeVerifier: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		const scopes = options?.scopes ?? [];
-		return await this.client.createAuthorizationURL({
-			state,
-			codeVerifier,
-			scopes: [...scopes, "openid"]
-		});
+		codeVerifier: string
+	): AuthorizationCodeAuthorizationURL {
+		const url = new AuthorizationCodeAuthorizationURL(this.authorizeEndpoint, this.clientId);
+		url.setRedirectURI(this.redirectURI);
+		url.setState(state);
+		url.setS256CodeChallenge(codeVerifier);
+		return url;
 	}
 
 	public async validateAuthorizationCode(
 		code: string,
 		codeVerifier: string
-	): Promise<AmazonCognitoTokens> {
-		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
-			code,
-			{
-				credentials: this.clientSecret,
-				codeVerifier
-			}
-		);
-		const tokens: AmazonCognitoTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token
-		};
+	): Promise<OAuth2Tokens> {
+		const context = new AuthorizationCodeTokenRequestContext(code);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		context.setRedirectURI(this.redirectURI);
+		context.setCodeVerifier(codeVerifier);
+		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<AmazonCognitoRefreshedTokens> {
-		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(refreshToken, {
-			credentials: this.clientSecret
-		});
-		const tokens: AmazonCognitoRefreshedTokens = {
-			accessToken: result.access_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token
-		};
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const context = new RefreshRequestContext(refreshToken);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
 	}
-}
-
-interface AuthorizationCodeResponseBody {
-	access_token: string;
-	refresh_token: string;
-	expires_in: number;
-	id_token: string;
-}
-
-interface RefreshTokenResponseBody {
-	access_token: string;
-	expires_in: number;
-	id_token: string;
-}
-
-export interface AmazonCognitoTokens {
-	accessToken: string;
-	refreshToken: string;
-	accessTokenExpiresAt: Date;
-	idToken: string;
-}
-
-export interface AmazonCognitoRefreshedTokens {
-	accessToken: string;
-	accessTokenExpiresAt: Date;
-	idToken: string;
 }

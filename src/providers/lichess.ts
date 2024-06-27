@@ -1,46 +1,42 @@
-import { OAuth2Client } from "oslo/oauth2";
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import {
+	AuthorizationCodeAuthorizationURL,
+	AuthorizationCodeTokenRequestContext
+} from "@oslojs/oauth2";
+import { sendTokenRequest } from "../request.js";
+
+import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizeEndpoint = "https://lichess.org/oauth";
 const tokenEndpoint = "https://lichess.org/api/token";
 
-export class Lichess implements OAuth2ProviderWithPKCE {
-	private client: OAuth2Client;
+export class Lichess {
+	private clientId: string;
+	private redirectURI: string;
 
 	constructor(clientId: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.clientId = clientId;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
+	public createAuthorizationURL(
 		state: string,
-		codeVerifier: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state,
-			scopes: options?.scopes ?? [],
-			codeVerifier
-		});
+		codeVerifier: string
+	): AuthorizationCodeAuthorizationURL {
+		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		url.setRedirectURI(this.redirectURI);
+		url.setState(state);
+		url.setS256CodeChallenge(codeVerifier);
+		return url;
 	}
-
 	public async validateAuthorizationCode(
 		code: string,
 		codeVerifier: string
-	): Promise<LichessTokens> {
-		const result = await this.client.validateAuthorizationCode(code, {
-			codeVerifier
-		});
-		const tokens: LichessTokens = {
-			accessToken: result.access_token
-		};
+	): Promise<OAuth2Tokens> {
+		const context = new AuthorizationCodeTokenRequestContext(code);
+		context.setClientId(this.clientId);
+		context.setRedirectURI(this.redirectURI);
+		context.setCodeVerifier(codeVerifier);
+		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
 	}
-}
-
-export interface LichessTokens {
-	accessToken: string;
 }
