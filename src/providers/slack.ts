@@ -40,10 +40,10 @@ export class SlackApp {
 	}
 }
 
-const oidcAuthorizationEndpoint = "https://slack.com/openid/connect/authorize";
-const oidcTokenEndpoint = "https://slack.com/api/openid.connect.token";
+const openidAuthorizationEndpoint = "https://slack.com/openid/connect/authorize";
+const openidTokenEndpoint = "https://slack.com/api/openid.connect.token";
 
-export class SlackOIDC {
+export class SlackOpenID {
 	private clientId: string;
 	private clientSecret: string;
 	private redirectURI: string | null;
@@ -55,7 +55,7 @@ export class SlackOIDC {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(oidcAuthorizationEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(openidAuthorizationEndpoint, this.clientId);
 		if (this.redirectURI !== null) {
 			url.setRedirectURI(this.redirectURI);
 		}
@@ -69,7 +69,7 @@ export class SlackOIDC {
 		if (this.redirectURI !== null) {
 			context.setRedirectURI(this.redirectURI);
 		}
-		const tokens = await sendTokenRequest(oidcTokenEndpoint, context);
+		const tokens = await sendTokenRequest(openidTokenEndpoint, context);
 		return tokens;
 	}
 }

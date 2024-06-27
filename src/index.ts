@@ -32,7 +32,7 @@ export { Reddit } from "./providers/reddit.js";
 export { Roblox } from "./providers/roblox.js";
 export { Salesforce } from "./providers/salesforce.js";
 export { Shikimori } from "./providers/shikimori.js";
-export { SlackApp, SlackOIDC } from "./providers/slack.js";
+export { SlackApp, SlackOpenID } from "./providers/slack.js";
 export { Spotify } from "./providers/spotify.js";
 export { Strava } from "./providers/strava.js";
 export { Tiltify } from "./providers/tiltify.js";
