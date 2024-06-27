@@ -21,7 +21,10 @@ export class Apple {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.credentials.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(
+			authorizationEndpoint,
+			this.credentials.clientId
+		);
 		url.setState(state);
 		url.setRedirectURI(this.redirectURI);
 		return url;
