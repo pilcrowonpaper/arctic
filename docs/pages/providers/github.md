@@ -33,7 +33,7 @@ url.setScopes("user:email", "repo");
 
 ## Validate authorization code
 
-Use `validateAuthorizationCode()` to validate the provided authorization code. This will either return an [`OAuth2Tokens`]() or throw an error. OAuth Apps will only return an access token.
+Use `validateAuthorizationCode()` to validate the provided authorization code. This will either return an [`OAuth2Tokens`]() or throw an error. OAuth Apps will only return an access token (no expiration).
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
