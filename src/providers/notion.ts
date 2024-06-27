@@ -6,7 +6,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://api.notion.com/v1/oauth/authorize";
+const authorizationEndpoint = "https://api.notion.com/v1/oauth/authorize";
 const tokenEndpoint = "https://api.notion.com/v1/oauth/token";
 
 export class Notion {
@@ -21,7 +21,7 @@ export class Notion {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

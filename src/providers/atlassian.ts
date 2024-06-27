@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://auth.atlassian.com/authorize";
+const authorizationEndpoint = "https://auth.atlassian.com/authorize";
 const tokenEndpoint = "https://auth.atlassian.com/oauth/token";
 
 export class Atlassian {
@@ -22,7 +22,7 @@ export class Atlassian {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		url.searchParams.set("audience", "api.atlassian.com");

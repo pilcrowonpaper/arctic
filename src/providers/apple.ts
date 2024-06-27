@@ -8,7 +8,7 @@ import { sendTokenRequest } from "../request.js";
 import type { OAuth2Tokens } from "../oauth2.js";
 import { base64, base64url } from "@oslojs/encoding";
 
-const authorizeEndpoint = "https://appleid.apple.com/auth/authorize";
+const authorizationEndpoint = "https://appleid.apple.com/auth/authorize";
 const tokenEndpoint = "https://appleid.apple.com/auth/token";
 
 export class Apple {
@@ -21,7 +21,7 @@ export class Apple {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.credentials.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.credentials.clientId);
 		url.setState(state);
 		url.setRedirectURI(this.redirectURI);
 		return url;

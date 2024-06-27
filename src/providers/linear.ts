@@ -6,7 +6,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://linear.app/oauth/authorize";
+const authorizationEndpoint = "https://linear.app/oauth/authorize";
 const tokenEndpoint = "https://api.linear.app/oauth/token";
 
 export class Linear {
@@ -21,7 +21,7 @@ export class Linear {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

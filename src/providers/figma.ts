@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://www.figma.com/oauth";
+const authorizationEndpoint = "https://www.figma.com/oauth";
 const tokenEndpoint = "https://www.figma.com/api/oauth/token";
 
 export class Figma {
@@ -22,7 +22,7 @@ export class Figma {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

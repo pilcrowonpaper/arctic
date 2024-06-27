@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://v5api.tiltify.com/oauth/authorizeze";
+const authorizationEndpoint = "https://v5api.tiltify.com/oauth/authorizeze";
 const tokenEndpoint = "https://v5api.tiltify.com/oauth/token";
 
 export class Tiltify {
@@ -22,7 +22,7 @@ export class Tiltify {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

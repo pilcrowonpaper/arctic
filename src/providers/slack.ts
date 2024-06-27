@@ -6,7 +6,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://slack.com/openid/connect/authorize";
+const authorizationEndpoint = "https://slack.com/openid/connect/authorize";
 const tokenEndpoint = "https://slack.com/api/openid.connect.token";
 
 export class Slack {
@@ -21,7 +21,7 @@ export class Slack {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

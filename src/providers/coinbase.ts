@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://www.coinbase.com/oauth/authorize";
+const authorizationEndpoint = "https://www.coinbase.com/oauth/authorize";
 const tokenEndpoint = "https://www.coinbase.com/oauth/token";
 
 export class Coinbase {
@@ -22,7 +22,7 @@ export class Coinbase {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

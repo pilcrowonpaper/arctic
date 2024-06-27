@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://shikimori.one/oauth/authorize";
+const authorizationEndpoint = "https://shikimori.one/oauth/authorize";
 const tokenEndpoint = "https://shikimori.one/oauth/token";
 
 export class Shikimori {
@@ -22,7 +22,7 @@ export class Shikimori {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

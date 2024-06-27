@@ -6,7 +6,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://api.intra.42.fr/oauth/authorize";
+const authorizationEndpoint = "https://api.intra.42.fr/oauth/authorize";
 const tokenEndpoint = "https://api.intra.42.fr/oauth/token";
 
 export class FortyTwo {
@@ -21,7 +21,7 @@ export class FortyTwo {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

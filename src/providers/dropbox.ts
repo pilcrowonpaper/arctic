@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://www.dropbox.com/oauth2/authorize";
+const authorizationEndpoint = "https://www.dropbox.com/oauth2/authorize";
 const tokenEndpoint = "https://api.dropboxapi.com/oauth2/token";
 
 export class Dropbox {
@@ -22,7 +22,7 @@ export class Dropbox {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

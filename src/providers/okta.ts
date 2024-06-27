@@ -8,7 +8,7 @@ import { sendTokenRequest } from "../request.js";
 import type { OAuth2Tokens } from "../oauth2.js";
 
 export class Okta {
-	private authorizeEndpoint: string;
+	private authorizationEndpoint: string;
 	private tokenEndpoint: string;
 
 	private clientId: string;
@@ -16,13 +16,13 @@ export class Okta {
 	private redirectURI: string;
 
 	constructor(
-		authorizeEndpoint: string,
+		authorizationEndpoint: string,
 		tokenEndpoint: string,
 		clientId: string,
 		clientSecret: string,
 		redirectURI: string
 	) {
-		this.authorizeEndpoint = authorizeEndpoint;
+		this.authorizationEndpoint = authorizationEndpoint;
 		this.tokenEndpoint = tokenEndpoint;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
@@ -33,7 +33,7 @@ export class Okta {
 		state: string,
 		codeVerifier: string
 	): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(this.authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(this.authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		url.setS256CodeChallenge(codeVerifier);

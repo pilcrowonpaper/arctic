@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://myanimelist.net/v1/oauth2/authorize";
+const authorizationEndpoint = "https://myanimelist.net/v1/oauth2/authorize";
 const tokenEndpoint = "https://myanimelist.net/v1/oauth2/token";
 
 export class MyAnimeList {
@@ -31,7 +31,7 @@ export class MyAnimeList {
 		state: string,
 		codeVerifier: string
 	): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		if (this.redirectURI !== null) {
 			url.setRedirectURI(this.redirectURI);
 		}

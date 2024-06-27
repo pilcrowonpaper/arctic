@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://discord.com/oauth2/authorize";
+const authorizationEndpoint = "https://discord.com/oauth2/authorize";
 const tokenEndpoint = "https://discord.com/api/oauth2/token";
 
 export class Discord {
@@ -22,7 +22,7 @@ export class Discord {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://access.line.me/oauth2/v2.1/authorize";
+const authorizationEndpoint = "https://access.line.me/oauth2/v2.1/authorize";
 const tokenEndpoint = "https://api.line.me/oauth2/v2.1/token";
 
 export class Line {
@@ -25,7 +25,7 @@ export class Line {
 		state: string,
 		codeVerifier: string
 	): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		url.setS256CodeChallenge(codeVerifier);

@@ -8,7 +8,7 @@ import { sendTokenRequest } from "../request.js";
 import type { OAuth2Tokens } from "../oauth2.js";
 
 export class Auth0 {
-	private authorizeEndpoint: string;
+	private authorizationEndpoint: string;
 	private tokenEndpoint: string;
 
 	private clientId: string;
@@ -16,7 +16,7 @@ export class Auth0 {
 	private redirectURI: string;
 
 	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.authorizeEndpoint = domain + "/authorize";
+		this.authorizationEndpoint = domain + "/authorize";
 		this.tokenEndpoint = domain + "/oauth/token";
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
@@ -24,7 +24,7 @@ export class Auth0 {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(this.authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(this.authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

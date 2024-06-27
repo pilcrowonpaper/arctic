@@ -8,7 +8,7 @@ import { sendTokenRequest } from "../request.js";
 import type { OAuth2Tokens } from "../oauth2.js";
 
 export class GitLab {
-	private authorizeEndpoint: string;
+	private authorizationEndpoint: string;
 	private tokenEndpoint: string;
 
 	private clientId: string;
@@ -16,7 +16,7 @@ export class GitLab {
 	private redirectURI: string;
 
 	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.authorizeEndpoint = domain + "/oauth/authorize";
+		this.authorizationEndpoint = domain + "/oauth/authorize";
 		this.tokenEndpoint = domain + "/oauth/token";
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
@@ -24,7 +24,7 @@ export class GitLab {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(this.authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(this.authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

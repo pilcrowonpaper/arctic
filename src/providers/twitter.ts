@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://twitter.com/i/oauth2/authorize";
+const authorizationEndpoint = "https://twitter.com/i/oauth2/authorize";
 const tokenEndpoint = "https://api.twitter.com/2/oauth2/token";
 
 export class Twitter {
@@ -25,7 +25,7 @@ export class Twitter {
 		state: string,
 		codeVerifier: string
 	): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		url.setS256CodeChallenge(codeVerifier);

@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://appcenter.intuit.com/connect/oauth2";
+const authorizationEndpoint = "https://appcenter.intuit.com/connect/oauth2";
 const tokenEndpoint = "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer";
 
 export class Intuit {
@@ -22,7 +22,7 @@ export class Intuit {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

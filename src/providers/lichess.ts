@@ -6,7 +6,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://lichess.org/oauth";
+const authorizationEndpoint = "https://lichess.org/oauth";
 const tokenEndpoint = "https://lichess.org/api/token";
 
 export class Lichess {
@@ -22,7 +22,7 @@ export class Lichess {
 		state: string,
 		codeVerifier: string
 	): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		url.setS256CodeChallenge(codeVerifier);

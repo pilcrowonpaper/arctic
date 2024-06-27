@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://osu.ppy.sh/oauth/authorize";
+const authorizationEndpoint = "https://osu.ppy.sh/oauth/authorize";
 const tokenEndpoint = "https://osu.ppy.sh/oauth/token";
 
 export class Osu {
@@ -22,7 +22,7 @@ export class Osu {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		if (this.redirectURI !== null) {
 			url.setRedirectURI(this.redirectURI);
 		}

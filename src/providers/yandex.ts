@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://oauth.yandex.com/authorize";
+const authorizationEndpoint = "https://oauth.yandex.com/authorize";
 const tokenEndpoint = "https://oauth.yandex.com/token";
 
 export class Yandex {
@@ -22,7 +22,7 @@ export class Yandex {
 	}
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		return url;

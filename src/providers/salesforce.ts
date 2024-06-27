@@ -7,7 +7,7 @@ import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://login.salesforce.com/services/oauth2/authorize";
+const authorizationEndpoint = "https://login.salesforce.com/services/oauth2/authorize";
 const tokenEndpoint = "https://login.salesforce.com/services/oauth2/token";
 
 export class Salesforce {
@@ -25,7 +25,7 @@ export class Salesforce {
 		state: string,
 		codeVerifier: string
 	): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizeEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		url.setS256CodeChallenge(codeVerifier);
