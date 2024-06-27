@@ -26,7 +26,7 @@ import { generateState, generateCodeVerifier } from "arctic";
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
 const url = google.createAuthorizationURL(state, codeVerifier);
-url.setScopes("profile", "email");
+url.setScopes("openid", "profile");
 ```
 
 ## Validate authorization code
@@ -128,5 +128,5 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 
 ```ts
 const url = google.createAuthorizationURL(state, codeVerifier);
-url.setScopes("profile", "email");
+url.setScopes("openid", "profile", "email");
 ```
