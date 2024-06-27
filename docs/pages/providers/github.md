@@ -10,7 +10,7 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
-`GitHub` takes a client ID, client secret, and redirect URI. The redirect URI is optional but required by GitHub if there are multiple URIs defined.
+The redirect URI is optional but required by GitHub if there are multiple URIs defined.
 
 ```ts
 import { GitHub } from "arctic";
@@ -21,7 +21,7 @@ const github = new GitHub(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `createAuthorizationURL()` to create a URL to redirect the user for authentication. You can set scopes with `setScopes()` and `appendScopes()`.
+Use `setScopes()` and `appendScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
@@ -33,7 +33,7 @@ url.setScopes("user:email", "repo");
 
 ## Validate authorization code
 
-Use `validateAuthorizationCode()` to validate the provided authorization code. This will either return an [`OAuth2Tokens`]() or throw an error. OAuth Apps will only return an access token (no expiration).
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/OAuth2RequestError), [`ArcticFetchError`](/reference/ArcticFetchError), or a standard `Error` (parse errors). OAuth Apps will only return an access token (no expiration).
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
