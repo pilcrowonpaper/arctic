@@ -24,6 +24,7 @@ export class Notion {
 		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
+		url.searchParams.set("owner", "user");
 		return url;
 	}
 
