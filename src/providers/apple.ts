@@ -58,7 +58,9 @@ export class Apple {
 		const now = Math.floor(Date.now() / 1000);
 		const header = {
 			typ: "JWT",
-			alg: "ES256",
+			alg: "ES256"
+		};
+		const payload = {
 			iss: this.credentials.teamId,
 			kid: this.credentials.keyId,
 			exp: now + 5 * 60,
@@ -69,7 +71,9 @@ export class Apple {
 		const encodedHeader = base64url.encodeNoPadding(
 			new TextEncoder().encode(JSON.stringify(header))
 		);
-		const encodedPayload = base64url.encodeNoPadding(new TextEncoder().encode(JSON.stringify({})));
+		const encodedPayload = base64url.encodeNoPadding(
+			new TextEncoder().encode(JSON.stringify(payload))
+		);
 		const signature = await crypto.subtle.sign(
 			{
 				name: "ECDSA",
