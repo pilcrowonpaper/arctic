@@ -4,24 +4,90 @@ title: "GitHub"
 
 # GitHub
 
-For usage, see [OAuth 2.0 provider](/guides/oauth2).
+OAuth 2.0 provider for Github Apps and GitHub Apps.
+
+For implementing OAuth in your app, see the [OAuth 2.0](/guides/oauth2) guide.
+
+## Initialization
+
+The redirect URI is optional, but required by GitHub if there are multiple URIs defined.
 
 ```ts
 import { GitHub } from "arctic";
 
-const github = new GitHub(clientId, clientSecret, {
-	// optional
-	redirectURI, // required when multiple redirect URIs are defined
-	enterpriseDomain: "https://example.com" // the base URL of your GitHub Enterprise Server instance
-});
+const github = new GitHub(clientId, clientSecret, null);
+const github = new GitHub(clientId, clientSecret, redirectURI);
 ```
 
+## Create authorization URL
+
+`createAuthorizationURL()` requires the OAuth state. You can set scopes with `setScopes()` and `appendScopes()`.
+
 ```ts
-const url: URL = await github.createAuthorizationURL(state, {
-	// optional
-	scopes
-});
-const tokens: GitHubTokens = await github.validateAuthorizationCode(code);
+import { generateState } from "arctic";
+
+const state = generateState();
+const url = github.createAuthorizationURL(state);
+url.setScopes("user:email", "repo");
+```
+
+## Validate authorization code
+
+Use `validateAuthorizationCode()` the validate the returned authorization code. This will either return an [`OAuth2Tokens`]() or throw an error. OAuth Apps will only return an access token.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await github.validateAuthorizationCode(code);
+	const accessToken = tokens.accessToken();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
+}
+```
+
+If you're using GitHub Apps, GitHub will provide an expiration for the access token alongside a refresh token.
+
+```ts
+const tokens = await github.validateAuthorizationCode(code);
+const accessToken = tokens.accessToken();
+const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+const refreshToken = tokens.refreshToken();
+const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
+```
+
+## Refresh access token
+
+For GitHub Apps, use `refreshAccessToken()` to get a new access token with a refresh token. The behavior is identical to `validateAuthorizationCode()`.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await github.refreshAccessToken(accessToken);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+	const refreshToken = tokens.refreshToken();
+	const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
 ```
 
 ## Get user profile
@@ -31,7 +97,7 @@ Use the [`/user` endpoint](https://docs.github.com/en/rest/users/users?apiVersio
 ```ts
 const response = await fetch("https://api.github.com/user", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const user = await response.json();
@@ -42,16 +108,15 @@ const user = await response.json();
 Add the `email` scope and use the [`/user/emails` endpoint](https://docs.github.com/en/rest/users/emails?apiVersion=2022-11-28#list-email-addresses-for-the-authenticated-user).
 
 ```ts
-const url = await github.createAuthorizationURL(state, {
-	scopes: ["user:email"]
-});
+const url = github.createAuthorizationURL(state);
+url.setScopes("user:email");
 ```
 
 ```ts
 const tokens = await github.validateAuthorizationCode(code);
 const response = await fetch("https://api.github.com/user/emails", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const emails = await response.json();
