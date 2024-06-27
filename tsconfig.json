@@ -1,6 +1,8 @@
 {
 	"include": ["src"],
 	"compilerOptions": {
+		"outDir": "dist",
+		"declaration": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"target": "es2022",
@@ -9,11 +11,8 @@
 		"resolveJsonModule": true,
 		"moduleDetection": "force",
 		"strict": true,
-		"noUncheckedIndexedAccess": true,
 		"moduleResolution": "NodeNext",
-		"module": "NodeNext",
-		"outDir": "dist",
-		"declaration": true
+		"module": "NodeNext"
 	},
 	"exclude": ["src/**/*.test.ts"]
 }

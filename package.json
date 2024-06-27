@@ -32,6 +32,7 @@
 	},
 	"dependencies": {
 		"@oslojs/encoding": "0.3.0",
-		"@oslojs/oauth2": "0.2.0"
+		"@oslojs/oauth2": "0.2.0",
+		"vitest": "^1.6.0"
 	}
 }
