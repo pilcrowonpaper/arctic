@@ -28,7 +28,7 @@ import { generateState } from "arctic";
 
 const state = generateState();
 const url = slack.createAuthorizationURL(state);
-url.setScopes("email", "users.profile:write");
+url.setScopes("incoming-webhook", "commands");
 ```
 
 ## Validate authorization code
