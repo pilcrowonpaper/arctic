@@ -12,9 +12,9 @@ const tokenEndpoint = "https://slack.com/api/openid.connect.token";
 export class Slack {
 	private clientId: string;
 	private clientSecret: string;
-	private redirectURI: string;
+	private redirectURI: string | null;
 
-	constructor(clientId: string, clientSecret: string, redirectURI: string) {
+	constructor(clientId: string, clientSecret: string, redirectURI: string | null) {
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.redirectURI = redirectURI;
@@ -22,7 +22,9 @@ export class Slack {
 
 	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
 		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
-		url.setRedirectURI(this.redirectURI);
+		if (this.redirectURI !== null) {
+			url.setRedirectURI(this.redirectURI);
+		}
 		url.setState(state);
 		return url;
 	}
@@ -30,7 +32,9 @@ export class Slack {
 	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
 		const context = new AuthorizationCodeTokenRequestContext(code);
 		context.authenticateWithRequestBody(this.clientId, this.clientSecret);
-		context.setRedirectURI(this.redirectURI);
+		if (this.redirectURI !== null) {
+			context.setRedirectURI(this.redirectURI);
+		}
 		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
 	}

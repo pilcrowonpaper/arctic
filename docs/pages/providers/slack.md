@@ -10,9 +10,12 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
+The redirect URI is optional.
+
 ```ts
 import { Slack } from "arctic";
 
+const slack = new Slack(clientId, clientSecret, null);
 const slack = new Slack(clientId, clientSecret, redirectURI);
 ```
 
