@@ -1,14 +1,16 @@
 import {
 	AuthorizationCodeAuthorizationURL,
 	AuthorizationCodeTokenRequestContext,
-	RefreshRequestContext
+	RefreshRequestContext,
+	TokenRevocationRequestContext
 } from "@oslojs/oauth2";
-import { sendTokenRequest } from "../request.js";
+import { sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://discord.com/oauth2/authorize";
 const tokenEndpoint = "https://discord.com/api/oauth2/token";
+const tokenRevocationEndpoint = "https://discord.com/api/oauth2/token/revoke";
 
 export class Discord {
 	private clientId: string;
@@ -41,5 +43,12 @@ export class Discord {
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
 		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
+	}
+
+	// Revokes both access and refresh token
+	public async revokeToken(token: string): Promise<void> {
+		const context = new TokenRevocationRequestContext(token);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		await sendTokenRevocationRequest(tokenRevocationEndpoint, context);
 	}
 }

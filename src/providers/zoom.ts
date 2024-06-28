@@ -1,14 +1,16 @@
 import {
 	AuthorizationCodeAuthorizationURL,
 	AuthorizationCodeTokenRequestContext,
-	RefreshRequestContext
+	RefreshRequestContext,
+	TokenRevocationRequestContext
 } from "@oslojs/oauth2";
-import { sendTokenRequest } from "../request.js";
+import { sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://zoom.us/oauth/authorize";
 const tokenEndpoint = "https://zoom.us/oauth/token";
+const tokenRevocationEndpoint = "https://zoom.us/oauth/revoke";
 
 export class Zoom {
 	private clientId: string;
@@ -49,5 +51,11 @@ export class Zoom {
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
 		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
+	}
+
+	public async revokeAccessToken(accessToken: string): Promise<void> {
+		const context = new TokenRevocationRequestContext(accessToken);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		await sendTokenRevocationRequest(tokenRevocationEndpoint, context);
 	}
 }

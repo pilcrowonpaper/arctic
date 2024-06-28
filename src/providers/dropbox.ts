@@ -1,14 +1,16 @@
 import {
 	AuthorizationCodeAuthorizationURL,
 	AuthorizationCodeTokenRequestContext,
-	RefreshRequestContext
+	RefreshRequestContext,
+	TokenRevocationRequestContext
 } from "@oslojs/oauth2";
-import { sendTokenRequest } from "../request.js";
+import { sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://www.dropbox.com/oauth2/authorize";
 const tokenEndpoint = "https://api.dropboxapi.com/oauth2/token";
+const tokenRevocationEndpoint = "https://api.dropboxapi.com/2/auth/token/revoke"
 
 export class Dropbox {
 	private clientId: string;
@@ -41,5 +43,12 @@ export class Dropbox {
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
 		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
+	}
+
+	// Revokes both access and refresh token
+	public async revokeToken(token: string): Promise<void> {
+		const context = new TokenRevocationRequestContext(token);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		await sendTokenRevocationRequest(tokenRevocationEndpoint, context);
 	}
 }

@@ -1,14 +1,16 @@
 import {
 	AuthorizationCodeAuthorizationURL,
 	AuthorizationCodeTokenRequestContext,
-	RefreshRequestContext
+	RefreshRequestContext,
+	TokenRevocationRequestContext
 } from "@oslojs/oauth2";
-import { sendTokenRequest } from "../request.js";
+import { sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://apis.roblox.com/oauth/v1/authorize";
 const tokenEndpoint = "https://apis.roblox.com/oauth/v1/token";
+const tokenRevocationEndpoint = "https://apis.roblox.com/oauth/v1/token/revoke";
 
 export class Roblox {
 	private clientId: string;
@@ -49,5 +51,11 @@ export class Roblox {
 		context.authenticateWithRequestBody(this.clientId, this.clientSecret);
 		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
+	}
+
+	public async revokeRefreshToken(refreshToken: string): Promise<void> {
+		const context = new TokenRevocationRequestContext(refreshToken);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		await sendTokenRevocationRequest(tokenRevocationEndpoint, context);
 	}
 }

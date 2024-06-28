@@ -1,15 +1,17 @@
 import {
 	AuthorizationCodeAuthorizationURL,
 	AuthorizationCodeTokenRequestContext,
-	RefreshRequestContext
+	RefreshRequestContext,
+	TokenRevocationRequestContext
 } from "@oslojs/oauth2";
-import { sendTokenRequest } from "../request.js";
+import { sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 export class Auth0 {
 	private authorizationEndpoint: string;
 	private tokenEndpoint: string;
+	private tokenRevocationEndpoint: string;
 
 	private clientId: string;
 	private clientSecret: string;
@@ -18,6 +20,7 @@ export class Auth0 {
 	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
 		this.authorizationEndpoint = domain + "/authorize";
 		this.tokenEndpoint = domain + "/oauth/token";
+		this.tokenRevocationEndpoint = domain + "/oauth/revoke";
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.redirectURI = redirectURI;
@@ -43,5 +46,11 @@ export class Auth0 {
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
 		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
+	}
+
+	public async revokeRefreshToken(refreshToken: string): Promise<void> {
+		const context = new TokenRevocationRequestContext(refreshToken);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		await sendTokenRevocationRequest(this.tokenRevocationEndpoint, context);
 	}
 }

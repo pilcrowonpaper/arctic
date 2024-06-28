@@ -1,14 +1,16 @@
 import {
 	AuthorizationCodeAuthorizationURL,
 	AuthorizationCodeTokenRequestContext,
-	RefreshRequestContext
+	RefreshRequestContext,
+	TokenRevocationRequestContext
 } from "@oslojs/oauth2";
-import { sendTokenRequest } from "../request.js";
+import { sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://www.coinbase.com/oauth/authorize";
 const tokenEndpoint = "https://www.coinbase.com/oauth/token";
+const tokenRevocationEndpoint = "https://api.coinbase.com/oauth/revoke";
 
 export class Coinbase {
 	private clientId: string;
@@ -41,5 +43,11 @@ export class Coinbase {
 		context.authenticateWithRequestBody(this.clientId, this.clientSecret);
 		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
+	}
+
+	public async revokeToken(token: string): Promise<void> {
+		const context = new TokenRevocationRequestContext(token);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		await sendTokenRevocationRequest(tokenRevocationEndpoint, context);
 	}
 }

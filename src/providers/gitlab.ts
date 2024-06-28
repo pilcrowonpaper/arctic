@@ -1,15 +1,17 @@
 import {
 	AuthorizationCodeAuthorizationURL,
 	AuthorizationCodeTokenRequestContext,
-	RefreshRequestContext
+	RefreshRequestContext,
+	TokenRevocationRequestContext
 } from "@oslojs/oauth2";
-import { sendTokenRequest } from "../request.js";
+import { sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 export class GitLab {
 	private authorizationEndpoint: string;
 	private tokenEndpoint: string;
+	private tokenRevocationEndpoint: string;
 
 	private clientId: string;
 	private clientSecret: string;
@@ -18,6 +20,7 @@ export class GitLab {
 	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
 		this.authorizationEndpoint = domain + "/oauth/authorize";
 		this.tokenEndpoint = domain + "/oauth/token";
+		this.tokenRevocationEndpoint = domain + "/oauth/revoke";
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.redirectURI = redirectURI;
@@ -43,5 +46,11 @@ export class GitLab {
 		context.authenticateWithRequestBody(this.clientId, this.clientSecret);
 		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
+	}
+
+	public async revokeToken(token: string): Promise<void> {
+		const context = new TokenRevocationRequestContext(token);
+		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		await sendTokenRevocationRequest(this.tokenRevocationEndpoint, context);
 	}
 }
