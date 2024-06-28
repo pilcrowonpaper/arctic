@@ -65,3 +65,17 @@ const response = await fetch("https://api.box.com/2.0/users/me", {
 });
 const user = await response.json();
 ```
+
+## Revoke access tokens
+
+Revoke an access token by sending it or the refresh token with `revokeToken()`. It throws the same errors as `validateAuthorizationCode()`.
+
+```ts
+try {
+	// Both works
+	await box.revokeToken(accessToken);
+	await box.revokeToken(refreshToken);
+} catch (e) {
+	// Handle errors
+}
+```
