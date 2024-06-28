@@ -8,16 +8,19 @@ import { sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizationEndpoint = "https://login.salesforce.com/services/oauth2/authorize";
-const tokenEndpoint = "https://login.salesforce.com/services/oauth2/token";
-const tokenRevocationEndpoint = "https://login.salesforce.com/services/oauth2/revoke"
-
 export class Salesforce {
+	private authorizationEndpoint: string;
+	private tokenEndpoint: string;
+	private tokenRevocationEndpoint: string;
+
 	private clientId: string;
 	private clientSecret: string;
 	private redirectURI: string;
 
-	constructor(clientId: string, clientSecret: string, redirectURI: string) {
+	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
+		this.authorizationEndpoint = domain + "/services/oauth2/authorize";
+		this.tokenEndpoint = domain + "/services/oauth2/token";
+		this.tokenRevocationEndpoint = domain + "/services/oauth2/revoke";
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.redirectURI = redirectURI;
@@ -27,7 +30,7 @@ export class Salesforce {
 		state: string,
 		codeVerifier: string
 	): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
+		const url = new AuthorizationCodeAuthorizationURL(this.authorizationEndpoint, this.clientId);
 		url.setRedirectURI(this.redirectURI);
 		url.setState(state);
 		url.setS256CodeChallenge(codeVerifier);
@@ -42,20 +45,20 @@ export class Salesforce {
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
 		context.setRedirectURI(this.redirectURI);
 		context.setCodeVerifier(codeVerifier);
-		const tokens = await sendTokenRequest(tokenEndpoint, context);
+		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
 		const context = new RefreshRequestContext(refreshToken);
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
-		const tokens = await sendTokenRequest(tokenEndpoint, context);
+		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
 	}
 
 	public async revokeToken(token: string): Promise<void> {
 		const context = new TokenRevocationRequestContext(token);
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
-		await sendTokenRevocationRequest(tokenRevocationEndpoint, context);
+		await sendTokenRevocationRequest(this.tokenRevocationEndpoint, context);
 	}
 }
