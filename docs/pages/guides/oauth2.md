@@ -75,7 +75,6 @@ try {
 Calling `OAuth2Tokens.accessToken()` for example parses the response and returns the `access_token` field. If it doesn't exist, it will throw a parse `Error`. See each provider's guides for the actual return values.
 
 ```ts
-const tokenType = tokens.tokenType();
 const accessToken = tokens.accessToken();
 const accessTokenExpiresInSeconds = tokens.accessTokenExpiresInSeconds();
 const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
