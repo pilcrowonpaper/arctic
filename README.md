@@ -2,6 +2,10 @@
 
 Arctic is a collection of OAuth 2.0 clients for popular providers. It only supports the authorization code grant type and intended to be used server-side. Built on top of the Fetch API, it's light weight, fully-typed, and runtime-agnostic.
 
+```
+npm install arctic@next
+```
+
 ```ts
 import { GitHub, generateState } from "arctic";
 

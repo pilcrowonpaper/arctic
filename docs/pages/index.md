@@ -4,6 +4,8 @@ title: "Arctic documentation"
 
 # Arctic documentation
 
+**This is the v2 docs!**
+
 Arctic is a collection of OAuth 2.0 clients for popular providers. It only supports the authorization code grant type and intended to be used server-side. Built on top of the Fetch API, it's light weight, fully-typed, and runtime-agnostic.
 
 ```ts
@@ -26,7 +28,7 @@ For a generic OAuth 2.0 client, see [`@oslojs/oauth2`](https://github.com/oslo-p
 ## Installation
 
 ```
-npm install arctic
+npm install arctic@next
 ```
 
 ### Polyfill
