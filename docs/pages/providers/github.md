@@ -66,9 +66,9 @@ const refreshToken = tokens.refreshToken();
 const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
 ```
 
-## Refresh access token
+## Refresh access tokens
 
-For GitHub Apps, use `refreshAccessToken()` to get a new access token with a refresh token. The behavior is identical to `validateAuthorizationCode()`.
+For GitHub Apps, use `refreshAccessToken()` to get a new access token using a refresh token. The behavior is identical to `validateAuthorizationCode()`.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
