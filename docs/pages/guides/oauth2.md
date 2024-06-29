@@ -42,7 +42,7 @@ return redirect(url);
 Compare the state, and use `validateAuthorizationCode()` to validate the authorization code. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors).
 
 ```ts
-import { OAuth2RequestError } from "arctic";
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 const code = request.url.searchParams.get("code");
 const state = request.url.searchParams.get("state");
