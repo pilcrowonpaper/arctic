@@ -8,8 +8,7 @@
 			"title": "Guides",
 			"pages": [
 				["OAuth 2.0", "/guides/oauth2"],
-				["OAuth 2.0 with PKCE", "/guides/oauth2-pkce"],
-				["OpenID Connect", "/guides/oidc"]
+				["OAuth 2.0 with PKCE", "/guides/oauth2-pkce"]
 			]
 		},
 		{
@@ -35,7 +34,6 @@
 				["Google", "/providers/google"],
 				["Intuit", "/providers/intuit"],
 				["Kakao", "/providers/kakao"],
-				["Keycloak", "/providers/keycloak"],
 				["Lichess", "/providers/lichess"],
 				["Line", "/providers/line"],
 				["Linear", "/providers/linear"],
