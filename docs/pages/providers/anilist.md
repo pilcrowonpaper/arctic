@@ -18,8 +18,6 @@ const aniList = new AniList(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `createAuthorizationURL()` to create a URL to redirect the user for authentication.
-
 ```ts
 import { generateState } from "arctic";
 
