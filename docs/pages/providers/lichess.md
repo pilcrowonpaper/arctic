@@ -4,12 +4,55 @@ title: "Lichess"
 
 # Lichess
 
-For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
+OAuth 2.0 provider for Lichess.
+
+Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
+
+## Initialization
 
 ```ts
 import { Lichess } from "arctic";
 
-export const lichess = new Lichess(clientId, redirectURI);
+const lichess = new Lichess(clientId, redirectURI);
+```
+
+## Create authorization URL
+
+Use `setScopes()` and `appendScopes()` to define scopes.
+
+```ts
+import { generateState, generateCodeVerifier } from "arctic";
+
+const state = generateState();
+const codeVerifier = generateCodeVerifier();
+const url = lichess.createAuthorizationURL(state, codeVerifier);
+url.setScopes("challenge:read", "challenge:write");
+```
+
+## Validate authorization code
+
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/OAuth2RequestError), [`ArcticFetchError`](/reference/ArcticFetchError), or a standard `Error` (parse errors). Lichess returns an access token and its expiration.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await lichess.validateAuthorizationCode(code, codeVerifier);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
+}
 ```
 
 ## Get user profile
@@ -17,10 +60,9 @@ export const lichess = new Lichess(clientId, redirectURI);
 Use the [/api/account](https://lichess.org/api#tag/Account/operation/accountMe) endpoint
 
 ```ts
-const tokens = await lichess.validateAuthorizationCode(code);
 const lichessUserResponse = await fetch("https://lichess.org/api/account", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+		Authorization: `Bearer ${tokens}`
 	}
 });
 const user = await lichessUserResponse.json();
@@ -31,17 +73,16 @@ const user = await lichessUserResponse.json();
 Add the `email:read` scope and use the [/api/account/email](https://lichess.org/api#tag/Account/operation/accountEmail) endpoint
 
 ```ts
-const url = await lichess.createAuthorizationURL(state, codeVerifier, {
-	scopes: ["email:read"]
-});
+const url = lichess.createAuthorizationURL(state, codeVerifier);
+url.setScopes("email:read");
 ```
 
 ```ts
 const tokens = await lichess.validateAuthorizationCode(code);
-const liichessEmailResponse = await fetch("https://lichess.org/api/account/email", {
+const response = await fetch("https://lichess.org/api/account/email", {
 	headers: {
 		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
-const { email } = await lichessUserResponse.json();
+const email = await response.json();
 ```
