@@ -31,7 +31,7 @@ url.setScopes("openid", "profile");
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/OAuth2RequestError), [`ArcticFetchError`](/reference/ArcticFetchError), or a standard `Error` (parse errors). Google only returns a refresh token on the user's first authentication so use `hasRefreshToken()` to check if a refresh token was provided.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/OAuth2RequestError), [`ArcticFetchError`](/reference/ArcticFetchError), or a standard `Error` (parse errors). Google will return an access token with an expiration.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
@@ -50,45 +50,6 @@ try {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
-	}
-	// Parse error
-}
-```
-
-## Refresh tokens
-
-Set the `access_type` parameter to `offline` to get a refresh token. You will only get the refresh token on the user's first authentication.
-
-```ts
-const url = google.createAuthorizationURL();
-url.searchParams.set("access_type", "offline");
-```
-
-```ts
-const tokens = await google.validateAuthorizationCode();
-const accessToken = tokens.accessToken();
-const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
-if (tokens.hasRefreshToken()) {
-	const refreshToken = tokens.refreshToken();
-	const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
-}
-```
-
-Use `refreshAccessToken()` to get a new access token with a refresh token. This method's behavior is identical to `validateAuthorizationCode()`. Google will not provide a new refresh token after a token refresh.
-
-```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
-
-try {
-	const tokens = await google.refreshAccessToken(accessToken);
-	const accessToken = tokens.accessToken();
-	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
-} catch (e) {
-	if (e instanceof OAuth2RequestError) {
-		// Invalid authorization code, credentials, or redirect URI
-	}
-	if (e instanceof ArcticFetchError) {
-		// Failed to call `fetch()`
 	}
 	// Parse error
 }
@@ -129,4 +90,43 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 ```ts
 const url = google.createAuthorizationURL(state, codeVerifier);
 url.setScopes("openid", "profile", "email");
+```
+
+## Refresh tokens
+
+Set the `access_type` parameter to `offline` to get refresh tokens. You will only get the refresh token on the user's first authentication.
+
+```ts
+const url = google.createAuthorizationURL();
+url.searchParams.set("access_type", "offline");
+```
+
+```ts
+const tokens = await google.validateAuthorizationCode(code, codeVerifier);
+const accessToken = tokens.accessToken();
+const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+if (tokens.hasRefreshToken()) {
+	const refreshToken = tokens.refreshToken();
+	const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
+}
+```
+
+Use `refreshAccessToken()` to get a new access token using a refresh token. This method's behavior is identical to `validateAuthorizationCode()`. Google will not provide a new refresh token after a token refresh.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await google.refreshAccessToken(accessToken);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
 ```
