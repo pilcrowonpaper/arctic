@@ -17,10 +17,10 @@ export class AmazonCognito {
 	private clientSecret: string;
 	private redirectURI: string;
 
-	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.authorizationEndpoint = domain + "/oauth2/authorize";
-		this.tokenEndpoint = domain + "/oauth2/token";
-		this.tokenRevocationEndpoint = domain + "/oauth2/revoke";
+	constructor(userPool: string, clientId: string, clientSecret: string, redirectURI: string) {
+		this.authorizationEndpoint = userPool + "/oauth2/authorize";
+		this.tokenEndpoint = userPool + "/oauth2/token";
+		this.tokenRevocationEndpoint = userPool + "/oauth2/revoke";
 
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
@@ -57,7 +57,7 @@ export class AmazonCognito {
 		return tokens;
 	}
 
-	public async revokeRefreshToken(refreshToken: string): Promise<void> {
+	public async revokeToken(refreshToken: string): Promise<void> {
 		const context = new TokenRevocationRequestContext(refreshToken);
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
 		await sendTokenRevocationRequest(this.tokenRevocationEndpoint, context);
