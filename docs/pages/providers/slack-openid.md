@@ -35,7 +35,7 @@ url.addScopes("openid", "profile");
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/OAuth2RequestError), [`ArcticFetchError`](/reference/ArcticFetchError), or a standard `Error` (parse errors). Slack will return an access token (no expiration) and an ID token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Slack will return an access token (no expiration) and an ID token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
@@ -61,7 +61,7 @@ try {
 
 ## Get user profile
 
-Decode the ID token or the `userinfo` endpoint to get the user profile. Arctic provides [`decodeIdToken()`](/reference/decodeIdToken) for decoding the token's payload.
+Decode the ID token or the `userinfo` endpoint to get the user profile. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
 
 ```ts
 import { decodeIdToken } from "arctic";
