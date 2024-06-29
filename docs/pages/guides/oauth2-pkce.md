@@ -4,7 +4,7 @@ title: "OAuth 2.0 with PKCE"
 
 # OAuth 2.0 with PKCE
 
-Most providers require a client ID, client secret, and redirect URI.
+Most providers require a client ID, client secret, and redirect URI. The API is nearly identical across providers but always check each provider's guide before implementing.
 
 ```ts
 import { Google } from "arctic";
@@ -16,17 +16,18 @@ const google = new Google(clientId, clientSecret, redirectURI);
 
 Generate a state and code verifier using `generateState()` and `generateCodeVerifier()`. Use them to create an authorization URL with `createAuthorizationURL()`, store the state and code verifier as cookies, and redirect the user to the authorization url.
 
-You may optionally pass `scopes`. For providers that implement OpenID Connect, `openid` is always included. There may be more options depending on the provider.
+Use `addScopes()` to add scopes.
 
 ```ts
-import { generateCodeVerifier, generateState } from "arctic";
+import { generateState, generateCodeVerifier } from "arctic";
 
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
 
-const url = await google.createAuthorizationURL(state, codeVerifier);
+const url = google.createAuthorizationURL(state, codeVerifier);
+url.addScopes("user:email", "repo");
 
-// store state verifier as cookie
+// store state as cookie
 setCookie("state", state, {
 	secure: true, // set to false in localhost
 	path: "/",
@@ -47,7 +48,7 @@ return redirect(url);
 
 ## Validate authorization code
 
-Compare the state, and use `validateAuthorizationCode()` to validate the authorization code with the code verifier. This returns an object with an access token, an ID token for OIDC, and a refresh token if requested. If the code is invalid, it will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError).
+Compare the state, and use `validateAuthorizationCode()` to validate the authorization code and code verifier. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors).
 
 ```ts
 import { OAuth2RequestError } from "arctic";
@@ -58,34 +59,44 @@ const state = request.url.searchParams.get("state");
 const storedState = getCookie("state");
 const storedCodeVerifier = getCookie("code_verifier");
 
-if (!code || !storedState || !storedCodeVerifier || state !== storedState) {
+if (code === null || storedState === null || state !== storedState || storedCodeVerifier === null) {
 	// 400
 	throw new Error("Invalid request");
 }
 
 try {
 	const tokens = await google.validateAuthorizationCode(code, storedCodeVerifier);
+	const accessToken = tokens.accessToken();
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
-		const { request, message, description } = e;
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
 	}
-	// unknown error
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
 }
 ```
 
-## Refresh access token
-
-If the OAuth provider supports refresh tokens, `refreshAccessToken()` can be used to get a new access token using a refresh token. This will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError) if the refresh token is invalid.
+Calling `OAuth2Tokens.accessToken()` for example parses the response and returns the `access_token` field. If it doesn't exist, it will throw a parse `Error`. See each provider's guides for the actual return values.
 
 ```ts
-import { OAuth2RequestError } from "arctic";
+const tokenType = tokens.tokenType();
+const accessToken = tokens.accessToken();
+const accessTokenExpiresInSeconds = tokens.accessTokenExpiresInSeconds();
+const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+const refreshToken = tokens.refreshToken();
+const refreshTokenExpiresInSeconds = tokens.refreshTokenExpiresInSeconds();
+const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
+const idToken = tokens.idToken();
+```
 
-try {
-	const tokens = await google.refreshAccessToken(refreshToken);
-} catch (e) {
-	if (e instanceof OAuth2RequestError) {
-		const { request, message, description } = e;
-	}
-	// unknown error
-}
+Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
+
+```ts
+const claims = decodeIdToken(idToken);
 ```
