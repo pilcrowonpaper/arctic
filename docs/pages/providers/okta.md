@@ -63,13 +63,13 @@ try {
 
 ## Refresh access tokens
 
-Use `refreshAccessToken()` to get a new access token using a refresh token. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
+Use `refreshAccessToken()` to get a new access token using a refresh token. Okta requires you to pass scopes when refreshing tokens. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await okta.refreshAccessToken(accessToken);
+	const tokens = await okta.refreshAccessToken(accessToken, scopes);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
