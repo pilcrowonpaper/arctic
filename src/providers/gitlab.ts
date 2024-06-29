@@ -18,7 +18,7 @@ export class GitLab {
 	private redirectURI: string;
 
 	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.authorizationEndpoint = `https://${domain}/oauth/authorize`
+		this.authorizationEndpoint = `https://${domain}/oauth/authorize`;
 		this.tokenEndpoint = domain + `https://${domain}/oauth/token`;
 		this.tokenRevocationEndpoint = domain + "/oauth/revoke";
 		this.clientId = clientId;
