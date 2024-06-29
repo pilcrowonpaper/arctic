@@ -18,9 +18,9 @@ export class Salesforce {
 	private redirectURI: string;
 
 	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.authorizationEndpoint = domain + "/services/oauth2/authorize";
-		this.tokenEndpoint = domain + "/services/oauth2/token";
-		this.tokenRevocationEndpoint = domain + "/services/oauth2/revoke";
+		this.authorizationEndpoint = `https://${domain}/services/oauth2/authorize`;
+		this.tokenEndpoint = domain + `https://${domain}/services/oauth2/token`;
+		this.tokenRevocationEndpoint = `https://${domain}/services/oauth2/revoke`;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.redirectURI = redirectURI;
