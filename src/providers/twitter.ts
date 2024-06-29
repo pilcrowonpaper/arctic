@@ -1,14 +1,16 @@
 import {
 	AuthorizationCodeAuthorizationURL,
 	AuthorizationCodeTokenRequestContext,
-	RefreshRequestContext
+	RefreshRequestContext,
+	TokenRevocationRequestContext
 } from "@oslojs/oauth2";
-import { sendTokenRequest } from "../request.js";
+import { sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://twitter.com/i/oauth2/authorize";
 const tokenEndpoint = "https://api.twitter.com/2/oauth2/token";
+const tokenRevocationEndpoint = "https://api.twitter.com/2/oauth2/revoke";
 
 export class Twitter {
 	private clientId: string;
@@ -49,5 +51,11 @@ export class Twitter {
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
 		const tokens = await sendTokenRequest(tokenEndpoint, context);
 		return tokens;
+	}
+
+	public async revokeToken(token: string): Promise<void> {
+		const context = new TokenRevocationRequestContext(token);
+		context.authenticateWithRequestBody(this.clientId, this.clientSecret);
+		await sendTokenRevocationRequest(tokenRevocationEndpoint, context);
 	}
 }
