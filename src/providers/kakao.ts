@@ -6,6 +6,7 @@ import {
 import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
+
 const authorizationEndpoint = "https://kauth.kakao.com/oauth/authorize";
 const tokenEndpoint = "https://kauth.kakao.com/oauth/token";
 
