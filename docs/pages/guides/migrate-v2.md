@@ -7,7 +7,7 @@ title: "Migrate to v2"
 Arctic v2 is here! This update changes how tokens are handled and introduces various small improvements.
 
 ```
-npm install arctic@beta
+npm install arctic@next
 ```
 
 > All providers except KeyCloak has been migrated. If you use keyCloak, please help us with the migration!
