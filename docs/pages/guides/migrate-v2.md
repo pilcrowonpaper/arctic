@@ -4,7 +4,7 @@ title: "Migrate to v2"
 
 # Migrate to v2
 
-Arctic v2 is here! This update changes how tokens are handled and introduces various small improvements. Behind the scenes, it's also fully type-safe now! We used to heavily rely on type assertion but added proper `in` and `typeof` checks thanks to the new `@oslojs/oauth2` package.
+Arctic v2 is here! This update changes how tokens are handled and introduces various small improvements. Behind the scenes, it's also fully type-safe now! We used to heavily rely on type assertion but this upgrade adds proper `in` and `typeof` checks!
 
 ```
 npm install arctic@next
