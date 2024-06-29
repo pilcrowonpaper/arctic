@@ -53,7 +53,7 @@ export class Roblox {
 		return tokens;
 	}
 
-	public async revokeRefreshToken(refreshToken: string): Promise<void> {
+	public async revokeToken(refreshToken: string): Promise<void> {
 		const context = new TokenRevocationRequestContext(refreshToken);
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
 		await sendTokenRevocationRequest(tokenRevocationEndpoint, context);

@@ -20,7 +20,7 @@ export class Auth0 {
 	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
 		this.authorizationEndpoint = `https://${domain}/authorize`;
 		this.tokenEndpoint = `https://${domain}/oauth/token`;
-		this.tokenRevocationEndpoint = `https://${domain}/oauth/revoke`
+		this.tokenRevocationEndpoint = `https://${domain}/oauth/revoke`;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.redirectURI = redirectURI;
@@ -48,7 +48,7 @@ export class Auth0 {
 		return tokens;
 	}
 
-	public async revokeRefreshToken(refreshToken: string): Promise<void> {
+	public async revokeToken(refreshToken: string): Promise<void> {
 		const context = new TokenRevocationRequestContext(refreshToken);
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
 		await sendTokenRevocationRequest(this.tokenRevocationEndpoint, context);

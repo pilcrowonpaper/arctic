@@ -53,7 +53,7 @@ export class Zoom {
 		return tokens;
 	}
 
-	public async revokeAccessToken(accessToken: string): Promise<void> {
+	public async revokeToken(accessToken: string): Promise<void> {
 		const context = new TokenRevocationRequestContext(accessToken);
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
 		await sendTokenRevocationRequest(tokenRevocationEndpoint, context);
