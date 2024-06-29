@@ -82,11 +82,14 @@ try {
 
 ## OpenID Connect
 
-Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. Arctic provides [`decodeIdToken()`](/reference/decodeIdToken) for decoding the token's payload.
+Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. The `nonce` parameter is required by Entra ID to use OpenID. Arctic provides [`decodeIdToken()`](/reference/decodeIdToken) for decoding the token's payload.
 
 ```ts
 const url = entraId.createAuthorizationURL(state, codeVerifier);
 url.setScopes("openid");
+// The nonce should be unique to each request similar to state.
+// That said, nonce can just be "_" here since it isn't useful for server-based OAuth.
+url.searchParams.set("nonce", nonce);
 ```
 
 ```ts
