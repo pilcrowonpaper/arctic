@@ -72,9 +72,7 @@ Revoke tokens with `revokeToken()`. Revoking a refresh token will also invalidat
 
 ```ts
 try {
-	// Both works
-	await box.revokeToken(accessToken);
-	await box.revokeToken(refreshToken);
+	await box.revokeToken(token);
 } catch (e) {
 	// Handle errors
 }
