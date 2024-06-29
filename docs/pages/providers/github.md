@@ -103,7 +103,7 @@ const response = await fetch("https://api.github.com/user", {
 const user = await response.json();
 ```
 
-## Get email
+## Get user email
 
 Add the `email` scope and use the [`/user/emails` endpoint](https://docs.github.com/en/rest/users/emails?apiVersion=2022-11-28#list-email-addresses-for-the-authenticated-user).
 

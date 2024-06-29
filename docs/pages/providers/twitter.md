@@ -6,7 +6,7 @@ title: "Twitter"
 
 OAuth 2.0 provider for Twitter API v2.
 
-Also see the [OAuth 2.0](/guides/oauth2) guide.
+Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
