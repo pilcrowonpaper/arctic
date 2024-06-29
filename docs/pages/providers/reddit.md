@@ -4,21 +4,91 @@ title: "Reddit"
 
 # Reddit
 
-For usage, see [OAuth 2.0 provider](/guides/oauth2).
+OAuth 2.0 provider for Reddit.
+
+Also see the [OAuth 2.0](/guides/oauth2) guide.
+
+## Initialization
 
 ```ts
 import { Reddit } from "arctic";
 
-const reddit = new Reddit(clientId, clientSecret, redirectURI);
+const patreon = new Reddit(clientId, clientSecret, redirectURI);
+```
+
+## Create authorization URL
+
+Use `setScopes()` and `appendScopes()` to define scopes.
+
+```ts
+import { generateState } from "arctic";
+
+const state = generateState();
+const url = reddit.createAuthorizationURL(state);
+url.setScopes("edit", "read");
+```
+
+## Validate authorization code
+
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/OAuth2RequestError), [`ArcticFetchError`](/reference/ArcticFetchError), or a standard `Error` (parse errors). Reddit returns an access token and its expiration.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await reddit.validateAuthorizationCode(code);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
+}
+```
+
+## Refresh access tokens
+
+Set the `duration` parameter to `permanent` to get refresh tokens.
+
+```ts
+const url = reddit.createAuthorizationURL();
+url.searchParams.set("duration", "permanent");
 ```
 
 ```ts
-const url: URL = await reddit.createAuthorizationURL(state, {
-	// optional
-	scopes
-});
-const tokens: RedditTokens = await reddit.validateAuthorizationCode(code);
-const tokens: RedditTokens = await reddit.refreshAccessToken(refreshToken);
+const tokens = await reddit.validateAuthorizationCode(code);
+const accessToken = tokens.accessToken();
+const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+const refreshToken = tokens.refreshToken();
+```
+
+Use `refreshAccessToken()` to get a new access token using a refresh token. Reddit the same values as during the authorization code validation. This method throws the same errors as `validateAuthorizationCode()`.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await reddit.refreshAccessToken(accessToken);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+	const refreshToken = tokens.refreshToken();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
 ```
 
 ## Get user profile
@@ -26,20 +96,10 @@ const tokens: RedditTokens = await reddit.refreshAccessToken(refreshToken);
 Use the `/me` endpoint.
 
 ```ts
-const tokens = await reddit.validateAuthorizationCode(code);
 const response = await fetch("https://oauth.reddit.com/api/v1/me", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const user = await response.json();
-```
-
-## Get refresh token
-
-Set `duration` param to `permanent`.
-
-```ts
-const url = await dropbox.createAuthorizationURL();
-url.searchParams.set("duration", "permanent");
 ```
