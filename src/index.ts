@@ -44,8 +44,6 @@ export { Yandex } from "./providers/yandex.js";
 export { Zoom } from "./providers/zoom.js";
 export { FortyTwo } from "./providers/42.js";
 
-export type { AppleCredentials } from "./providers/apple.js";
-
 export {
 	generateCodeVerifier,
 	generateState,
