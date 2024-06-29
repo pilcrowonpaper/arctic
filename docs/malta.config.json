@@ -3,6 +3,7 @@
 	"description": "Arctic is a collection of OAuth 2.0 clients for popular providers.",
 	"domain": "https://arctic.js.org",
 	"twitter": "@pilcrowonpaper",
+	"asset_hashing": true,
 	"sidebar": [
 		{
 			"title": "Guides",
