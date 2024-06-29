@@ -70,7 +70,7 @@ const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 const refreshToken = tokens.refreshToken();
 ```
 
-Use `refreshAccessToken()` to get a new access token using a refresh token. Tumblr the same values as during the authorization code validation. This method throws the same errors as `validateAuthorizationCode()`.
+Use `refreshAccessToken()` to get a new access token using a refresh token. Tumblr returns the same values as during the authorization code validation. This method throws the same errors as `validateAuthorizationCode()`.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

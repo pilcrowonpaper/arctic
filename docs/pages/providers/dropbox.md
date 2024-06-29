@@ -13,7 +13,7 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 ```ts
 import { Dropbox } from "arctic";
 
-const discord = new Dropbox(clientId, clientSecret, redirectURI);
+const dropbox = new Dropbox(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
@@ -118,7 +118,6 @@ try {
 	const tokens = await dropbox.refreshAccessToken(accessToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
-	const refreshToken = tokens.refreshToken();
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
