@@ -134,3 +134,5 @@ try {
 	// Parse error
 }
 ```
+
+> Token revocation must be enabled in the settings.
