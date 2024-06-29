@@ -10,7 +10,7 @@ import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://www.dropbox.com/oauth2/authorize";
 const tokenEndpoint = "https://api.dropboxapi.com/oauth2/token";
-const tokenRevocationEndpoint = "https://api.dropboxapi.com/2/auth/token/revoke"
+const tokenRevocationEndpoint = "https://api.dropboxapi.com/2/auth/token/revoke";
 
 export class Dropbox {
 	private clientId: string;
