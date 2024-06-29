@@ -80,7 +80,7 @@ url.addScopes("openid", "profile");
 The initialization parameters have changed for a few providers. See each provider's guide for details.
 
 - [Apple](/providers/apple)
-- [Github](/provders/github)
+- [Github](/proviGders/github)
 - [GitLab](/providers/gitlab)
 - [Microsoft Entra ID](/providers/microsoft-entra-id)
 - [MyAnimeList](/providers/myanimelist)
