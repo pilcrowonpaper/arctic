@@ -123,7 +123,7 @@ Pass a refresh token to `revokeToken()` to revoke it and all access tokens issue
 
 ```ts
 try {
-	await coinbase.revokeToken(refreshToken);
+	await cognito.revokeToken(refreshToken);
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
