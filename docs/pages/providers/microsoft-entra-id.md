@@ -4,43 +4,113 @@ title: "Microsoft Entra ID"
 
 # Microsoft Entra ID
 
-Implements OpenID Connect. By default, `nonce` is set to `_`.
+OAuth 2.0 provider for Microsoft Entra ID.
 
-For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
+Also see the [OAuth 2.0](/guides/oauth2) guide.
+
+## Initialization
+
+See [Endpoints](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints) for more on the `tenant` parameter.
 
 ```ts
 import { MicrosoftEntraId } from "arctic";
 
-const entraId = new MicrosoftEntraId(tenantId, clientId, clientSecret, redirectURI);
+const entraId = new MicrosoftEntraId(tenant, clientId, clientSecret, redirectURI);
+```
+
+## Create authorization URL
+
+Use `setScopes()` and `appendScopes()` to define scopes.
+
+```ts
+import { generateState, generateCodeVerifier } from "arctic";
+
+const state = generateState();
+const codeVerifier = generateCodeVerifier();
+const url = entraId.createAuthorizationURL(state, codeVerifier);
+url.setScopes("openid", "profile");
+```
+
+## Validate authorization code
+
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/OAuth2RequestError), [`ArcticFetchError`](/reference/ArcticFetchError), or a standard `Error` (parse errors). Entra ID returns an access token, the access token expiration, and a refresh token.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await entraId.validateAuthorizationCode(code, codeVerifier);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+	const refreshToken = tokens.refreshToken();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
+}
+```
+
+## Refresh access tokens
+
+Use `refreshAccessToken()` to get a new access token using a refresh token. Entra ID returns the same values as during the authorization code validation. This method throws the same errors as `validateAuthorizationCode()`.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await entraId.refreshAccessToken(accessToken);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
+```
+
+## OpenID Connect
+
+Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. Arctic provides [`decodeIdToken()`](/reference/decodeIdToken) for decoding the token's payload.
+
+```ts
+const url = entraId.createAuthorizationURL(state, codeVerifier);
+url.setScopes("openid");
 ```
 
 ```ts
-const url: URL = await entraId.createAuthorizationURL(state, codeVerifier, {
-	// optional
-	scopes // "openid" always included
-});
-const tokens: MicrosoftEntraIdTokens = await entraId.validateAuthorizationCode(code, codeVerifier);
-const tokens: MicrosoftEntraIdTokens = await entraId.refreshAccessToken(refreshToken);
-```
+import { decodeIdToken } from "arctic";
 
-## Get user profile
-
-Add the `profile` scope. Optionally add the `email` scope to get user email.
-
-```ts
-const url = await entraId.createAuthorizationURL(state, codeVerifier, {
-	scopes: ["profile", "email"]
-});
-```
-
-Parse the ID token or use the `userinfo` endpoint. See [ID token claims](https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference).
-
-```ts
 const tokens = await entraId.validateAuthorizationCode(code, codeVerifier);
+const idToken = tokens.idToken();
+const claims = decodeIdToken(idToken);
+```
+
+```ts
 const response = await fetch("https://graph.microsoft.com/oidc/userinfo", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const user = await response.json();
+```
+
+### Get user profile
+
+Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
+
+```ts
+const url = entraId.createAuthorizationURL(state, codeVerifier);
+url.setScopes("openid", "profile", "email");
 ```
