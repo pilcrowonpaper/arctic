@@ -1,6 +1,6 @@
 # Arctic
 
-Arctic is an OAuth 2.0 library for JavaScript/TypeScript that supports numerous providers. It's light weight, fully-typed, and runtime-agnostic. [Read the documentation →](https://arctic.js.org)
+Arctic is an OAuth 2.0 library for JavaScript with built-in support for numerous providers. It's intended to be used server-side and uses the `fetch()` API. It's light weight, fully-typed, and runtime-agnostic. [Read the documentation →](https://arctic.js.org)
 
 ```ts
 import { GitHub, generateState } from "arctic";
@@ -8,16 +8,16 @@ import { GitHub, generateState } from "arctic";
 const github = new GitHub(clientId, clientSecret);
 
 const state = generateState();
-const authorizationURL = await github.createAuthorizationURL(state, {
-	scopes: ["user:email"]
-});
+const authorizationURL = github.createAuthorizationURL(state);
+authorizationURL.addScopes("user:email");
 
 const tokens = await github.validateAuthorizationCode(code);
+const accessToken = tokens.accessToken();
 ```
 
-For a flexible OAuth 2.0 client, see [`oslo/oauth2`](http://github.com/pilcrowonpaper/oslo).
+For a flexible OAuth 2.0 client, see [`@oslojs/oauth2`](https://github.com/oslo-project/oauth2).
 
-> Arctic only supports providers that strictly follow the OAuth 2.0 spec (including PKCE).
+> Arctic only supports providers that follow the OAuth 2.0 spec (including PKCE and token revocation).
 
 ## Semver
 
@@ -45,7 +45,6 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Google
 - Intuit
 - Kakao
-- Keycloak
 - Lichess
 - Line
 - Linear
