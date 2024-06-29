@@ -15,9 +15,11 @@ interface Properties {
 	code: string;
 	description: string | null;
 	uri: string | null;
+	state: string | null;
 }
 ```
 
 - `code`: The `error` field
 - `description`: The `error_description` field
 - `uri`: The `error_uri` field
+- `state`: The `state` field

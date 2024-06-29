@@ -39,7 +39,11 @@ export async function sendTokenRequest(
 		if (result.hasErrorURI()) {
 			uri = result.errorURI();
 		}
-		throw new OAuth2RequestError(code, description, uri);
+		let state: string | null = null;
+		if ("state" in data && typeof data.state === "string") {
+			state = result.state();
+		}
+		throw new OAuth2RequestError(code, description, uri, state);
 	}
 	return new OAuth2Tokens(data);
 }
@@ -85,7 +89,11 @@ export async function sendTokenRevocationRequest(
 		if (result.hasErrorURI()) {
 			uri = result.errorURI();
 		}
-		throw new OAuth2RequestError(code, description, uri);
+		let state: string | null = null;
+		if ("state" in data && typeof data.state === "string") {
+			state = result.state();
+		}
+		throw new OAuth2RequestError(code, description, uri, state);
 	}
 }
 
@@ -101,11 +109,13 @@ export class OAuth2RequestError extends Error {
 	public code: string;
 	public description: string | null;
 	public uri: string | null;
+	public state: string | null;
 
-	constructor(code: string, description: string | null, uri: string | null) {
+	constructor(code: string, description: string | null, uri: string | null, state: string | null) {
 		super(`OAuth request error: ${code}`);
 		this.code = code;
 		this.description = description;
 		this.uri = uri;
+		this.state = state;
 	}
 }
