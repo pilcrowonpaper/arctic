@@ -78,7 +78,7 @@ Add the `offline.access` scope to get refresh tokens.
 
 ```ts
 const url = twitter.createAuthorizationURL();
-url.addScopes("offline.access");
+url.setScopes("offline.access");
 ```
 
 ```ts

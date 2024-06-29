@@ -78,10 +78,9 @@ url.setScopes("email:read");
 ```
 
 ```ts
-const tokens = await lichess.validateAuthorizationCode(code);
 const response = await fetch("https://lichess.org/api/account/email", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const email = await response.json();

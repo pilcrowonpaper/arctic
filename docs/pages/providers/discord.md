@@ -98,7 +98,7 @@ const user = await response.json();
 
 ## Revoke tokens
 
-Pass a token to `revokeToken()` to revoke all tokens associated with the authorization (in other words, both tokens will be revoked regardless of which one you passed). This can throw the same errors as `validateAuthorizationCode()`.
+Pass a token to `revokeToken()` to revoke all tokens associated with the authorization. This can throw the same errors as `validateAuthorizationCode()`.
 
 ```ts
 try {

@@ -115,3 +115,15 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 const url = auth0.createAuthorizationURL(state, codeVerifier);
 url.setScopes("openid", "profile", "email");
 ```
+
+## Revoke tokens
+
+Revoke tokens with `revokeToken()`. Currently, only refresh tokens can be revoked. It throws the same errors as `validateAuthorizationCode()`.
+
+```ts
+try {
+	await box.revokeToken(refreshToken);
+} catch (e) {
+	// Handle errors
+}
+```

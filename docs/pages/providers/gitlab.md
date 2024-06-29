@@ -86,16 +86,14 @@ try {
 Add the `read_user` scope and use the [`/user` endpoint](https://docs.gitlab.com/ee/api/users.html#list-current-user).
 
 ```ts
-const url = await gitlab.createAuthorizationURL(state, {
-	scopes: ["read_user"]
-});
+const url = gitlab.createAuthorizationURL(state);
+url.setScopes("read_user");
 ```
 
 ```ts
-const tokens = await gitlab.validateAuthorizationCode(code);
 const response = await fetch("https://gitlab.com/api/v4/user", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const user = await response.json();
@@ -103,7 +101,7 @@ const user = await response.json();
 
 ## Revoke tokens
 
-Revoke tokens with `revokeToken()`. This can throw the same errors as `validateAuthorizationCode()`.
+Use `revokeToken()` to revoke a token. This can throw the same errors as `validateAuthorizationCode()`.
 
 ```ts
 try {

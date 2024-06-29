@@ -10,7 +10,7 @@ Also see [OAuth 2.0 with PKCE](/guides/oauth2-pkce).
 
 ## Initialization
 
-The user pool must not include trailing slashes.
+The user pool should not include trailing slashes.
 
 ```ts
 import { AmazonCognito } from "arctic";
@@ -117,9 +117,9 @@ const url = cognito.createAuthorizationURL(state, codeVerifier);
 url.setScopes("openid", "profile", "email");
 ```
 
-## Revoke refresh tokens
+## Revoke tokens
 
-Pass a refresh token to `revokeToken()` to revoke it and all access tokens issued with it. This can throw the same errors as `validateAuthorizationCode()`.
+Pass a token to `revokeToken()` to revoke all tokens associated with the authorization. This can throw the same errors as `validateAuthorizationCode()`.
 
 ```ts
 try {

@@ -86,7 +86,7 @@ Use the [`/users` endpoint](https://dev.twitch.tv/docs/api/reference/#get-users)
 const tokens = await twitch.validateAuthorizationCode(code);
 const response = await fetch("https://api.twitch.tv/helix/users", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`,
+		Authorization: `Bearer ${accessToken}`,
 		"Client-Id": clientId
 	}
 });
