@@ -125,3 +125,21 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 const url = roblox.createAuthorizationURL(state, codeVerifier);
 url.setScopes("openid", "profile", "email");
 ```
+
+## Revoke tokens
+
+Revoke tokens with `revokeToken()`. This can throw the same errors as `validateAuthorizationCode()`.
+
+```ts
+try {
+	await salesforce.revokeToken(token);
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
+```

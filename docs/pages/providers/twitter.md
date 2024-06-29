@@ -109,7 +109,7 @@ try {
 }
 ```
 
-## Revoke refresh tokens
+## Revoke tokens
 
 Use `revokeToken()` to revoke a token. This can throw the same errors as `validateAuthorizationCode()`.
 

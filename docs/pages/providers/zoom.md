@@ -88,3 +88,21 @@ const response = await fetch("https://api.zoom.us/v2/users/me", {
 });
 const user = await response.json();
 ```
+
+## Revoke tokens
+
+Revoke tokens with `revokeToken()`. This can throw the same errors as `validateAuthorizationCode()`.
+
+```ts
+try {
+	await zoom.revokeToken(token);
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
+```

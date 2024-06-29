@@ -130,3 +130,21 @@ try {
 	// Parse error
 }
 ```
+
+## Revoke tokens
+
+Revoke tokens with `revokeToken()`. This can throw the same errors as `validateAuthorizationCode()`.
+
+```ts
+try {
+	await google.revokeToken(token);
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
+```
