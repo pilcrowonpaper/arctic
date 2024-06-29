@@ -45,7 +45,6 @@ export class Discord {
 		return tokens;
 	}
 
-	// Revokes both access and refresh token
 	public async revokeToken(token: string): Promise<void> {
 		const context = new TokenRevocationRequestContext(token);
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
