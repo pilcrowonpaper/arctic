@@ -1,6 +1,6 @@
 {
 	"name": "Arctic",
-	"description": "Arctic is a library that provides OAuth 2.0 clients for major providers.",
+	"description": "Arctic is a collection of OAuth 2.0 clients for popular providers.",
 	"domain": "https://arctic.js.org",
 	"twitter": "@pilcrowonpaper",
 	"sidebar": [

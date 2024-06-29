@@ -1,6 +1,6 @@
 # Arctic
 
-Arctic is an OAuth 2.0 library for JavaScript with built-in support for numerous providers. It's intended to be used server-side and uses the `fetch()` API. It's light weight, fully-typed, and runtime-agnostic. [Read the documentation →](https://arctic.js.org)
+Arctic is a collection of OAuth 2.0 clients for popular providers. It only supports the authorization code grant type and intended to be used server-side. Built on top of the Fetch API, it's light weight, fully-typed, and runtime-agnostic.
 
 ```ts
 import { GitHub, generateState } from "arctic";
@@ -15,7 +15,7 @@ const tokens = await github.validateAuthorizationCode(code);
 const accessToken = tokens.accessToken();
 ```
 
-For a flexible OAuth 2.0 client, see [`@oslojs/oauth2`](https://github.com/oslo-project/oauth2).
+For a generic OAuth 2.0 client, see [`@oslojs/oauth2`](https://github.com/oslo-project/oauth2).
 
 > Arctic only supports providers that follow the OAuth 2.0 spec (including PKCE and token revocation).
 
