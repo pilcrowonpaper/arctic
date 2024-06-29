@@ -4,9 +4,11 @@ title: "Line"
 
 # Line
 
-Implements OpenID Connect.
+OAuth 2.0 provider for Line.
 
-For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
+Also see the [OAuth 2.0](/guides/oauth2) guide.
+
+## Initialization
 
 ```ts
 import { Line } from "arctic";
@@ -14,35 +16,101 @@ import { Line } from "arctic";
 const line = new Line(clientId, clientSecret, redirectURI);
 ```
 
+## Create authorization URL
+
+Use `setScopes()` and `appendScopes()` to define scopes.
+
 ```ts
-const url: URL = await line.createAuthorizationURL(state, codeVerifier, {
-	// optional
-	scopes // "openid" always included
-});
-const tokens: LineTokens = await line.validateAuthorizationCode(code, codeVerifier);
-const tokens: LineRefreshedTokens = await line.refreshAccessToken(refreshToken);
+import { generateState, generateCodeVerifier } from "arctic";
+
+const state = generateState();
+const codeVerifier = generateCodeVerifier();
+const url = line.createAuthorizationURL(state, codeVerifier);
+url.setScopes("openid", "profile");
 ```
 
-## Get user profile
+## Validate authorization code
 
-Add the `profile` scope. Optionally add the `email` scope to get user email.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/OAuth2RequestError), [`ArcticFetchError`](/reference/ArcticFetchError), or a standard `Error` (parse errors). Line returns an access token, the access token expiration, and a refresh token.
 
 ```ts
-const url = await line.createAuthorizationURL(state, codeVerifier, {
-	scopes: ["profile", "email"]
-});
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await line.validateAuthorizationCode(code, codeVerifier);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+	const refreshToken = tokens.refreshToken();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
+}
 ```
 
-Parse the ID token or use the `userinfo` endpoint. See [ID token claims](https://developers.line.biz/en/docs/line-login/verify-id-token/#signature).
+## Refresh access tokens
+
+Use `refreshAccessToken()` to get a new access token using a refresh token. Line only returns a new access token and its expiration. This method throws the same errors as `validateAuthorizationCode()`.
 
 ```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await line.refreshAccessToken(accessToken);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
+```
+
+## OpenID Connect
+
+Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. Arctic provides [`decodeIdToken()`](/reference/decodeIdToken) for decoding the token's payload.
+
+```ts
+const url = line.createAuthorizationURL(state, codeVerifier);
+url.setScopes("openid");
+```
+
+```ts
+import { decodeIdToken } from "arctic";
+
 const tokens = await line.validateAuthorizationCode(code, codeVerifier);
+const idToken = tokens.idToken();
+const claims = decodeIdToken(idToken);
+```
+
+```ts
 const response = await fetch("https://api.line.me/oauth2/v2.1/userinfo", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const user = await response.json();
+```
+
+### Get user profile
+
+Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
+
+```ts
+const url = line.createAuthorizationURL(state, codeVerifier);
+url.setScopes("openid", "profile", "email");
 ```
 
 Or, alternatively use the [`/profile` endpoint](https://developers.line.biz/en/reference/line-login/#get-user-profile).
