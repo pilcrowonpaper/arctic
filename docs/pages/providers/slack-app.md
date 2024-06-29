@@ -21,14 +21,14 @@ const slack = new SlackApp(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = slack.createAuthorizationURL(state);
-url.setScopes("incoming-webhook", "commands");
+url.addScopes("incoming-webhook", "commands");
 ```
 
 ## Validate authorization code

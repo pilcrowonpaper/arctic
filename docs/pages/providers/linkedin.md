@@ -20,14 +20,14 @@ const linkedin = new LinkedIn(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = linkedin.createAuthorizationURL(state);
-url.setScopes("openid", "profile");
+url.addScopes("openid", "profile");
 ```
 
 ## Validate authorization code
@@ -88,7 +88,7 @@ Use OpenID Connect with the `openid` scope to get the user's profile with an ID 
 
 ```ts
 const url = linkedin.createAuthorizationURL(state, codeVerifier);
-url.setScopes("openid");
+url.addScopes("openid");
 ```
 
 ```ts
@@ -114,5 +114,5 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 
 ```ts
 const url = linkedin.createAuthorizationURL(state, codeVerifier);
-url.setScopes("openid", "profile", "email");
+url.addScopes("openid", "profile", "email");
 ```

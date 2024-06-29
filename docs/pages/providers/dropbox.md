@@ -18,14 +18,14 @@ const dropbox = new Dropbox(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = dropbox.createAuthorizationURL(state);
-url.setScopes("account_info.read", "files.content.read");
+url.addScopes("account_info.read", "files.content.read");
 ```
 
 ## Validate authorization code
@@ -62,7 +62,7 @@ Also see [supported claims](https://developers.dropbox.com/oidc-guide#oidc-stand
 
 ```ts
 const url = dropbox.createAuthorizationURL(state, codeVerifier);
-url.setScopes("openid");
+url.addScopes("openid");
 ```
 
 ```ts
@@ -88,7 +88,7 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 
 ```ts
 const url = google.createAuthorizationURL(state, codeVerifier);
-url.setScopes("openid", "profile", "email");
+url.addScopes("openid", "profile", "email");
 ```
 
 The [`/users/get_current_account` endpoint](https://www.dropbox.com/developers/documentation/http/documentation#users-get_current_account) can also be used.

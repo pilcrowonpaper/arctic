@@ -18,14 +18,14 @@ const vk = new VK(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes. Optionally use the `offline` scope to get access tokens with no expiration.
+Use `addScopes()` to define scopes. Optionally use the `offline` scope to get access tokens with no expiration.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = vk.createAuthorizationURL(state);
-url.setScopes("email", "messages", "offline");
+url.addScopes("email", "messages", "offline");
 ```
 
 ## Validate authorization code

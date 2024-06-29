@@ -18,7 +18,7 @@ const google = new Google(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState, generateCodeVerifier } from "arctic";
@@ -26,7 +26,7 @@ import { generateState, generateCodeVerifier } from "arctic";
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
 const url = google.createAuthorizationURL(state, codeVerifier);
-url.setScopes("openid", "profile");
+url.addScopes("openid", "profile");
 ```
 
 ## Validate authorization code
@@ -63,7 +63,7 @@ Also see [ID token claims](https://developers.google.com/identity/openid-connect
 
 ```ts
 const url = google.createAuthorizationURL(state, codeVerifier);
-url.setScopes("openid");
+url.addScopes("openid");
 ```
 
 ```ts
@@ -89,7 +89,7 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 
 ```ts
 const url = google.createAuthorizationURL(state, codeVerifier);
-url.setScopes("openid", "profile", "email");
+url.addScopes("openid", "profile", "email");
 ```
 
 ## Refresh tokens

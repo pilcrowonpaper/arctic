@@ -18,14 +18,14 @@ const spotify = new Spotify(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = spotify.createAuthorizationURL(state);
-url.setScopes("user-read-email", "user-read-private");
+url.addScopes("user-read-email", "user-read-private");
 ```
 
 ## Validate authorization code

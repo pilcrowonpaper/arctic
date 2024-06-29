@@ -21,7 +21,7 @@ const authentik = new Authentik(domain, clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState, generateCodeVerifier } from "arctic";
@@ -29,7 +29,7 @@ import { generateState, generateCodeVerifier } from "arctic";
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
 const url = authentik.createAuthorizationURL(state, codeVerifier);
-url.setScopes("openid", "profile");
+url.addScopes("openid", "profile");
 ```
 
 ## Validate authorization code

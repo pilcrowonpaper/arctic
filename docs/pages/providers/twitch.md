@@ -18,14 +18,14 @@ const twitch = new Twitch(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = twitch.createAuthorizationURL(state);
-url.setScopes("activity:write", "read");
+url.addScopes("activity:write", "read");
 ```
 
 ## Validate authorization code

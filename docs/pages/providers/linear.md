@@ -18,7 +18,7 @@ const linear = new Linear(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 **The `read` scope must always be included.**
 
@@ -27,7 +27,7 @@ import { generateState } from "arctic";
 
 const state = generateState();
 const url = linear.createAuthorizationURL(state);
-url.setScopes("read", "write");
+url.addScopes("read", "write");
 ```
 
 ## Validate authorization code

@@ -21,14 +21,14 @@ const github = new GitHub(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = github.createAuthorizationURL(state);
-url.setScopes("user:email", "repo");
+url.addScopes("user:email", "repo");
 ```
 
 ## Validate authorization code
@@ -109,7 +109,7 @@ Add the `email` scope and use the [`/user/emails` endpoint](https://docs.github.
 
 ```ts
 const url = github.createAuthorizationURL(state);
-url.setScopes("user:email");
+url.addScopes("user:email");
 ```
 
 ```ts

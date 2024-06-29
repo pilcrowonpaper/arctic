@@ -18,14 +18,14 @@ const twitter = new Twitter(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = twitter.createAuthorizationURL(state);
-url.setScopes("account_info.read", "files.content.read");
+url.addScopes("account_info.read", "files.content.read");
 ```
 
 ## Validate authorization code
@@ -60,7 +60,7 @@ Add the `users.read` and `tweet.read` scopes and use the [`/users/me` endpoint](
 
 ```ts
 const url = twitter.createAuthorizationURL(state, codeVerifier);
-url.setScopes("users.read", "tweet.read");
+url.addScopes("users.read", "tweet.read");
 ```
 
 ```ts
@@ -78,7 +78,7 @@ Add the `offline.access` scope to get refresh tokens.
 
 ```ts
 const url = twitter.createAuthorizationURL();
-url.setScopes("offline.access");
+url.addScopes("offline.access");
 ```
 
 ```ts

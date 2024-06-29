@@ -18,14 +18,14 @@ const dribble = new Dribble(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = dribble.createAuthorizationURL(state);
-url.setScopes("public", "upload");
+url.addScopes("public", "upload");
 ```
 
 ## Validate authorization code

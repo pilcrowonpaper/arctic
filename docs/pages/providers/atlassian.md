@@ -18,14 +18,14 @@ const atlassian = new Atlassian(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = atlassian.createAuthorizationURL(state);
-url.setScopes("write:jira-work", "read:jira-user");
+url.addScopes("write:jira-work", "read:jira-user");
 ```
 
 ## Validate authorization code
@@ -84,7 +84,7 @@ Add the `read:me` scope and use the [`/me` endpoint](https://developer.atlassian
 
 ```ts
 const url = atlassian.createAuthorizationURL(state);
-url.setScopes("read:me");
+url.addScopes("read:me");
 ```
 
 ```ts

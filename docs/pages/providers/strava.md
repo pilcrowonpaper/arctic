@@ -18,14 +18,14 @@ const strava = new Strava(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = strava.createAuthorizationURL(state);
-url.setScopes("activity:write", "read");
+url.addScopes("activity:write", "read");
 ```
 
 ## Validate authorization code
@@ -84,7 +84,7 @@ Add the `read` scope and use the [`/athlete` endpoint](https://developers.strava
 
 ```ts
 const url = strava.createAuthorizationURL(state);
-url.setScopes("read");
+url.addScopes("read");
 ```
 
 ```ts

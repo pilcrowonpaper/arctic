@@ -21,7 +21,7 @@ const slack = new SlackOIDC(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 **The `openid` scope is required.**
 
@@ -30,7 +30,7 @@ import { generateState } from "arctic";
 
 const state = generateState();
 const url = slack.createAuthorizationURL(state);
-url.setScopes("openid", "profile");
+url.addScopes("openid", "profile");
 ```
 
 ## Validate authorization code
@@ -82,5 +82,5 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 
 ```ts
 const url = slack.createAuthorizationURL(state, codeVerifier);
-url.setScopes("openid", "profile", "email");
+url.addScopes("openid", "profile", "email");
 ```

@@ -18,7 +18,7 @@ const lichess = new Lichess(clientId, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState, generateCodeVerifier } from "arctic";
@@ -26,7 +26,7 @@ import { generateState, generateCodeVerifier } from "arctic";
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
 const url = lichess.createAuthorizationURL(state, codeVerifier);
-url.setScopes("challenge:read", "challenge:write");
+url.addScopes("challenge:read", "challenge:write");
 ```
 
 ## Validate authorization code
@@ -74,7 +74,7 @@ Add the `email:read` scope and use the [/api/account/email](https://lichess.org/
 
 ```ts
 const url = lichess.createAuthorizationURL(state, codeVerifier);
-url.setScopes("email:read");
+url.addScopes("email:read");
 ```
 
 ```ts

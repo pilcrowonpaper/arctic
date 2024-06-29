@@ -18,14 +18,14 @@ const facebook = new Facebook(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `setScopes()` and `appendScopes()` to define scopes.
+Use `addScopes()` to define scopes.
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const url = facebook.createAuthorizationURL(state);
-url.setScopes("email", "public_profile");
+url.addScopes("email", "public_profile");
 ```
 
 ## Validate authorization code
