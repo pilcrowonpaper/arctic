@@ -109,7 +109,7 @@ const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 const refreshToken = tokens.refreshToken();
 ```
 
-Use `refreshAccessToken()` to get a new access token using a refresh token. Dropbox will only return the access token and its expiration. This method throws the same errors as `validateAuthorizationCode()`.
+Use `refreshAccessToken()` to get a new access token using a refresh token. Dropbox will only return the access token and its expiration. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

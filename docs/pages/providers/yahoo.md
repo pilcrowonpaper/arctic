@@ -58,7 +58,7 @@ try {
 
 ## Refresh access tokens
 
-Use `refreshAccessToken()` to get a new access token using a refresh token. Yahoo returns the same values as during the authorization code validation. This method throws the same errors as `validateAuthorizationCode()`.
+Use `refreshAccessToken()` to get a new access token using a refresh token. Yahoo returns the same values as during the authorization code validation. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

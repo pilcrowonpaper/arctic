@@ -106,7 +106,7 @@ url.setScopes("openid", "profile", "email");
 
 ## Refresh access tokens
 
-Use `refreshAccessToken()` to get a new access token using a refresh token. The returned values are the same as authorization code validation. This method throws the same errors as `validateAuthorizationCode()`.
+Use `refreshAccessToken()` to get a new access token using a refresh token. The returned values are the same as authorization code validation. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

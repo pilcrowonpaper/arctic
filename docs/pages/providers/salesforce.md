@@ -72,7 +72,7 @@ const accessToken = tokens.accessToken();
 const refreshToken = tokens.refreshToken();
 ```
 
-Use `refreshAccessToken()` to get a new access token using a refresh token. Salesforce only returns an access token. This method throws the same errors as `validateAuthorizationCode()`.
+Use `refreshAccessToken()` to get a new access token using a refresh token. Salesforce only returns an access token. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
