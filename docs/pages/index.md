@@ -4,6 +4,8 @@ title: "Arctic documentation"
 
 # Arctic documentation
 
+**The v2 beta is here - [check it out!](https://arcticjs.dev)**
+
 Arctic is a TypeScript library that provides OAuth 2.0 and OpenID Connect clients for major providers. It runs on any runtime, including Node.js, Bun, Deno, and Cloudflare Workers.
 
 If you need a generic OAuth 2.0 client, see [Oslo](https://oslo.js.org).
