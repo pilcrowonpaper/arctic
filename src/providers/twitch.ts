@@ -1,16 +1,14 @@
 import {
 	AuthorizationCodeAuthorizationURL,
 	AuthorizationCodeTokenRequestContext,
-	RefreshRequestContext,
-	TokenRevocationRequestContext
+	RefreshRequestContext
 } from "@oslojs/oauth2";
-import { sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
+import { sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://id.twitch.tv/oauth2/authorize";
 const tokenEndpoint = "https://id.twitch.tv/oauth2/token";
-const tokenRevocationEndpoint = "https://id.twitch.tv/oauth2/revoke";
 
 export class Twitch {
 	private clientId: string;
@@ -45,9 +43,5 @@ export class Twitch {
 		return tokens;
 	}
 
-	public async revokeAccessToken(accessToken: string): Promise<void> {
-		const context = new TokenRevocationRequestContext(accessToken);
-		context.setClientId(this.clientId);
-		await sendTokenRevocationRequest(tokenRevocationEndpoint, context);
-	}
+	// No token revocation since the error responses are not spec-compliant
 }
