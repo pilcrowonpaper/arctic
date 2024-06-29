@@ -61,7 +61,7 @@ Since this is a cross-origin form request, make sure to relax your CSRF protecti
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/OAuth2RequestError), [`ArcticFetchError`](/reference/ArcticFetchError), or a standard `Error` (parse errors). Apple returns an ID token (the access token and refresh token currently does not have any uses).
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/OAuth2RequestError), [`ArcticFetchError`](/reference/ArcticFetchError), or a standard `Error` (parse errors). The ID token will always be returned regardless of the scope. T access token and refresh token currently does not have any uses.
 
 Arctic provides [`decodeIdToken()`](/reference/decodeIdToken) for decoding the ID token's payload.
 
