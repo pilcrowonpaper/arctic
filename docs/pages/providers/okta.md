@@ -10,12 +10,15 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
-See [Endpoints](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints) for more on the `tenant` parameter.
+The `domain` parameter should not include the protocol or path. The `authorizationServerId` parameter is optional.
 
 ```ts
 import { Okta } from "arctic";
 
-const entraId = new Okta(tenant, clientId, clientSecret, redirectURI);
+const domain = "auth.example.com";
+
+const okta = new Okta(domain, null, clientId, clientSecret, redirectURI);
+const okta = new Okta(domain, authorizationServerId, clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
@@ -27,7 +30,7 @@ import { generateState, generateCodeVerifier } from "arctic";
 
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
-const url = entraId.createAuthorizationURL(state, codeVerifier);
+const url = okta.createAuthorizationURL(state, codeVerifier);
 url.setScopes("openid", "profile");
 ```
 
@@ -39,7 +42,7 @@ url.setScopes("openid", "profile");
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await entraId.validateAuthorizationCode(code, codeVerifier);
+	const tokens = await okta.validateAuthorizationCode(code, codeVerifier);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
@@ -60,13 +63,13 @@ try {
 
 ## Refresh access tokens
 
-Use `refreshAccessToken()` to get a new access token using a refresh token. This method throws the same errors as `validateAuthorizationCode()`.
+Use `refreshAccessToken()` to get a new access token using a refresh token. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await entraId.refreshAccessToken(accessToken);
+	const tokens = await okta.refreshAccessToken(accessToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
@@ -86,7 +89,7 @@ Use `revokeToken()` to revoke a token. This can throw the same errors as `valida
 
 ```ts
 try {
-	await gitlab.revokeToken(token);
+	await okta.revokeToken(token);
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
