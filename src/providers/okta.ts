@@ -62,7 +62,7 @@ export class Okta {
 	public async refreshAccessToken(refreshToken: string, scopes: string[]): Promise<OAuth2Tokens> {
 		const context = new RefreshRequestContext(refreshToken);
 		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
-		context.setScopes(...scopes);
+		context.addScopes(...scopes);
 		const tokens = await sendTokenRequest(this.tokenEndpoint, context);
 		return tokens;
 	}
