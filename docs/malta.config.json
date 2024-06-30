@@ -67,7 +67,7 @@
 		},
 		{
 			"title": "API reference",
-			"pages": ["arctic", "/reference/main"]
+			"pages": [["arctic", "/reference/main"]]
 		},
 		{
 			"title": "Links",
