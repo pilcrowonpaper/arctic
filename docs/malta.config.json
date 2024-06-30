@@ -66,6 +66,10 @@
 			]
 		},
 		{
+			"title": "API reference",
+			"pages": ["arctic", "/reference/main"]
+		},
+		{
 			"title": "Links",
 			"pages": [
 				["GitHub", "https://github.com/pilcrowonpaper/arctic"],
