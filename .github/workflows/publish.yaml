@@ -80,6 +80,7 @@ jobs:
   publish-v2-docs:
     name: Publish v2 docs
     runs-on: ubuntu-latest
+    needs: check-changesets
     if: needs.check-changesets.check-changesets.outputs.changesets == 0 && github.ref_name == 'v2'
     steps:
       - name: setup actions
