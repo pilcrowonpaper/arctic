@@ -6,7 +6,7 @@ title: "Authentik"
 
 OAuth 2.0 provider for Authentik.
 
-Also see the [OAuth 2.0](/guides/oauth2) guide.
+Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
@@ -58,6 +58,24 @@ try {
 	// Parse error
 }
 ```
+
+## OpenID Connect
+
+Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
+
+```ts
+const url = keycloak.createAuthorizationURL(state, codeVerifier);
+url.addScopes("openid");
+```
+
+```ts
+import { decodeIdToken } from "arctic";
+
+const tokens = await authentik.validateAuthorizationCode(code, codeVerifier);
+const idToken = tokens.idToken();
+const claims = decodeIdToken(idToken);
+```
+
 
 ## Refresh access tokens
 
