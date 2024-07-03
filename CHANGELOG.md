@@ -1,5 +1,15 @@
 # arctic
 
+## 2.0.0-next.1
+
+## Minor changes
+
+- Add KeyCloak provider
+
+## Patch changes
+
+- Fix token endpoint initialization in `Salesforce` provider
+
 ## 2.0.0-next.0
 
 ## Major changes
