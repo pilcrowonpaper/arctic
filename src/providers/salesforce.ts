@@ -19,7 +19,7 @@ export class Salesforce {
 
 	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
 		this.authorizationEndpoint = `https://${domain}/services/oauth2/authorize`;
-		this.tokenEndpoint = domain + `https://${domain}/services/oauth2/token`;
+		this.tokenEndpoint = `https://${domain}/services/oauth2/token`;
 		this.tokenRevocationEndpoint = `https://${domain}/services/oauth2/revoke`;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
