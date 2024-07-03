@@ -1,22 +1,22 @@
 ---
-title: "Authentik"
+title: "KeyCloak"
 ---
 
 # Okta
 
-OAuth 2.0 provider for Authentik.
+OAuth 2.0 provider for KeyCloak.
 
 Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
-The `domain` parameter should not include the protocol or path.
+The realm URL should not include trailing slashes.
 
 ```ts
-import { Authentik } from "arctic";
+import { KeyCloak } from "arctic";
 
-const domain = "auth.example.com";
-const authentik = new Authentik(domain, clientId, clientSecret, redirectURI);
+const realmURL = "https://auth.example.com/realms/myrealm
+const keycloak = new KeyCloak(realmURL, clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
@@ -28,19 +28,19 @@ import { generateState, generateCodeVerifier } from "arctic";
 
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
-const url = authentik.createAuthorizationURL(state, codeVerifier);
+const url = keycloak.createAuthorizationURL(state, codeVerifier);
 url.addScopes("openid", "profile");
 ```
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Actual values returned by Authentik depends on your configuration and version.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Actual values returned by KeyCloak depends on your configuration and version.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await authentik.validateAuthorizationCode(code, codeVerifier);
+	const tokens = await keycloak.validateAuthorizationCode(code, codeVerifier);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
@@ -71,7 +71,7 @@ url.addScopes("openid");
 ```ts
 import { decodeIdToken } from "arctic";
 
-const tokens = await authentik.validateAuthorizationCode(code, codeVerifier);
+const tokens = await keycloak.validateAuthorizationCode(code, codeVerifier);
 const idToken = tokens.idToken();
 const claims = decodeIdToken(idToken);
 ```
@@ -84,7 +84,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. This
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await authentik.refreshAccessToken(accessToken);
+	const tokens = await keycloak.refreshAccessToken(accessToken);
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
@@ -102,7 +102,7 @@ Use `revokeToken()` to revoke a token. This can throw the same errors as `valida
 
 ```ts
 try {
-	await authentik.revokeToken(token);
+	await keycloak.revokeToken(token);
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI

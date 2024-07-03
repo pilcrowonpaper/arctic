@@ -36,6 +36,7 @@
 				["Google", "/providers/google"],
 				["Intuit", "/providers/intuit"],
 				["Kakao", "/providers/kakao"],
+				["KeyCloak", "/providers/keycloak"],
 				["Lichess", "/providers/lichess"],
 				["Line", "/providers/line"],
 				["Linear", "/providers/linear"],

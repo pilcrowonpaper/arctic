@@ -15,4 +15,3 @@ title: "arctic"
 - [`generateCodeVerifier()`](https://oauth2.oslojs.dev/reference/main/generateCodeVerifier)
 - [`generateState()`](https://oauth2.oslojs.dev/reference/main/generateState)
 - [`decodeIdToken()`](/reference/main/decodeIdToken)
-

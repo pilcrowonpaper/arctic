@@ -8,7 +8,7 @@ import { sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-export class Authentik {
+export class KeyCloak {
 	private authorizationEndpoint: string;
 	private tokenEndpoint: string;
 	private tokenRevocationEndpoint: string;
@@ -17,10 +17,10 @@ export class Authentik {
 	private clientSecret: string;
 	private redirectURI: string;
 
-	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.authorizationEndpoint = `https://${domain}/application/o/authorize/`;
-		this.tokenEndpoint = `https://${domain}/application/o/token/`;
-		this.tokenRevocationEndpoint = `https://${domain}/application/o/revoke`;
+	constructor(realmURL: string, clientId: string, clientSecret: string, redirectURI: string) {
+		this.authorizationEndpoint = realmURL + "/protocol/openid-connect/auth";
+		this.tokenEndpoint = realmURL + "/protocol/openid-connect/token";
+		this.tokenRevocationEndpoint = realmURL + "/protocol/openid-connect/revoke";
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.redirectURI = redirectURI;

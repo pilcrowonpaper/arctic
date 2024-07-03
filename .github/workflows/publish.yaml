@@ -76,7 +76,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-  
+
   publish-v2-docs:
     name: Publish v2 docs
     runs-on: ubuntu-latest
@@ -102,4 +102,3 @@ jobs:
         run: npm i -g wrangler
       - name: deploy
         run: wrangler pages deploy docs/dist --project-name arctic-v2 --branch main
-

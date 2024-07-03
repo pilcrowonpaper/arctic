@@ -17,6 +17,7 @@ export { GitHub } from "./providers/github.js";
 export { GitLab } from "./providers/gitlab.js";
 export { Google } from "./providers/google.js";
 export { Kakao } from "./providers/kakao.js";
+export { KeyCloak } from "./providers/keycloak.js";
 export { Lichess } from "./providers/lichess.js";
 export { Line } from "./providers/line.js";
 export { Linear } from "./providers/linear.js";
