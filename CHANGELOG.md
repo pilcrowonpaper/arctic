@@ -1,6 +1,6 @@
 # arctic
 
-## next
+## 2.0.0-next.2
 
 ## Major changes
 
