@@ -18,14 +18,12 @@ const osu = new Osu(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = osu.createAuthorizationURL(state);
-url.addScopes("public", "friends.read");
+const scopes = ["public", "friends.read"];
+const url = osu.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code

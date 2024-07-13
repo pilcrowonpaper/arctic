@@ -18,14 +18,12 @@ const patreon = new Patreon(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = patreon.createAuthorizationURL(state);
-url.addScopes("identify", "identity[email]");
+const scopes = ["identify", "identity[email]"];
+const url = patreon.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -83,8 +81,8 @@ try {
 Add the `identity` scope and use the [`/api/oauth2/v2/identity` endpoint](https://docs.patreon.com/#get-api-oauth2-v2-identity). Optionally add the `identity[email]` scope to get user email.
 
 ```ts
-const url = patreon.createAuthorizationURL(state);
-url.addScopes("identify", "identity[email]");
+const scopes = ["identify", "identity[email]"];
+const url = patreon.createAuthorizationURL(state, scopes);
 ```
 
 ```ts

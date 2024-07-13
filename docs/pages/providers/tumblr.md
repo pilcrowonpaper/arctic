@@ -18,14 +18,12 @@ const patreon = new Tumblr(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = tumblr.createAuthorizationURL(state);
-url.addScopes("basic", "write");
+const scopes = ["basic", "write"];
+const url = tumblr.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -59,8 +57,8 @@ try {
 Add the `offline_access` scope to get refresh tokens.
 
 ```ts
-const url = tumblr.createAuthorizationURL();
-url.addScopes("offline_access");
+const scopes = ["offline_access"];
+const url = tumblr.createAuthorizationURL(state, scopes);
 ```
 
 ```ts

@@ -18,14 +18,12 @@ const yandex = new Yandex(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = yandex.createAuthorizationURL(state);
-url.addScopes("activity:write", "read");
+const scopes = ["activity:write", "read"];
+const url = yandex.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code

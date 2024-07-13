@@ -1,5 +1,12 @@
 # arctic
 
+## next
+
+## Major changes
+
+- Update `createAuthorizationURL()` provider methods
+- Remove `SlackApp` and `SlackOpenID`
+
 ## 2.0.0-next.1
 
 ## Minor changes

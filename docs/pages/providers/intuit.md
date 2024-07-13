@@ -18,14 +18,12 @@ const intuit = new Intuit(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = intuit.createAuthorizationURL(state);
-url.addScopes("email", "activities.read");
+const scopes = ["email", "activities.read"];
+const url = intuit.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -74,8 +72,8 @@ Use OpenID Connect with the `openid` scope to get the user's profile with an ID 
 Also see [ID token claims](https://developer.intuit.com/app/developer/qbo/docs/develop/authentication-and-authorization/openid-connect#obtaining-user-profile-information).
 
 ```ts
-const url = intuit.createAuthorizationURL(state);
-url.addScopes("openid");
+const scopes = ["openid"];
+const url = intuit.createAuthorizationURL(state, scopes);
 ```
 
 ```ts
@@ -100,8 +98,8 @@ const user = await response.json();
 Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
 
 ```ts
-const url = intuit.createAuthorizationURL(state);
-url.addScopes("openid", "profile", "email");
+const scopes = ["openid", "profile", "email"];
+const url = intuit.createAuthorizationURL(state, scopes);
 ```
 
 ## Refresh access tokens

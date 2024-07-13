@@ -18,14 +18,12 @@ const coinbase = new Coinbase(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = coinbase.createAuthorizationURL(state);
-url.addScopes("wallet:user:email", "wallet:accounts:read");
+const scopes = ["wallet:user:email", "wallet:accounts:read"];
+const url = coinbase.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code

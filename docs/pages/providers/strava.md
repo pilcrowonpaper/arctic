@@ -18,14 +18,12 @@ const strava = new Strava(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = strava.createAuthorizationURL(state);
-url.addScopes("activity:write", "read");
+const scopes = ["activity:write", "read"];
+const url = strava.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -83,8 +81,8 @@ try {
 Add the `read` scope and use the [`/athlete` endpoint](https://developers.strava.com/docs/reference/#api-Athletes-getLoggedInAthlete). Alternatively, use the `read_all` scope to get all private data.
 
 ```ts
-const url = strava.createAuthorizationURL(state);
-url.addScopes("read");
+const scopes = ["read"];
+const url = strava.createAuthorizationURL(state, scopes);
 ```
 
 ```ts

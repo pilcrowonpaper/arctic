@@ -1,8 +1,4 @@
-import {
-	AuthorizationCodeAuthorizationURL,
-	AuthorizationCodeTokenRequestContext
-} from "@oslojs/oauth2";
-import { sendTokenRequest } from "../request.js";
+import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -20,18 +16,24 @@ export class Facebook {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
-		url.setRedirectURI(this.redirectURI);
-		url.setState(state);
+	public createAuthorizationURL(state: string, scopes: string[]): URL {
+		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("scope", scopes.join(" "));
+		url.searchParams.set("redirect_uri", this.redirectURI);
 		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
-		const context = new AuthorizationCodeTokenRequestContext(code);
-		context.authenticateWithRequestBody(this.clientId, this.clientSecret);
-		context.setRedirectURI(this.redirectURI);
-		const tokens = await sendTokenRequest(tokenEndpoint, context);
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		body.set("redirect_uri", this.redirectURI);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 }

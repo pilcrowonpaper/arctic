@@ -32,7 +32,7 @@ export { Reddit } from "./providers/reddit.js";
 export { Roblox } from "./providers/roblox.js";
 export { Salesforce } from "./providers/salesforce.js";
 export { Shikimori } from "./providers/shikimori.js";
-export { SlackApp, SlackOpenID } from "./providers/slack.js";
+export { Slack } from "./providers/slack.js";
 export { Spotify } from "./providers/spotify.js";
 export { Strava } from "./providers/strava.js";
 export { Tiltify } from "./providers/tiltify.js";
@@ -46,11 +46,5 @@ export { Yandex } from "./providers/yandex.js";
 export { Zoom } from "./providers/zoom.js";
 export { FortyTwo } from "./providers/42.js";
 
-export {
-	generateCodeVerifier,
-	generateState,
-	AuthorizationCodeAuthorizationURL
-} from "@oslojs/oauth2";
-
-export { ArcticFetchError, OAuth2RequestError } from "./request.js";
-export { OAuth2Tokens } from "./oauth2.js";
+export { OAuth2Tokens, generateCodeVerifier, generateState } from "./oauth2.js";
+export { OAuth2RequestError, ArcticFetchError } from "./request.js";

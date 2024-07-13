@@ -18,14 +18,12 @@ const twitter = new Twitter(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = twitter.createAuthorizationURL(state);
-url.addScopes("account_info.read", "files.content.read");
+const scops = ["account_info.read", "files.content.read"];
+const url = twitter.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -59,8 +57,8 @@ try {
 Add the `users.read` and `tweet.read` scopes and use the [`/users/me` endpoint](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me). You cannot get user emails with the v2 API.
 
 ```ts
-const url = twitter.createAuthorizationURL(state, codeVerifier);
-url.addScopes("users.read", "tweet.read");
+const scopes = ["users.read", "tweet.read"];
+const url = twitter.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
@@ -77,8 +75,8 @@ const user = await response.json();
 Add the `offline.access` scope to get refresh tokens.
 
 ```ts
-const url = twitter.createAuthorizationURL();
-url.addScopes("offline.access");
+const scopes = ["offline.access"];
+const url = twitter.createAuthorizationURL(state, codeVerifier, state);
 ```
 
 ```ts

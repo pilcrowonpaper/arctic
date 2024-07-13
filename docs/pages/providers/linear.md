@@ -18,16 +18,14 @@ const linear = new Linear(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 **The `read` scope must always be included.**
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = linear.createAuthorizationURL(state);
-url.addScopes("read", "write");
+const scopes = ["read", "write"];
+const url = linear.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code

@@ -18,14 +18,12 @@ const figma = new Figma(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = figma.createAuthorizationURL(state);
-url.addScopes("files:read", "file_variables:read");
+const scopes = ["files:read", "file_variables:read"];
+const url = figma.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code

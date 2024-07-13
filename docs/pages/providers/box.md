@@ -18,14 +18,12 @@ const box = new Box(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = box.createAuthorizationURL(state);
-url.addScopes("root_readonly", "manage_managed_users");
+const scopes = ["root_readonly", "manage_managed_users"];
+const url = box.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code

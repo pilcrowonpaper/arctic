@@ -21,14 +21,12 @@ const gitlab = new GitLab(domain, clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = gitlab.createAuthorizationURL(state);
-url.addScopes("read_user", "profile");
+const scopes = ["read_user", "profile"];
+const url = gitlab.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -86,8 +84,8 @@ try {
 Add the `read_user` scope and use the [`/user` endpoint](https://docs.gitlab.com/ee/api/users.html#list-current-user).
 
 ```ts
-const url = gitlab.createAuthorizationURL(state);
-url.addScopes("read_user");
+const scopes = ["read_user"];
+const url = gitlab.createAuthorizationURL(state, scopes);
 ```
 
 ```ts

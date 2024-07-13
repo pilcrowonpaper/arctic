@@ -38,11 +38,12 @@ const privateKey = base64.decodeIgnorePadding(
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
-const url = apple.createAuthorizationURL(state);
-url.addScopes("name", "email");
+import { generateState } from "arctic";
+
+const state = generateState();
+const scopes = ["name", "email"];
+const url = apple.createAuthorizationURL(state, scopes);
 ```
 
 ### Requesting scopes

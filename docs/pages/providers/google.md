@@ -18,15 +18,13 @@ const google = new Google(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState, generateCodeVerifier } from "arctic";
 
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
-const url = google.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid", "profile");
+const scopes = ["openid", "profile"];
+const url = google.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
@@ -62,8 +60,8 @@ Use OpenID Connect with the `openid` scope to get the user's profile with an ID 
 Also see [ID token claims](https://developers.google.com/identity/openid-connect/openid-connect#an-id-tokens-payload).
 
 ```ts
-const url = google.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid");
+const scopes = ["openid"];
+const url = google.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
@@ -88,8 +86,8 @@ const user = await response.json();
 Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
 
 ```ts
-const url = google.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid", "profile", "email");
+const scopes = ["openid", "profile", "email"];
+const url = google.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Refresh tokens
@@ -97,7 +95,7 @@ url.addScopes("openid", "profile", "email");
 Set the `access_type` parameter to `offline` to get refresh tokens. You will only get the refresh token on the user's first authentication.
 
 ```ts
-const url = google.createAuthorizationURL();
+const url = google.createAuthorizationURL(state, codeVerifier, scopes);
 url.searchParams.set("access_type", "offline");
 ```
 
