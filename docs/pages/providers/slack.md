@@ -1,10 +1,10 @@
 ---
-title: "Slack (OpenID)"
+title: "Slack"
 ---
 
 # Slack (OpenID)
 
-OAuth 2.0 provider for Slack (OpenID Connect). This is different from Slack provider used to install apps - use [`Slack (App)`](/providers/slack-app) instead.
+OAuth 2.0 provider for Slack (OpenID Connect).
 
 Also see the [OAuth 2.0](/guides/oauth2) guide.
 
@@ -21,16 +21,14 @@ const slack = new SlackOIDC(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 **The `openid` scope is required.**
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = slack.createAuthorizationURL(state);
-url.addScopes("openid", "profile");
+const scopes = ["openid", "profile"];
+const url = slack.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -81,6 +79,6 @@ const user = await response.json();
 Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
 
 ```ts
-const url = slack.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid", "profile", "email");
+const scopes = ["openid", "profile", "email"];
+const url = slack.createAuthorizationURL(state, codeVerifier, scopes);
 ```

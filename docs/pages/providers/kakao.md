@@ -18,14 +18,12 @@ const kakao = new Kakao(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = kakao.createAuthorizationURL(state);
-url.addScopes("account_email", "profile");
+const scopes = ["account_email", "profile"];
+const url = kakao.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code

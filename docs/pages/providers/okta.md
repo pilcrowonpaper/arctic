@@ -23,15 +23,13 @@ const okta = new Okta(domain, authorizationServerId, clientId, clientSecret, red
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState, generateCodeVerifier } from "arctic";
 
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
-const url = okta.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid", "profile");
+const scopes = ["openid", "profile"];
+const url = okta.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code

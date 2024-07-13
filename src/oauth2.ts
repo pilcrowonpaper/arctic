@@ -1,40 +1,61 @@
+import { base64url } from "@oslojs/encoding";
+import { sha256 } from "@oslojs/crypto/sha2";
 import { TokenRequestResult } from "@oslojs/oauth2";
 
 export class OAuth2Tokens {
 	public data: object;
-	private parser: TokenRequestResult;
+
+	private result: TokenRequestResult;
 
 	constructor(data: object) {
 		this.data = data;
-		this.parser = new TokenRequestResult(data);
+		this.result = new TokenRequestResult(data);
+	}
+
+	public tokenType(): string {
+		return this.result.tokenType();
 	}
 
 	public accessToken(): string {
-		return this.parser.accessToken();
+		return this.result.accessToken();
 	}
 
 	public accessTokenExpiresInSeconds(): number {
-		return this.parser.accessTokenExpiresInSeconds();
+		return this.result.accessTokenExpiresInSeconds();
 	}
 
 	public accessTokenExpiresAt(): Date {
-		return this.parser.accessTokenExpiresAt();
+		return this.result.accessTokenExpiresAt();
 	}
 
 	public hasRefreshToken(): boolean {
-		return this.parser.hasRefreshToken();
+		return this.result.hasRefreshToken();
 	}
 
 	public refreshToken(): string {
-		return this.parser.refreshToken();
+		return this.result.refreshToken();
 	}
 
 	public refreshTokenExpiresInSeconds(): number {
-		return this.parser.refreshTokenExpiresInSeconds();
+		if (
+			"refresh_token_expires_in" in this.data &&
+			typeof this.data.refresh_token_expires_in === "number"
+		) {
+			return this.data.refresh_token_expires_in;
+		}
+		throw new Error("Missing or invalid 'refresh_token_expires_in' field");
 	}
 
 	public refreshTokenExpiresAt(): Date {
-		return this.parser.refreshTokenExpiresAt();
+		return new Date(Date.now() + this.refreshTokenExpiresInSeconds() * 1000);
+	}
+
+	public hasScopes(): boolean {
+		return this.result.hasScopes();
+	}
+
+	public scopes(): string[] {
+		return this.result.scopes();
 	}
 
 	public idToken(): string {
@@ -43,4 +64,21 @@ export class OAuth2Tokens {
 		}
 		throw new Error("Missing or invalid field 'id_token'");
 	}
+}
+
+export function createS256CodeChallenge(codeVerifier: string): string {
+	const codeChallengeBytes = sha256(new TextEncoder().encode(codeVerifier));
+	return base64url.encodeNoPadding(codeChallengeBytes);
+}
+
+export function generateCodeVerifier(): string {
+	const randomValues = new Uint8Array(32);
+	crypto.getRandomValues(randomValues);
+	return base64url.encodeNoPadding(randomValues);
+}
+
+export function generateState(): string {
+	const randomValues = new Uint8Array(32);
+	crypto.getRandomValues(randomValues);
+	return base64url.encodeNoPadding(randomValues);
 }

@@ -1,9 +1,4 @@
-import {
-	AuthorizationCodeAuthorizationURL,
-	AuthorizationCodeTokenRequestContext,
-	RefreshRequestContext
-} from "@oslojs/oauth2";
-import { sendTokenRequest } from "../request.js";
+import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -21,29 +16,39 @@ export class Osu {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(authorizationEndpoint, this.clientId);
+	public createAuthorizationURL(state: string, scopes: string[]): URL {
+		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("scope", scopes.join(" "));
 		if (this.redirectURI !== null) {
-			url.setRedirectURI(this.redirectURI);
+			url.searchParams.set("redirect_uri", this.redirectURI);
 		}
-		url.setState(state);
 		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
-		const context = new AuthorizationCodeTokenRequestContext(code);
-		context.authenticateWithRequestBody(this.clientId, this.clientSecret);
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
 		if (this.redirectURI !== null) {
-			context.setRedirectURI(this.redirectURI);
+			body.set("redirect_uri", this.redirectURI);
 		}
-		const tokens = await sendTokenRequest(tokenEndpoint, context);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
-		const context = new RefreshRequestContext(refreshToken);
-		context.authenticateWithRequestBody(this.clientId, this.clientSecret);
-		const tokens = await sendTokenRequest(tokenEndpoint, context);
+		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
+		body.set("refresh_token", refreshToken);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 }

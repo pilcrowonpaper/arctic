@@ -16,16 +16,13 @@ const google = new Google(clientId, clientSecret, redirectURI);
 
 Generate a state and code verifier using `generateState()` and `generateCodeVerifier()`. Use them to create an authorization URL with `createAuthorizationURL()`, store the state and code verifier as cookies, and redirect the user to the authorization url.
 
-Use `addScopes()` to add scopes.
-
 ```ts
 import { generateState, generateCodeVerifier } from "arctic";
 
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
-
-const url = google.createAuthorizationURL(state, codeVerifier);
-url.addScopes("user:email", "repo");
+const scopes = ["user:email", "repo"];
+const url = google.createAuthorizationURL(state, codeVerifier, scopes);
 
 // store state as cookie
 setCookie("state", state, {

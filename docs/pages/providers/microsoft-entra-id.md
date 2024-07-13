@@ -20,15 +20,13 @@ const entraId = new MicrosoftEntraId(tenant, clientId, clientSecret, redirectURI
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState, generateCodeVerifier } from "arctic";
 
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
-const url = entraId.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid", "profile");
+const scopes = ["openid", "profile"];
+const url = entraId.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
@@ -85,10 +83,10 @@ try {
 Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. The `nonce` parameter is required by Entra ID to use OpenID. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
 
 ```ts
-const url = entraId.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid");
+const scopes = ["openid"];
+const url = entraId.createAuthorizationURL(state, codeVerifier, scopes);
 // The nonce should be unique to each request similar to state.
-// That said, nonce can just be "_" here since it isn't useful for server-based OAuth.
+// However, nonce can just be "_" here since it isn't useful for server-based OAuth.
 url.searchParams.set("nonce", nonce);
 ```
 
@@ -114,6 +112,6 @@ const user = await response.json();
 Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
 
 ```ts
-const url = entraId.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid", "profile", "email");
+const scopes = ["openid", "profile", "email"];
+const url = entraId.createAuthorizationURL(state, codeVerifier, scopes);
 ```

@@ -18,14 +18,12 @@ const atlassian = new Atlassian(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = atlassian.createAuthorizationURL(state);
-url.addScopes("write:jira-work", "read:jira-user");
+const scopes = ["write:jira-work", "read:jira-user"];
+const url = atlassian.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -83,8 +81,8 @@ try {
 Add the `read:me` scope and use the [`/me` endpoint](https://developer.atlassian.com/cloud/confluence/oauth-2-3lo-apps/#how-do-i-retrieve-the-public-profile-of-the-authenticated-user-).
 
 ```ts
-const url = atlassian.createAuthorizationURL(state);
-url.addScopes("read:me");
+const scopes = ["read:me"];
+const url = atlassian.createAuthorizationURL(state, scopes);
 ```
 
 ```ts

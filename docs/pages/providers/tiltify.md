@@ -18,14 +18,12 @@ const tiltify = new Tiltify(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = tiltify.createAuthorizationURL(state);
-url.addScopes("activity:write", "read");
+const scopes = ["activity:write", "read"];
+const url = tiltify.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code

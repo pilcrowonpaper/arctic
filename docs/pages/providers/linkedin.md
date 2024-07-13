@@ -20,14 +20,12 @@ const linkedin = new LinkedIn(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = linkedin.createAuthorizationURL(state);
-url.addScopes("openid", "profile");
+const scopes = ["openid", "profile"];
+const url = linkedin.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -87,8 +85,8 @@ try {
 Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
 
 ```ts
-const url = linkedin.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid");
+const scopes = ["openid"];
+const url = linkedin.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
@@ -113,6 +111,6 @@ const user = await response.json();
 Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
 
 ```ts
-const url = linkedin.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid", "profile", "email");
+const scopes = ["openid", "profile", "email"];
+const url = linkedin.createAuthorizationURL(state, codeVerifier, scopes);
 ```

@@ -18,14 +18,12 @@ const patreon = new Reddit(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = reddit.createAuthorizationURL(state);
-url.addScopes("edit", "read");
+const scopes = ["edit", "read"];
+const url = reddit.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -59,7 +57,7 @@ try {
 Set the `duration` parameter to `permanent` to get refresh tokens.
 
 ```ts
-const url = reddit.createAuthorizationURL();
+const url = reddit.createAuthorizationURL(state, scopes);
 url.searchParams.set("duration", "permanent");
 ```
 

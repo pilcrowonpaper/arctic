@@ -14,11 +14,11 @@ npm install arctic@next
 
 ## Authorization URL
 
-`createAuthorizationURL()` is no longer asynchronous. There is no longer a `scopes` option as well. Instead, use the `addScopes()` method.
+`createAuthorizationURL()` is no longer asynchronous and you can pass the scopes array directly.
 
 ```ts
-const url = github.createAuthorizationURL(state);
-url.addScopes("user:email", "repo");
+const scopes = ["user:email", "repo"];
+const url = github.createAuthorizationURL(state, scopes);
 ```
 
 ## Authorization code validation
@@ -71,8 +71,8 @@ try {
 Providers no longer include the `openid` scope by default.
 
 ```ts
-const url = google.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid", "profile");
+const scopes = ["openid", "profile"];
+const url = google.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Initialization

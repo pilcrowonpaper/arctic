@@ -18,14 +18,12 @@ const discord = new Discord(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = discord.createAuthorizationURL(state);
-url.addScopes("email", "activities.read");
+const scopes = ["email", "activities.read"];
+const url = discord.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -83,8 +81,8 @@ try {
 Add the `identify` scope and use the [`/users/@me` endpoint](https://discord.com/developers/docs/resources/user#get-current-user).
 
 ```ts
-const url = discord.createAuthorizationURL(state);
-url.addScopes("identify");
+const scopes = ["identify"];
+const url = discord.createAuthorizationURL(state, scopes);
 ```
 
 ```ts

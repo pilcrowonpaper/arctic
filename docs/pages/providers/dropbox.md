@@ -18,14 +18,12 @@ const dropbox = new Dropbox(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = dropbox.createAuthorizationURL(state);
-url.addScopes("account_info.read", "files.content.read");
+const scopes = ["account_info.read", "files.content.read"];
+const url = dropbox.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -61,8 +59,8 @@ Use OpenID Connect with the `openid` scope to get the user's profile with an ID 
 Also see [supported claims](https://developers.dropbox.com/oidc-guide#oidc-standard).
 
 ```ts
-const url = dropbox.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid");
+const scopes = ["openid"];
+const url = dropbox.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
@@ -87,8 +85,8 @@ const user = await response.json();
 Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
 
 ```ts
-const url = google.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid", "profile", "email");
+const scopes = ["openid", "profile", "email"];
+const url = google.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 The [`/users/get_current_account` endpoint](https://www.dropbox.com/developers/documentation/http/documentation#users-get_current_account) can also be used.
@@ -98,7 +96,7 @@ The [`/users/get_current_account` endpoint](https://www.dropbox.com/developers/d
 Set the `access_type` parameter to `offline` to get refresh tokens.
 
 ```ts
-const url = dropbox.createAuthorizationURL();
+const url = dropbox.createAuthorizationURL(state, codeVerifier, scopes);
 url.searchParams.set("access_type", "offline");
 ```
 

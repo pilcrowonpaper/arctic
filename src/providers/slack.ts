@@ -1,15 +1,11 @@
-import {
-	AuthorizationCodeAuthorizationURL,
-	AuthorizationCodeTokenRequestContext
-} from "@oslojs/oauth2";
-import { sendTokenRequest } from "../request.js";
+import { createOAuth2Request, encodeBasicCredentials, sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const appAuthorizationEndpoint = "https://slack.com/oauth/v2/authorize";
-const appTokenEndpoint = "https://slack.com/api/oauth.v2.access";
+const authorizationEndpoint = "https://slack.com/openid/connect/authorize";
+const tokenEndpoint = "https://slack.com/api/openid.connect.token";
 
-export class SlackApp {
+export class Slack {
 	private clientId: string;
 	private clientSecret: string;
 	private redirectURI: string | null;
@@ -20,56 +16,28 @@ export class SlackApp {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(appAuthorizationEndpoint, this.clientId);
+	public createAuthorizationURL(state: string, scopes: string[]): URL {
+		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("scope", scopes.join(" "));
 		if (this.redirectURI !== null) {
-			url.setRedirectURI(this.redirectURI);
+			url.searchParams.set("redirect_uri", this.redirectURI);
 		}
-		url.setState(state);
 		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
-		const context = new AuthorizationCodeTokenRequestContext(code);
-		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
 		if (this.redirectURI !== null) {
-			context.setRedirectURI(this.redirectURI);
+			body.set("redirect_uri", this.redirectURI);
 		}
-		const tokens = await sendTokenRequest(appTokenEndpoint, context);
-		return tokens;
-	}
-}
-
-const openidAuthorizationEndpoint = "https://slack.com/openid/connect/authorize";
-const openidTokenEndpoint = "https://slack.com/api/openid.connect.token";
-
-export class SlackOpenID {
-	private clientId: string;
-	private clientSecret: string;
-	private redirectURI: string | null;
-
-	constructor(clientId: string, clientSecret: string, redirectURI: string | null) {
-		this.clientId = clientId;
-		this.clientSecret = clientSecret;
-		this.redirectURI = redirectURI;
-	}
-
-	public createAuthorizationURL(state: string): AuthorizationCodeAuthorizationURL {
-		const url = new AuthorizationCodeAuthorizationURL(openidAuthorizationEndpoint, this.clientId);
-		if (this.redirectURI !== null) {
-			url.setRedirectURI(this.redirectURI);
-		}
-		url.setState(state);
-		return url;
-	}
-
-	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
-		const context = new AuthorizationCodeTokenRequestContext(code);
-		context.authenticateWithHTTPBasicAuth(this.clientId, this.clientSecret);
-		if (this.redirectURI !== null) {
-			context.setRedirectURI(this.redirectURI);
-		}
-		const tokens = await sendTokenRequest(openidTokenEndpoint, context);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 }

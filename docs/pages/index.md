@@ -14,14 +14,14 @@ import { GitHub, generateState } from "arctic";
 const github = new GitHub(clientId, clientSecret);
 
 const state = generateState();
-const authorizationURL = github.createAuthorizationURL(state);
-authorizationURL.addScopes("user:email");
+const scopes = ["user:email"];
+const authorizationURL = github.createAuthorizationURL(state, scopes);
+
+// ...
 
 const tokens = await github.validateAuthorizationCode(code);
 const accessToken = tokens.accessToken();
 ```
-
-For a generic OAuth 2.0 client, see [`@oslojs/oauth2`](https://github.com/oslo-project/oauth2).
 
 > Arctic only supports providers that follow the OAuth 2.0 spec (including PKCE and token revocation).
 

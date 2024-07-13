@@ -1,21 +1,27 @@
-import { TokenRequestResult, OAuth2RequestContext } from "@oslojs/oauth2";
+import { base64 } from "@oslojs/encoding";
 import { OAuth2Tokens } from "./oauth2.js";
+import { OAuth2RequestResult } from "@oslojs/oauth2";
 
-export async function sendTokenRequest(
-	url: string,
-	context: OAuth2RequestContext
-): Promise<OAuth2Tokens> {
-	const body = new URLSearchParams();
-	for (const [key, value] of context.body) {
-		body.set(key, value);
-	}
+export function createOAuth2Request(endpoint: string, body: URLSearchParams): Request {
+	const request = new Request(endpoint, {
+		method: "POST",
+		body
+	});
+	request.headers.set("Content-Type", "application/x-www-form-urlencoded");
+	request.headers.set("Accept", "application/json");
+	request.headers.set("User-Agent", "arctic");
+	return request;
+}
+
+export function encodeBasicCredentials(username: string, password: string): string {
+	const bytes = new TextEncoder().encode(`${username}:${password}`);
+	return base64.encode(bytes);
+}
+
+export async function sendTokenRequest(request: Request): Promise<OAuth2Tokens> {
 	let response: Response;
 	try {
-		response = await fetch(url, {
-			method: context.method,
-			headers: new Headers(Array.from(context.headers.entries())),
-			body
-		});
+		response = await fetch(request);
 	} catch (e) {
 		throw new ArcticFetchError(e);
 	}
@@ -28,41 +34,18 @@ export async function sendTokenRequest(
 	if (typeof data !== "object" || data === null) {
 		throw new Error("Unexpected response body data");
 	}
-	const result = new TokenRequestResult(data);
+	const result = new OAuth2RequestResult(data);
 	if (result.hasErrorCode()) {
-		const code = result.errorCode();
-		let description: string | null = null;
-		if (result.hasErrorDescription()) {
-			description = result.errorDescription();
-		}
-		let uri: string | null = null;
-		if (result.hasErrorURI()) {
-			uri = result.errorURI();
-		}
-		let state: string | null = null;
-		if ("state" in data && typeof data.state === "string") {
-			state = result.state();
-		}
-		throw new OAuth2RequestError(code, description, uri, state);
+		const error = createOAuth2RequestError(result);
+		throw error;
 	}
 	return new OAuth2Tokens(data);
 }
 
-export async function sendTokenRevocationRequest(
-	url: string,
-	context: OAuth2RequestContext
-): Promise<void> {
-	const body = new URLSearchParams();
-	for (const [key, value] of context.body) {
-		body.set(key, value);
-	}
+export async function sendTokenRevocationRequest(request: Request): Promise<void> {
 	let response: Response;
 	try {
-		response = await fetch(url, {
-			method: context.method,
-			headers: new Headers(Array.from(context.headers.entries())),
-			body
-		});
+		response = await fetch(request);
 	} catch (e) {
 		throw new ArcticFetchError(e);
 	}
@@ -78,23 +61,28 @@ export async function sendTokenRevocationRequest(
 	if (typeof data !== "object" || data === null) {
 		throw new Error("Unexpected response body data");
 	}
-	const result = new TokenRequestResult(data);
+	const result = new OAuth2RequestResult(data);
 	if (result.hasErrorCode()) {
-		const code = result.errorCode();
-		let description: string | null = null;
-		if (result.hasErrorDescription()) {
-			description = result.errorDescription();
-		}
-		let uri: string | null = null;
-		if (result.hasErrorURI()) {
-			uri = result.errorURI();
-		}
-		let state: string | null = null;
-		if ("state" in data && typeof data.state === "string") {
-			state = result.state();
-		}
-		throw new OAuth2RequestError(code, description, uri, state);
+		const error = createOAuth2RequestError(result);
+		throw error;
 	}
+}
+
+function createOAuth2RequestError(result: OAuth2RequestResult): OAuth2RequestError {
+	const code = result.errorCode();
+	let description: string | null = null;
+	let uri: string | null = null;
+	let state: string | null = null;
+	if (result.hasErrorDescription()) {
+		description = result.errorDescription();
+	}
+	if (result.hasErrorURI()) {
+		uri = result.errorURI();
+	}
+	if ("state" in result.body && typeof result.body.state === "string") {
+		state = result.state();
+	}
+	return new OAuth2RequestError(code, description, uri, state);
 }
 
 export class ArcticFetchError extends Error {

@@ -18,15 +18,13 @@ const yahoo = new Yahoo(clientId, clientSecret, redirectURI);
 
 ## Create authorization URL
 
-Use `addScopes()` to define scopes.
-
 ```ts
 import { generateState, generateCodeVerifier } from "arctic";
 
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
-const url = yahoo.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid", "profile");
+const scopes = ["openid", "profile"];
+const url = yahoo.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
@@ -83,8 +81,8 @@ try {
 Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the [`userinfo` endpoint](https://developer.yahoo.com/sign-in-with-yahoo/#get-user-info-api). Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
 
 ```ts
-const url = yahoo.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid");
+const scopes = ["openid"];
+const url = yahoo.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
@@ -109,6 +107,6 @@ const user = await response.json();
 Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
 
 ```ts
-const url = yahoo.createAuthorizationURL(state, codeVerifier);
-url.addScopes("openid", "profile", "email");
+const scopes = ["openid", "profile", "email"];
+const url = yahoo.createAuthorizationURL(state, codeVerifier, scopes);
 ```

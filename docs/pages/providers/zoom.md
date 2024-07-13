@@ -23,7 +23,8 @@ import { generateState, generateCodeVerifier } from "arctic";
 
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
-const url = zoom.createAuthorizationURL(state, codeVerifier);
+const scopes = ["user:read:email"];
+const url = zoom.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code

@@ -16,15 +16,13 @@ const github = new GitHub(clientId, clientSecret, redirectURI);
 
 Generate state using `generateState()` and store it as a cookie. Use it to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
 
-Use `addScopes()` to add scopes.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 
-const url = github.createAuthorizationURL(state);
-url.addScopes("user:email", "repo");
+const scopes = ["user:email", "repo"];
+const url = github.createAuthorizationURL(state, scopes);
 
 // store state as cookie
 setCookie("state", state, {
