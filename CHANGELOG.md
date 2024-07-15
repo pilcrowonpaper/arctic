@@ -1,6 +1,6 @@
 # arctic
 
-## 2.0.0-next.3
+## 2.0.0-next.4
 
 - Fix `createAuthorizationURL()` methods.
 
