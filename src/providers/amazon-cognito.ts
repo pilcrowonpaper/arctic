@@ -29,6 +29,7 @@ export class AmazonCognito {
 
 	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
 		const url = new URL(this.authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("state", state);
 		url.searchParams.set("scope", scopes.join(" "));

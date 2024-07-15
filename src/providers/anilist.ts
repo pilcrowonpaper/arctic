@@ -18,6 +18,7 @@ export class AniList {
 
 	public createAuthorizationURL(state: string): URL {
 		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("state", state);
 		url.searchParams.set("redirect_uri", this.redirectURI);

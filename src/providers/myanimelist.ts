@@ -24,6 +24,7 @@ export class MyAnimeList {
 
 	public createAuthorizationURL(state: string, codeVerifier: string): URL {
 		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("state", state);
 		if (this.redirectURI !== null) {
