@@ -1,5 +1,9 @@
 # arctic
 
+## 1.9.2
+
+Republish.
+
 ## 1.9.1
 
 ### Patch changes

@@ -52,4 +52,3 @@ export class GitHub implements OAuth2Provider {
 export interface GitHubTokens {
 	accessToken: string;
 }
-
