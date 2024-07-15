@@ -1,5 +1,9 @@
 # arctic
 
+## 2.0.0-next.3
+
+- Fix `createAuthorizationURL()` methods.
+
 ## 2.0.0-next.2
 
 ## Major changes
