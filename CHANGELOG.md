@@ -1,5 +1,9 @@
 # arctic
 
+## 2.0.0-next.5
+
+- Export `decodeIdToken()`
+
 ## 2.0.0-next.4
 
 - Fix `createAuthorizationURL()` methods.
