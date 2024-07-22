@@ -15,7 +15,7 @@ The realm URL should not include trailing slashes.
 ```ts
 import { KeyCloak } from "arctic";
 
-const realmURL = "https://auth.example.com/realms/myrealm
+const realmURL = "https://auth.example.com/realms/myrealm"
 const keycloak = new KeyCloak(realmURL, clientId, clientSecret, redirectURI);
 ```
 
