@@ -44,7 +44,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Dropbox
 - Facebook
 - Figma
-- Github
+- GitHub
 - GitLab
 - Google
 - Intuit

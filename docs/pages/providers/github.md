@@ -4,7 +4,7 @@ title: "GitHub"
 
 # GitHub
 
-OAuth 2.0 provider for Github Apps and GitHub Apps.
+OAuth 2.0 provider for GitHub Apps and OAuth Apps.
 
 Also see the [OAuth 2.0](/guides/oauth2) guide.
 

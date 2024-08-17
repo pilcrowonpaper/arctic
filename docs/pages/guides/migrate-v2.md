@@ -80,7 +80,7 @@ const url = google.createAuthorizationURL(state, codeVerifier, scopes);
 The initialization parameters have changed for a few providers. See each provider's guide for details.
 
 - [Apple](/providers/apple)
-- [Github](/proviGders/github)
+- [GitHub](/proviGders/github)
 - [GitLab](/providers/gitlab)
 - [Microsoft Entra ID](/providers/microsoft-entra-id)
 - [MyAnimeList](/providers/myanimelist)
