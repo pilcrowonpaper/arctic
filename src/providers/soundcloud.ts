@@ -1,6 +1,6 @@
 import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
-import type { OAuth2Tokens } from "../oauth2.js";
+import { type OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://secure.soundcloud.com/authorize";
 const tokenEndpoint = "https://secure.soundcloud.com/oauth/token";
@@ -16,27 +16,24 @@ export class SoundCloud {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(state: string, codeVerifier: string): URL {
+	public createAuthorizationURL(state: string, challenge: string): URL {
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("redirect_uri", this.redirectURI);
 		url.searchParams.set("response_type", "code");
-		url.searchParams.set("code_challenge", codeVerifier);
+		url.searchParams.set("code_challenge", challenge);
 		url.searchParams.set("code_challenge_method", "S256");
 		url.searchParams.set("state", state);
 		return url;
 	}
 
-	public async validateAuthorizationCode(
-		code: string,
-		codeVerifier: string
-	): Promise<OAuth2Tokens> {
+	public async validateAuthorizationCode(code: string, challenge: string): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
 		body.set("grant_type", "authorization_code");
 		body.set("client_id", this.clientId);
 		body.set("client_secret", this.clientSecret);
 		body.set("redirect_uri", this.redirectURI);
-		body.set("code_verifier", codeVerifier);
+		body.set("code_verifier", challenge);
 		body.set("code", code);
 		const request = createOAuth2Request(tokenEndpoint, body);
 		// const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);

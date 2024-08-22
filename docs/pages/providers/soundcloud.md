@@ -19,12 +19,12 @@ const soundcloud = new SoundCloud(clientId, clientSecret, redirectURI);
 ## Create authorization URL
 
 ```ts
-import { generateState, generateCodeVerifier } from "arctic";
+import { generateState, createS256CodeChallenge } from "arctic";
 
 const state = generateState();
-const verifier = generateCodeVerifier();
+const s256Challenge = createS256CodeChallenge();
 
-const url = soundcloud.createAuthorizationURL(state, verifier);
+const url = soundcloud.createAuthorizationURL(state, s256Challenge);
 ```
 
 ## Validate authorization code
@@ -35,7 +35,7 @@ const url = soundcloud.createAuthorizationURL(state, verifier);
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await soundcloud.validateAuthorizationCode(code, verifier);
+	const tokens = await soundcloud.validateAuthorizationCode(code, s256Challenge);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
