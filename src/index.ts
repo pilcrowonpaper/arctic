@@ -1,3 +1,4 @@
+export { FortyTwo } from "./providers/42.js";
 export { AmazonCognito } from "./providers/amazon-cognito.js";
 export { AniList } from "./providers/anilist.js";
 export { Apple } from "./providers/apple.js";
@@ -12,10 +13,10 @@ export { Dribbble } from "./providers/dribbble.js";
 export { Dropbox } from "./providers/dropbox.js";
 export { Facebook } from "./providers/facebook.js";
 export { Figma } from "./providers/figma.js";
-export { Intuit } from "./providers/intuit.js";
 export { GitHub } from "./providers/github.js";
 export { GitLab } from "./providers/gitlab.js";
 export { Google } from "./providers/google.js";
+export { Intuit } from "./providers/intuit.js";
 export { Kakao } from "./providers/kakao.js";
 export { KeyCloak } from "./providers/keycloak.js";
 export { Lichess } from "./providers/lichess.js";
@@ -33,6 +34,7 @@ export { Roblox } from "./providers/roblox.js";
 export { Salesforce } from "./providers/salesforce.js";
 export { Shikimori } from "./providers/shikimori.js";
 export { Slack } from "./providers/slack.js";
+export { SoundCloud } from "./providers/soundcloud.js";
 export { Spotify } from "./providers/spotify.js";
 export { Strava } from "./providers/strava.js";
 export { Tiltify } from "./providers/tiltify.js";
@@ -44,8 +46,8 @@ export { WorkOS } from "./providers/workos.js";
 export { Yahoo } from "./providers/yahoo.js";
 export { Yandex } from "./providers/yandex.js";
 export { Zoom } from "./providers/zoom.js";
-export { FortyTwo } from "./providers/42.js";
 
 export { OAuth2Tokens, generateCodeVerifier, generateState } from "./oauth2.js";
-export { OAuth2RequestError, ArcticFetchError } from "./request.js";
 export { decodeIdToken } from "./oidc.js";
+export { ArcticFetchError, OAuth2RequestError } from "./request.js";
+
