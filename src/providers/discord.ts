@@ -1,12 +1,12 @@
 import { OAuth2Client } from "oslo/oauth2";
 import { TimeSpan, createDate } from "oslo";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2ProviderWithPKCE } from "../index.js";
 
 const authorizeEndpoint = "https://discord.com/oauth2/authorize";
 const tokenEndpoint = "https://discord.com/api/oauth2/token";
 
-export class Discord implements OAuth2Provider {
+export class Discord implements OAuth2ProviderWithPKCE {
 	private client: OAuth2Client;
 	private clientSecret: string;
 
@@ -19,19 +19,22 @@ export class Discord implements OAuth2Provider {
 
 	public async createAuthorizationURL(
 		state: string,
+		codeVerifier: string,
 		options?: {
 			scopes?: string[];
 		}
 	): Promise<URL> {
 		return await this.client.createAuthorizationURL({
 			state,
+			codeVerifier,
 			scopes: options?.scopes ?? []
 		});
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<DiscordTokens> {
+	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<DiscordTokens> {
 		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret
+			credentials: this.clientSecret,
+			codeVerifier
 		});
 		const tokens: DiscordTokens = {
 			accessToken: result.access_token,
