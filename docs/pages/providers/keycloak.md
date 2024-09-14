@@ -2,7 +2,7 @@
 title: "KeyCloak"
 ---
 
-# Okta
+# KeyCloak
 
 OAuth 2.0 provider for KeyCloak.
 
