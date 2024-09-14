@@ -23,8 +23,6 @@ function constructor(data: object): this;
 - [`accessTokenExpiresInSeconds()`](/reference/main/OAuth2Tokens/accessTokenExpiresInSeconds)
 - [`hasRefreshToken()`](/reference/main/OAuth2Tokens/hasRefreshToken)
 - [`refreshToken()`](/reference/main/OAuth2Tokens/refreshToken)
-- [`refreshTokenExpiresAt()`](/reference/main/OAuth2Tokens/refreshTokenExpiresAt)
-- [`refreshTokenExpiresInSeconds()`](/reference/main/OAuth2Tokens/refreshTokenExpiresInSeconds)
 
 ## Properties
 

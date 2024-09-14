@@ -1,10 +1,20 @@
 # arctic
 
+## 2.0.0-next.6
+
+## Major changes
+
+- Remove `OAuth2Tokens.refreshTokenExpiresInSeconds()` and `OAuth2Tokens.refreshTokenExpiresAt()`
+
 ## 2.0.0-next.5
+
+## Minor changes
 
 - Export `decodeIdToken()`
 
 ## 2.0.0-next.4
+
+## Patch changes
 
 - Fix `createAuthorizationURL()` methods.
 

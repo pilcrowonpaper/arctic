@@ -36,20 +36,6 @@ export class OAuth2Tokens {
 		return this.result.refreshToken();
 	}
 
-	public refreshTokenExpiresInSeconds(): number {
-		if (
-			"refresh_token_expires_in" in this.data &&
-			typeof this.data.refresh_token_expires_in === "number"
-		) {
-			return this.data.refresh_token_expires_in;
-		}
-		throw new Error("Missing or invalid 'refresh_token_expires_in' field");
-	}
-
-	public refreshTokenExpiresAt(): Date {
-		return new Date(Date.now() + this.refreshTokenExpiresInSeconds() * 1000);
-	}
-
 	public hasScopes(): boolean {
 		return this.result.hasScopes();
 	}

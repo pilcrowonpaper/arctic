@@ -61,7 +61,18 @@ const tokens = await github.validateAuthorizationCode(code);
 const accessToken = tokens.accessToken();
 const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 const refreshToken = tokens.refreshToken();
-const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
+```
+
+The refresh token expiration is returned as `refresh_token_expires_in`.
+
+```ts
+const tokens = await github.validateAuthorizationCode(code);
+if (
+	"refresh_token_expires_in" in tokens.data &&
+	typeof tokens.data.refresh_token_expires_in === "number"
+) {
+	const refreshTokenExpiresIn = tokens.data.refresh_token_expires_in;
+}
 ```
 
 ## Refresh access tokens
@@ -76,7 +87,6 @@ try {
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
-	const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI

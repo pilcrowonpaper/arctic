@@ -15,7 +15,7 @@ The realm URL should not include trailing slashes.
 ```ts
 import { KeyCloak } from "arctic";
 
-const realmURL = "https://auth.example.com/realms/myrealm"
+const realmURL = "https://auth.example.com/realms/myrealm";
 const keycloak = new KeyCloak(realmURL, clientId, clientSecret, redirectURI);
 ```
 
@@ -54,6 +54,15 @@ try {
 		// ...
 	}
 	// Parse error
+}
+```
+
+The refresh token expiration is returned as `refresh_expires_in`.
+
+```ts
+const tokens = await github.validateAuthorizationCode(code);
+if ("refresh_expires_in" in tokens.data && typeof tokens.data.refresh_expires_in === "number") {
+	const refreshTokenExpiresIn = tokens.data.refresh_expires_in;
 }
 ```
 

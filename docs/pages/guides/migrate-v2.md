@@ -30,7 +30,6 @@ const tokens = await github.validateAuthorizationCode(code);
 const accessToken = tokens.accessToken();
 const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 const refreshToken = tokens.refreshToken();
-const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
 const idToken = tokens.idToken();
 ```
 
@@ -39,7 +38,6 @@ Use `hasRefreshToken()` to check if the `refresh_token` field exists.
 ```ts
 if (tokens.hasRefreshToken()) {
 	const refreshToken = tokens.refreshToken();
-	const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
 }
 ```
 

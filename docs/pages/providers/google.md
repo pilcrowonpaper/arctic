@@ -53,6 +53,18 @@ try {
 }
 ```
 
+The refresh token expiration is returned as `refresh_token_expires_in`.
+
+```ts
+const tokens = await github.validateAuthorizationCode(code);
+if (
+	"refresh_token_expires_in" in tokens.data &&
+	typeof tokens.data.refresh_token_expires_in === "number"
+) {
+	const refreshTokenExpiresIn = tokens.data.refresh_token_expires_in;
+}
+```
+
 ## OpenID Connect
 
 Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
@@ -105,7 +117,6 @@ const accessToken = tokens.accessToken();
 const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 if (tokens.hasRefreshToken()) {
 	const refreshToken = tokens.refreshToken();
-	const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
 }
 ```
 

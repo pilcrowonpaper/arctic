@@ -77,8 +77,6 @@ const accessToken = tokens.accessToken();
 const accessTokenExpiresInSeconds = tokens.accessTokenExpiresInSeconds();
 const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 const refreshToken = tokens.refreshToken();
-const refreshTokenExpiresInSeconds = tokens.refreshTokenExpiresInSeconds();
-const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
 const idToken = tokens.idToken();
 ```
 

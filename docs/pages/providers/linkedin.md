@@ -30,7 +30,7 @@ const url = linkedin.createAuthorizationURL(state, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). LinkedIn returns an access token, a refresh token, and their expiration.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). LinkedIn returns an access token, its expiration, and a refresh token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
@@ -40,7 +40,6 @@ try {
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
-	const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
@@ -68,7 +67,6 @@ try {
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
-	const refreshTokenExpiresAt = tokens.refreshTokenExpiresAt();
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
@@ -77,6 +75,18 @@ try {
 		// Failed to call `fetch()`
 	}
 	// Parse error
+}
+```
+
+The refresh token expiration is returned as `refresh_token_expires_in`.
+
+```ts
+const tokens = await github.validateAuthorizationCode(code);
+if (
+	"refresh_token_expires_in" in tokens.data &&
+	typeof tokens.data.refresh_token_expires_in === "number"
+) {
+	const refreshTokenExpiresIn = tokens.data.refresh_token_expires_in;
 }
 ```
 
