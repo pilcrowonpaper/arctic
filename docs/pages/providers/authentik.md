@@ -63,7 +63,7 @@ Use OpenID Connect with the `openid` scope to get the user's profile with an ID 
 
 ```ts
 const scopes = ["openid"];
-const url = keycloak.createAuthorizationURL(state, codeVerifier, scopes);
+const url = authentik.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
