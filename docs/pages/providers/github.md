@@ -121,7 +121,6 @@ const url = github.createAuthorizationURL(state, scopes);
 ```
 
 ```ts
-const tokens = await github.validateAuthorizationCode(code);
 const response = await fetch("https://api.github.com/user/emails", {
 	headers: {
 		Authorization: `Bearer ${accessToken}`
