@@ -81,7 +81,7 @@ try {
 The refresh token expiration is returned as `refresh_token_expires_in`.
 
 ```ts
-const tokens = await github.validateAuthorizationCode(code);
+const tokens = await linkedin.validateAuthorizationCode(code);
 if (
 	"refresh_token_expires_in" in tokens.data &&
 	typeof tokens.data.refresh_token_expires_in === "number"
@@ -96,13 +96,13 @@ Use OpenID Connect with the `openid` scope to get the user's profile with an ID 
 
 ```ts
 const scopes = ["openid"];
-const url = linkedin.createAuthorizationURL(state, codeVerifier, scopes);
+const url = linkedin.createAuthorizationURL(state, scopes);
 ```
 
 ```ts
 import { decodeIdToken } from "arctic";
 
-const tokens = await linkedin.validateAuthorizationCode(code, codeVerifier);
+const tokens = await linkedin.validateAuthorizationCode(code);
 const idToken = tokens.idToken();
 const claims = decodeIdToken(idToken);
 ```
@@ -122,5 +122,5 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 
 ```ts
 const scopes = ["openid", "profile", "email"];
-const url = linkedin.createAuthorizationURL(state, codeVerifier, scopes);
+const url = linkedin.createAuthorizationURL(state, scopes);
 ```
