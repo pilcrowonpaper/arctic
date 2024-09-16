@@ -81,7 +81,6 @@ try {
 Use the [`/users` endpoint](https://dev.twitch.tv/docs/api/reference/#get-users) without passing any arguments. The `user:read:email` scope is required to get the user's email from the endpoint.
 
 ```ts
-const tokens = await twitch.validateAuthorizationCode(code);
 const response = await fetch("https://api.twitch.tv/helix/users", {
 	headers: {
 		Authorization: `Bearer ${accessToken}`,
