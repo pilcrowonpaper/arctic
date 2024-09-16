@@ -60,13 +60,13 @@ Also see [supported claims](https://developers.dropbox.com/oidc-guide#oidc-stand
 
 ```ts
 const scopes = ["openid"];
-const url = dropbox.createAuthorizationURL(state, codeVerifier, scopes);
+const url = dropbox.createAuthorizationURL(state, scopes);
 ```
 
 ```ts
 import { decodeIdToken } from "arctic";
 
-const tokens = await dropbox.validateAuthorizationCode(code, codeVerifier);
+const tokens = await dropbox.validateAuthorizationCode(code);
 const idToken = tokens.idToken();
 const claims = decodeIdToken(idToken);
 ```
@@ -86,7 +86,7 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 
 ```ts
 const scopes = ["openid", "profile", "email"];
-const url = google.createAuthorizationURL(state, codeVerifier, scopes);
+const url = dropbox.createAuthorizationURL(state, scopes);
 ```
 
 The [`/users/get_current_account` endpoint](https://www.dropbox.com/developers/documentation/http/documentation#users-get_current_account) can also be used.
@@ -96,7 +96,7 @@ The [`/users/get_current_account` endpoint](https://www.dropbox.com/developers/d
 Set the `access_type` parameter to `offline` to get refresh tokens.
 
 ```ts
-const url = dropbox.createAuthorizationURL(state, codeVerifier, scopes);
+const url = dropbox.createAuthorizationURL(state, scopes);
 url.searchParams.set("access_type", "offline");
 ```
 
