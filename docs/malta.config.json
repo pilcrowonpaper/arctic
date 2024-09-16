@@ -72,6 +72,7 @@
 		{
 			"title": "Links",
 			"pages": [
+				["Upgrade to v2 beta", "https://arcticjs.dev"],
 				["GitHub", "https://github.com/pilcrowonpaper/arctic"],
 				["Twitter", "https://twitter.com/pilcrowonpaper"],
 				["Donate", "https://github.com/sponsors/pilcrowOnPaper"]
