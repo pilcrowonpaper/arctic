@@ -1,4 +1,4 @@
-import { base64 } from "@oslojs/encoding";
+import { encodeBase64 } from "@oslojs/encoding";
 import { OAuth2Tokens } from "./oauth2.js";
 import { OAuth2RequestResult } from "@oslojs/oauth2";
 
@@ -15,7 +15,7 @@ export function createOAuth2Request(endpoint: string, body: URLSearchParams): Re
 
 export function encodeBasicCredentials(username: string, password: string): string {
 	const bytes = new TextEncoder().encode(`${username}:${password}`);
-	return base64.encode(bytes);
+	return encodeBase64(bytes);
 }
 
 export async function sendTokenRequest(request: Request): Promise<OAuth2Tokens> {

@@ -1,5 +1,5 @@
 import { createOAuth2Request, sendTokenRequest } from "../request.js";
-import { base64url } from "@oslojs/encoding";
+import { createJWTSignatureMessage, encodeJWT } from "@oslojs/jwt";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -74,22 +74,17 @@ export class Apple {
 			sub: this.clientId,
 			iat: now
 		};
-		const encodedHeader = base64url.encodeNoPadding(
-			new TextEncoder().encode(JSON.stringify(header))
+		const signature = new Uint8Array(
+			await crypto.subtle.sign(
+				{
+					name: "ECDSA",
+					hash: "SHA-256"
+				},
+				privateKey,
+				createJWTSignatureMessage(header, payload)
+			)
 		);
-		const encodedPayload = base64url.encodeNoPadding(
-			new TextEncoder().encode(JSON.stringify(payload))
-		);
-		const signature = await crypto.subtle.sign(
-			{
-				name: "ECDSA",
-				hash: "SHA-256"
-			},
-			privateKey,
-			new TextEncoder().encode(encodedHeader + "." + encodedPayload)
-		);
-		const encodedSignature = base64url.encodeNoPadding(new Uint8Array(signature));
-		const jwt = encodedHeader + "." + encodedPayload + "." + encodedSignature;
+		const jwt = encodeJWT(header, payload, signature);
 		return jwt;
 	}
 }

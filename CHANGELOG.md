@@ -1,43 +1,49 @@
 # arctic
 
+## 2.0.0-next.7
+
+### Patch changes
+
+- Update dependencies
+
 ## 2.0.0-next.6
 
-## Major changes
+### Major changes
 
 - Remove `OAuth2Tokens.refreshTokenExpiresInSeconds()` and `OAuth2Tokens.refreshTokenExpiresAt()`
 
 ## 2.0.0-next.5
 
-## Minor changes
+### Minor changes
 
 - Export `decodeIdToken()`
 
 ## 2.0.0-next.4
 
-## Patch changes
+### Patch changes
 
 - Fix `createAuthorizationURL()` methods.
 
 ## 2.0.0-next.2
 
-## Major changes
+### Major changes
 
 - Update `createAuthorizationURL()` provider methods
 - Remove `SlackApp` and `SlackOpenID`
 
 ## 2.0.0-next.1
 
-## Minor changes
+### Minor changes
 
 - Add KeyCloak provider
 
-## Patch changes
+### Patch changes
 
 - Fix token endpoint initialization in `Salesforce` provider
 
 ## 2.0.0-next.0
 
-## Major changes
+### Major changes
 
 - `createAuthorizationURL()` no longer returns a `Promise`
 - `validateAuthorizationCode()` and `refreshAccessToken()` returns `OAuth2Tokens`
@@ -49,7 +55,7 @@
 - Replace `Slack` with `SlackApp` and `SlackOpenID`
 - Remove `Keycloak`
 
-## Minor changes
+### Minor changes
 
 - Add `refreshAccessToken()` to `GitHub`
 - `createAuthorizationURL()` returns `AuthorizationCodeAuthorizationURL`
