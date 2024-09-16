@@ -57,7 +57,7 @@ try {
 Use the `/me` endpoint. See [user fields](https://developers.facebook.com/docs/graph-api/reference/user#Reading).
 
 ```ts
-const url = new Request("https://graph.facebook.com/me");
+const url = new URL("https://graph.facebook.com/me");
 url.searchParams.set("access_token", accessToken);
 url.searchParams.set("fields", ["id", "name", "picture", "email"].join(","));
 const response = await fetch(url);
