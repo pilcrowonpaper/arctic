@@ -60,7 +60,7 @@ try {
 The refresh token expiration is returned as `refresh_expires_in`.
 
 ```ts
-const tokens = await github.validateAuthorizationCode(code);
+const tokens = await keycloak.validateAuthorizationCode(code);
 if ("refresh_expires_in" in tokens.data && typeof tokens.data.refresh_expires_in === "number") {
 	const refreshTokenExpiresIn = tokens.data.refresh_expires_in;
 }
