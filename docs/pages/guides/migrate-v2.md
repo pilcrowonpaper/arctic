@@ -10,8 +10,6 @@ Arctic v2 is here! This update changes how tokens are handled and introduces var
 npm install arctic@next
 ```
 
-> All providers except KeyCloak has been migrated. If you use keyCloak, please help us with the migration!
-
 ## Authorization URL
 
 `createAuthorizationURL()` is no longer asynchronous and you can pass the scopes array directly.
