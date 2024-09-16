@@ -78,7 +78,7 @@ try {
 
 ## Get user profile
 
-Use the [`/myself` endpoint](https://docs.github.com/en/rest/users/users?apiVersion=2022-11-28#get-the-authenticated-user).
+Use the [`/myself` endpoint](https://yandex.cloud/en/docs/tracker/get-user-info?utm_referrer=https%3A%2F%2Fwww.google.com%2F).
 
 ```ts
 const response = await fetch("https://api.tracker.yandex.net/v2/myself", {
