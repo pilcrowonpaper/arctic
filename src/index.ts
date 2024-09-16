@@ -34,6 +34,7 @@ export { Salesforce } from "./providers/salesforce.js";
 export { Shikimori } from "./providers/shikimori.js";
 export { Slack } from "./providers/slack.js";
 export { Spotify } from "./providers/spotify.js";
+export { StartGG } from "./providers/startgg.js";
 export { Strava } from "./providers/strava.js";
 export { Tiltify } from "./providers/tiltify.js";
 export { Tumblr } from "./providers/tumblr.js";
