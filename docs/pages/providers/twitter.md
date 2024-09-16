@@ -22,8 +22,8 @@ const twitter = new Twitter(clientId, clientSecret, redirectURI);
 import { generateState } from "arctic";
 
 const state = generateState();
-const scops = ["account_info.read", "files.content.read"];
-const url = twitter.createAuthorizationURL(state, scopes);
+const scopes = ["account_info.read", "files.content.read"];
+const url = twitter.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
@@ -76,7 +76,7 @@ Add the `offline.access` scope to get refresh tokens.
 
 ```ts
 const scopes = ["offline.access"];
-const url = twitter.createAuthorizationURL(state, codeVerifier, state);
+const url = twitter.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
