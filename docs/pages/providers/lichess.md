@@ -60,7 +60,7 @@ Use the [/api/account](https://lichess.org/api#tag/Account/operation/accountMe) 
 ```ts
 const lichessUserResponse = await fetch("https://lichess.org/api/account", {
 	headers: {
-		Authorization: `Bearer ${tokens}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const user = await lichessUserResponse.json();
