@@ -61,11 +61,11 @@ Add the `refresh_token` scope to get refresh tokens.
 
 ```ts
 const scopes = ["refresh_token"];
-const url = dropbox.createAuthorizationURL(state, codeVerifier, scopes);
+const url = salesforce.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
-const tokens = await dropbox.validateAuthorizationCode(code);
+const tokens = await salesforce.validateAuthorizationCode(code);
 const accessToken = tokens.accessToken();
 const refreshToken = tokens.refreshToken();
 ```
@@ -95,13 +95,13 @@ Use OpenID Connect with the `openid` scope to get the user's profile with an ID 
 
 ```ts
 const scopes = ["openid"];
-const url = roblox.createAuthorizationURL(state, codeVerifier, scopes);
+const url = salesforce.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
 import { decodeIdToken } from "arctic";
 
-const tokens = await roblox.validateAuthorizationCode(code, codeVerifier);
+const tokens = await salesforce.validateAuthorizationCode(code, codeVerifier);
 const idToken = tokens.idToken();
 const claims = decodeIdToken(idToken);
 ```
@@ -121,7 +121,7 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 
 ```ts
 const scopes = ["openid", "profile", "email"];
-const url = roblox.createAuthorizationURL(state, codeVerifier, scopes);
+const url = salesforce.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Revoke tokens
