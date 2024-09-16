@@ -56,7 +56,7 @@ try {
 The refresh token expiration is returned as `refresh_token_expires_in`.
 
 ```ts
-const tokens = await github.validateAuthorizationCode(code);
+const tokens = await kakao.validateAuthorizationCode(code);
 if (
 	"refresh_token_expires_in" in tokens.data &&
 	typeof tokens.data.refresh_token_expires_in === "number"
