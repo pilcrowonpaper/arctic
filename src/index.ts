@@ -6,6 +6,7 @@ export { Auth0 } from "./providers/auth0.js";
 export { Authentik } from "./providers/authentik.js";
 export { Bitbucket } from "./providers/bitbucket.js";
 export { Box } from "./providers/box.js";
+export { Bungie } from "./providers/bungie.js";
 export { Coinbase } from "./providers/coinbase.js";
 export { Discord } from "./providers/discord.js";
 export { Dribbble } from "./providers/dribbble.js";

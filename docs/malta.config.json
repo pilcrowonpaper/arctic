@@ -25,6 +25,7 @@
 				["Authentik", "/providers/authentik"],
 				["Bitbucket", "/providers/bitbucket"],
 				["Box", "/providers/box"],
+				["Bungie", "/providers/bungie"],
 				["Coinbase", "/providers/coinbase"],
 				["Discord", "/providers/discord"],
 				["Dribbble", "/providers/dribbble"],
