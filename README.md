@@ -60,6 +60,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Okta
 - osu!
 - Patreon
+- Polar
 - Reddit
 - Roblox
 - Salesforce
