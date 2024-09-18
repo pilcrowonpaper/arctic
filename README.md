@@ -66,6 +66,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Shikimori
 - Slack
 - Spotify
+- Start.gg
 - Strava
 - Tiltify
 - Tumblr
