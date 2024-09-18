@@ -47,6 +47,7 @@
 				["Okta", "/providers/okta"],
 				["osu!", "/providers/osu"],
 				["Patreon", "/providers/patreon"],
+				["Polar", "/providers/polar"],
 				["Reddit", "/providers/reddit"],
 				["Roblox", "/providers/roblox"],
 				["Salesforce", "/providers/salesforce"],

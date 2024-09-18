@@ -28,6 +28,7 @@ export { Notion } from "./providers/notion.js";
 export { Okta } from "./providers/okta.js";
 export { Osu } from "./providers/osu.js";
 export { Patreon } from "./providers/patreon.js";
+export { Polar } from "./providers/polar.js";
 export { Reddit } from "./providers/reddit.js";
 export { Roblox } from "./providers/roblox.js";
 export { Salesforce } from "./providers/salesforce.js";
