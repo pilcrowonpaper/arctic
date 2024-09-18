@@ -4,13 +4,11 @@ title: "Bungie"
 
 # Bungie
 
-OAuth 2.0 provider for Bungie.
+OAuth 2.0 provider for Bungie. Only supports confidential clients.
 
 Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
-
-Pass a client secret for confidential clients.
 
 ```ts
 import { Bungie } from "arctic";
@@ -65,7 +63,7 @@ const refreshToken = tokens.refreshToken();
 The refresh token expiration is returned as `refresh_expires_in`.
 
 ```ts
-const tokens = await github.validateAuthorizationCode(code);
+const tokens = await bungie.validateAuthorizationCode(code);
 if ("refresh_expires_in" in tokens.data && typeof tokens.data.refresh_expires_in === "number") {
 	const refreshTokenExpiresIn = tokens.data.refresh_expires_in;
 }
@@ -73,7 +71,7 @@ if ("refresh_expires_in" in tokens.data && typeof tokens.data.refresh_expires_in
 
 ## Refresh access tokens
 
-For confidential clients, use `refreshAccessToken()` to get a new access token using a refresh token. The behavior is identical to `validateAuthorizationCode()`.
+Use `refreshAccessToken()` to get a new access token using a refresh token. The behavior is identical to `validateAuthorizationCode()`.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
