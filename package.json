@@ -34,6 +34,6 @@
 	"dependencies": {
 		"@oslojs/crypto": "0.6.0",
 		"@oslojs/encoding": "0.4.1",
-		"@oslojs/jwt": "0.1.0"
+		"@oslojs/jwt": "0.2.0"
 	}
 }

@@ -62,18 +62,18 @@ export class Apple {
 			["sign"]
 		);
 		const now = Math.floor(Date.now() / 1000);
-		const header = {
+		const headerJSON = JSON.stringify({
 			typ: "JWT",
 			alg: "ES256",
 			kid: this.keyId
-		};
-		const payload = {
+		});
+		const payloadJSON = JSON.stringify({
 			iss: this.teamId,
 			exp: now + 5 * 60,
 			aud: ["https://appleid.apple.com"],
 			sub: this.clientId,
 			iat: now
-		};
+		});
 		const signature = new Uint8Array(
 			await crypto.subtle.sign(
 				{
@@ -81,10 +81,10 @@ export class Apple {
 					hash: "SHA-256"
 				},
 				privateKey,
-				createJWTSignatureMessage(header, payload)
+				createJWTSignatureMessage(headerJSON, payloadJSON)
 			)
 		);
-		const jwt = encodeJWT(header, payload, signature);
+		const jwt = encodeJWT(headerJSON, payloadJSON, signature);
 		return jwt;
 	}
 }
