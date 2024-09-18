@@ -14,7 +14,6 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 import { Bungie } from "arctic";
 
 const bungie = new Bungie(clientId, clientSecret, redirectURI);
-const bungie = new Bungie(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
@@ -23,7 +22,8 @@ const bungie = new Bungie(clientId, null, redirectURI);
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = bungie.createAuthorizationURL(state);
+const scopes = ["ReadBasicUserProfile", "ReadGroups"];
+const url = bungie.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -94,7 +94,7 @@ try {
 
 ## Get user profile
 
-Add the `account` scope and use the [`GetCurrentBungieNetUser` endpoint](https://destinydevs.github.io/BungieNetPlatform/docs/services/User/User-GetCurrentBungieNetUser).
+Use the [`GetCurrentBungieNetUser` endpoint](https://destinydevs.github.io/BungieNetPlatform/docs/services/User/User-GetCurrentBungieNetUser).
 
 ```ts
 const response = await fetch("https://www.bungie.net/Platform/User/GetCurrentBungieNetUser", {
