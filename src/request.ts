@@ -1,6 +1,5 @@
 import { encodeBase64 } from "@oslojs/encoding";
 import { OAuth2Tokens } from "./oauth2.js";
-import { OAuth2RequestResult } from "@oslojs/oauth2";
 
 export function createOAuth2Request(endpoint: string, body: URLSearchParams): Request {
 	const request = new Request(endpoint, {
@@ -34,9 +33,8 @@ export async function sendTokenRequest(request: Request): Promise<OAuth2Tokens> 
 	if (typeof data !== "object" || data === null) {
 		throw new Error("Unexpected response body data");
 	}
-	const result = new OAuth2RequestResult(data);
-	if (result.hasErrorCode()) {
-		const error = createOAuth2RequestError(result);
+	if ("error" in data && typeof data.error === "string") {
+		const error = createOAuth2RequestError(data);
 		throw error;
 	}
 	return new OAuth2Tokens(data);
@@ -61,26 +59,30 @@ export async function sendTokenRevocationRequest(request: Request): Promise<void
 	if (typeof data !== "object" || data === null) {
 		throw new Error("Unexpected response body data");
 	}
-	const result = new OAuth2RequestResult(data);
-	if (result.hasErrorCode()) {
-		const error = createOAuth2RequestError(result);
+	if ("error" in data && typeof data.error === "string") {
+		const error = createOAuth2RequestError(data);
 		throw error;
 	}
 }
 
-function createOAuth2RequestError(result: OAuth2RequestResult): OAuth2RequestError {
-	const code = result.errorCode();
+function createOAuth2RequestError(result: object): OAuth2RequestError {
+	let code: string;
+	if ("error" in result && typeof result.error === "string") {
+		code = result.error;
+	} else {
+		throw new Error("Invalid error response");
+	}
 	let description: string | null = null;
 	let uri: string | null = null;
 	let state: string | null = null;
-	if (result.hasErrorDescription()) {
-		description = result.errorDescription();
+	if ("error_description" in result && typeof result.error_description === "string") {
+		description = result.error_description;
 	}
-	if (result.hasErrorURI()) {
-		uri = result.errorURI();
+	if ("error_uri" in result && typeof result.error_uri === "string") {
+		uri = result.error_uri;
 	}
-	if ("state" in result.body && typeof result.body.state === "string") {
-		state = result.state();
+	if ("state" in result && typeof result.state === "string") {
+		state = result.state;
 	}
 	return new OAuth2RequestError(code, description, uri, state);
 }

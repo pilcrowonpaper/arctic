@@ -1,47 +1,58 @@
 import { encodeBase64urlNoPadding } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
-import { TokenRequestResult } from "@oslojs/oauth2";
 
 export class OAuth2Tokens {
 	public data: object;
 
-	private result: TokenRequestResult;
-
 	constructor(data: object) {
 		this.data = data;
-		this.result = new TokenRequestResult(data);
 	}
 
 	public tokenType(): string {
-		return this.result.tokenType();
+		if ("token_type" in this.data && typeof this.data.token_type === "string") {
+			return this.data.token_type;
+		}
+		throw new Error("Missing or invalid 'token_type' field");
 	}
 
 	public accessToken(): string {
-		return this.result.accessToken();
+		if ("access_token" in this.data && typeof this.data.access_token === "string") {
+			return this.data.access_token;
+		}
+		throw new Error("Missing or invalid 'access_token' field");
 	}
 
 	public accessTokenExpiresInSeconds(): number {
-		return this.result.accessTokenExpiresInSeconds();
+		if ("expires_in" in this.data && typeof this.data.expires_in === "number") {
+			return this.data.expires_in;
+		}
+		throw new Error("Missing or invalid 'expires_in' field");
 	}
 
 	public accessTokenExpiresAt(): Date {
-		return this.result.accessTokenExpiresAt();
+		return new Date(Date.now() + this.accessTokenExpiresInSeconds() * 1000);
 	}
 
 	public hasRefreshToken(): boolean {
-		return this.result.hasRefreshToken();
+		return "refresh_token" in this.data && typeof this.data.refresh_token === "string";
 	}
 
 	public refreshToken(): string {
-		return this.result.refreshToken();
+		if ("refresh_token" in this.data && typeof this.data.refresh_token === "string") {
+			return this.data.refresh_token;
+		}
+		throw new Error("Missing or invalid 'refresh_token' field");
 	}
 
 	public hasScopes(): boolean {
-		return this.result.hasScopes();
+		return "scope" in this.data && typeof this.data.scope === "string";
 	}
 
 	public scopes(): string[] {
-		return this.result.scopes();
+		if ("scope" in this.data && typeof this.data.scope === "string") {
+			return this.data.scope.split(" ");
+		}
+		throw new Error("Missing or invalid 'scope' field");
 	}
 
 	public idToken(): string {

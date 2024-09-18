@@ -1,5 +1,11 @@
 # arctic
 
+## 2.0.0-next.9
+
+### Patch changes
+
+- Remove `@oslojs/oauth2` dependency.
+
 ## 2.0.0-next.8
 
 ### Minor changes
