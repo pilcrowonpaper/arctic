@@ -1,5 +1,13 @@
 # arctic
 
+## 2.0.0-next.8
+
+### Minor changes
+
+- Add Polar provider.
+- Add Start.gg provider.
+- Add Bungie.Net provider.
+
 ## 2.0.0-next.7
 
 ### Patch changes
