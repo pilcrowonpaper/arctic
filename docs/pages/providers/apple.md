@@ -21,12 +21,12 @@ const apple = new Apple(clientId, teamId, keyId, pkcs8PrivateKey, redirectURI);
 Here is an example to extract the PKCS#8 key from the PEM certificate.
 
 ```ts
-import { base64 } from "@oslojs/encoding";
+import { decodeBase64IgnorePadding } from "@oslojs/encoding";
 
 const certificate = `-----BEGIN PRIVATE KEY-----
 TmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXANCk5ldmVyIGdvbm5hIGxldCB5b3UgZG93bg0KTmV2ZXIgZ29ubmEgcnVuIGFyb3VuZCBhbmQgZGVzZXJ0IHlvdQ0KTmV2ZXIgZ29ubmEgbWFrZSB5b3UgY3J5DQpOZXZlciBnb25uYSBzYXkgZ29vZGJ5ZQ0KTmV2ZXIgZ29ubmEgdGVsbCBhIGxpZSBhbmQgaHVydCB5b3U
 -----END PRIVATE KEY-----`;
-const privateKey = base64.decodeIgnorePadding(
+const privateKey = decodeBase64IgnorePadding(
 	certificate
 		.replace("-----BEGIN PRIVATE KEY-----", "")
 		.replace("-----END PRIVATE KEY-----", "")
