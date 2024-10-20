@@ -74,4 +74,4 @@ jobs:
       - name: install wrangler
         run: npm i -g wrangler
       - name: deploy
-        run: wrangler pages deploy docs/dist --project-name arctic-v1 --branch v1
+        run: wrangler pages deploy docs/dist --project-name arctic --branch v1
