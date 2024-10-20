@@ -4,7 +4,7 @@ title: "Arctic v2 documentation"
 
 # Arctic v2 documentation
 
-*See [v1.arcticjs.dev](https://v1.arcticjs.dev) for the v2 docs*.
+*See [v1.arcticjs.dev](https://v1.arcticjs.dev) for the v1 docs.*
 
 Arctic is a collection of OAuth 2.0 clients for popular providers. It only supports the authorization code grant type and intended to be used server-side. Built on top of the Fetch API, it's light weight, fully-typed, and runtime-agnostic.
 
