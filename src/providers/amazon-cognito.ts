@@ -1,10 +1,5 @@
 import { createS256CodeChallenge } from "../oauth2.js";
-import {
-	createOAuth2Request,
-	encodeBasicCredentials,
-	sendTokenRequest,
-	sendTokenRevocationRequest
-} from "../request.js";
+import { createOAuth2Request, sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -49,9 +44,9 @@ export class AmazonCognito {
 		body.set("code", code);
 		body.set("code_verifier", codeVerifier);
 		body.set("redirect_uri", this.redirectURI);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
 		const request = createOAuth2Request(this.tokenEndpoint, body);
-		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
-		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
 		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
@@ -60,9 +55,9 @@ export class AmazonCognito {
 		const body = new URLSearchParams();
 		body.set("grant_type", "refresh_token");
 		body.set("refresh_token", refreshToken);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
 		const request = createOAuth2Request(this.tokenEndpoint, body);
-		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
-		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
 		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
@@ -70,9 +65,9 @@ export class AmazonCognito {
 	public async revokeToken(token: string): Promise<void> {
 		const body = new URLSearchParams();
 		body.set("token", token);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
 		const request = createOAuth2Request(this.tokenRevocationEndpoint, body);
-		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
-		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
 		await sendTokenRevocationRequest(request);
 	}
 }
