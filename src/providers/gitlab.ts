@@ -1,76 +1,69 @@
-import { OAuth2Client } from "oslo/oauth2";
-import { TimeSpan, createDate } from "oslo";
+import {
+	createOAuth2Request,
+	encodeBasicCredentials,
+	sendTokenRequest,
+	sendTokenRevocationRequest
+} from "../request.js";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-export class GitLab implements OAuth2Provider {
-	private client: OAuth2Client;
+export class GitLab {
+	private authorizationEndpoint: string;
+	private tokenEndpoint: string;
+	private tokenRevocationEndpoint: string;
+
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
-	constructor(
-		clientId: string,
-		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			domain?: string;
-		}
-	) {
-		const domain = options?.domain ?? "https://gitlab.com";
-		const authorizeEndpoint = domain + "/oauth/authorize";
-		const tokenEndpoint = domain + "/oauth/token";
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
+		this.authorizationEndpoint = `https://${domain}/oauth/authorize`;
+		this.tokenEndpoint = domain + `https://${domain}/oauth/token`;
+		this.tokenRevocationEndpoint = domain + "/oauth/revoke";
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state,
-			scopes: options?.scopes ?? []
-		});
+	public createAuthorizationURL(state: string, scopes: string[]): URL {
+		const url = new URL(this.authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("scope", scopes.join(" "));
+		url.searchParams.set("redirect_uri", this.redirectURI);
+		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<GitLabTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			authenticateWith: "request_body",
-			credentials: this.clientSecret
-		});
-		const tokens: GitLabTokens = {
-			accessToken: result.access_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			refreshToken: result.refresh_token
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		body.set("redirect_uri", this.redirectURI);
+		const request = createOAuth2Request(this.tokenEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<GitLabTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			authenticateWith: "request_body",
-			credentials: this.clientSecret
-		});
-		const tokens: GitLabTokens = {
-			accessToken: result.access_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			refreshToken: result.refresh_token
-		};
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
+		body.set("refresh_token", refreshToken);
+		const request = createOAuth2Request(this.tokenEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
-}
 
-interface TokenResponseBody {
-	access_token: string;
-	expires_in: number;
-	refresh_token: string;
-}
-
-export interface GitLabTokens {
-	accessToken: string;
-	accessTokenExpiresAt: Date;
-	refreshToken: string;
+	public async revokeToken(token: string): Promise<void> {
+		const body = new URLSearchParams();
+		body.set("token", token);
+		const request = createOAuth2Request(this.tokenRevocationEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		await sendTokenRevocationRequest(request);
+	}
 }

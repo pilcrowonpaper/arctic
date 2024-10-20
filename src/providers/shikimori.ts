@@ -1,62 +1,50 @@
-import { OAuth2Client } from "oslo/oauth2";
-import type { OAuth2Provider } from "../index.js";
+import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
-const authorizeEndpoint = "https://shikimori.one/oauth/authorize";
+import type { OAuth2Tokens } from "../oauth2.js";
+
+const authorizationEndpoint = "https://shikimori.one/oauth/authorize";
 const tokenEndpoint = "https://shikimori.one/oauth/token";
 
-export class Shikimori implements OAuth2Provider {
-	private client: OAuth2Client;
+export class Shikimori {
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
 	constructor(clientId: string, clientSecret: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	createAuthorizationURL(state: string, scopes?: string[]): Promise<URL> {
-		return this.client.createAuthorizationURL({ state, scopes });
+	public createAuthorizationURL(state: string): URL {
+		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("redirect_uri", this.redirectURI);
+		return url;
 	}
 
-	async validateAuthorizationCode(code: string): Promise<ShikimoriTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			authenticateWith: "request_body",
-			credentials: this.clientSecret
-		});
-
-		return {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			accessTokenExpiresAt: new Date((result.created_at + result.expires_in) * 1000)
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		body.set("redirect_uri", this.redirectURI);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
+		return tokens;
 	}
 
-	async refreshAccessToken(refreshToken: string): Promise<ShikimoriTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			authenticateWith: "request_body",
-			credentials: this.clientSecret
-		});
-
-		return {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			accessTokenExpiresAt: new Date((result.created_at + result.expires_in) * 1000)
-		};
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
+		body.set("refresh_token", refreshToken);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
+		return tokens;
 	}
-}
-
-interface TokenResponseBody {
-	access_token: string;
-	token_type: string;
-	expires_in: number;
-	refresh_token: string;
-	scope: string;
-	created_at: number;
-}
-
-export interface ShikimoriTokens {
-	accessToken: string;
-	refreshToken: string;
-	accessTokenExpiresAt: Date;
 }

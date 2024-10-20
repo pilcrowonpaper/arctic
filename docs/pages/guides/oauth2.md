@@ -4,28 +4,25 @@ title: "OAuth 2.0"
 
 # OAuth 2.0
 
-Most providers require a client ID, client secret, and redirect URI.
+Most providers require a client ID, client secret, and redirect URI. The API is nearly identical across providers but always check each provider's guide before implementing.
 
 ```ts
-import { Apple } from "arctic";
+import { GitHub } from "arctic";
 
-const apple = new Apple(clientId, clientSecret, redirectURI);
+const github = new GitHub(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
 
 Generate state using `generateState()` and store it as a cookie. Use it to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
 
-You may optionally pass `scopes`. For providers that implement OpenID Connect, `openid` is always included. There may be more options depending on the provider.
-
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 
-const url = await github.createAuthorizationURL(state, {
-	scopes: ["user:email"]
-});
+const scopes = ["user:email", "repo"];
+const url = github.createAuthorizationURL(state, scopes);
 
 // store state as cookie
 setCookie("state", state, {
@@ -34,49 +31,57 @@ setCookie("state", state, {
 	httpOnly: true,
 	maxAge: 60 * 10 // 10 min
 });
+
 return redirect(url);
 ```
 
 ## Validate authorization code
 
-Compare the state, and use `validateAuthorizationCode()` to validate the authorization code. This returns an object with an access token, ID token for OIDC, and a refresh token if requested. If the code or your credentials are invalid, it will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError).
+Compare the state, and use `validateAuthorizationCode()` to validate the authorization code. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors).
 
 ```ts
-import { OAuth2RequestError } from "arctic";
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 const code = request.url.searchParams.get("code");
 const state = request.url.searchParams.get("state");
 
 const storedState = getCookie("state");
 
-if (!code || !storedState || state !== storedState) {
+if (code === null || storedState === null || state !== storedState) {
 	// 400
 	throw new Error("Invalid request");
 }
 
 try {
 	const tokens = await github.validateAuthorizationCode(code);
+	const accessToken = tokens.accessToken();
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
-		const { message, description, request } = e;
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
 	}
-	// unknown error
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
 }
 ```
 
-## Refresh access token
-
-If the OAuth provider supports refresh tokens, `refreshAccessToken()` can be used to get a new access token using a refresh token. This will throw an [`OAuth2RequestError`](https://oslo.js.org/reference/oauth2/OAuth2RequestError) if the refresh token is invalid.
+Calling `OAuth2Tokens.accessToken()` for example parses the response and returns the `access_token` field. If it doesn't exist, it will throw a parse `Error`. See each provider's guides for the actual return values.
 
 ```ts
-import { OAuth2RequestError } from "arctic";
+const accessToken = tokens.accessToken();
+const accessTokenExpiresInSeconds = tokens.accessTokenExpiresInSeconds();
+const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+const refreshToken = tokens.refreshToken();
+const idToken = tokens.idToken();
+```
 
-try {
-	const tokens = await google.refreshAccessToken(refreshToken);
-} catch (e) {
-	if (e instanceof OAuth2RequestError) {
-		const { request, message, description } = e;
-	}
-	// unknown error
-}
+Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
+
+```ts
+const claims = decodeIdToken(idToken);
 ```

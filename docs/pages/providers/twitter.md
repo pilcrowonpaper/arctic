@@ -4,9 +4,11 @@ title: "Twitter"
 
 # Twitter
 
-For Twitter API v2.
+OAuth 2.0 provider for Twitter API v2.
 
-For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
+Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
+
+## Initialization
 
 ```ts
 import { Twitter } from "arctic";
@@ -14,13 +16,40 @@ import { Twitter } from "arctic";
 const twitter = new Twitter(clientId, clientSecret, redirectURI);
 ```
 
+## Create authorization URL
+
 ```ts
-const url: URL = await twitter.createAuthorizationURL(state, codeVerifier, {
-	// optional
-	scopes
-});
-const tokens: TwitterTokens = await twitter.validateAuthorizationCode(code, codeVerifier);
-const tokens: TwitterTokens = await twitter.refreshAccessToken(refreshToken);
+import { generateState } from "arctic";
+
+const state = generateState();
+const scopes = ["account_info.read", "files.content.read"];
+const url = twitter.createAuthorizationURL(state, codeVerifier, scopes);
+```
+
+## Validate authorization code
+
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Twitter returns an access token and its expiration.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await twitter.validateAuthorizationCode(code, codeVerifier);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
+}
 ```
 
 ## Get user profile
@@ -28,27 +57,70 @@ const tokens: TwitterTokens = await twitter.refreshAccessToken(refreshToken);
 Add the `users.read` and `tweet.read` scopes and use the [`/users/me` endpoint](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me). You cannot get user emails with the v2 API.
 
 ```ts
-const url = await twitter.createAuthorizationURL(state, codeVerifier, {
-	scopes: ["users.read", "tweet.read"]
-});
+const scopes = ["users.read", "tweet.read"];
+const url = twitter.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
-const tokens = await twitter.validateAuthorizationCode(code, codeVerifier);
 const response = await fetch("https://api.twitter.com/2/users/me", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const user = await response.json();
 ```
 
-## Get refresh token
+## Refresh access tokens
 
 Add the `offline.access` scope to get refresh tokens.
 
 ```ts
-const url = await twitter.createAuthorizationURL(state, codeVerifier, {
-	scopes: ["users.read", "tweet.read", "offline.access"]
-});
+const scopes = ["offline.access"];
+const url = twitter.createAuthorizationURL(state, codeVerifier, scopes);
+```
+
+```ts
+const tokens = await twitter.validateAuthorizationCode(code, codeVerifier);
+const accessToken = tokens.accessToken();
+const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+const refreshToken = tokens.refreshToken();
+```
+
+Use `refreshAccessToken()` to get a new access token using a refresh token. Twitter returns the same values as during the authorization code validation. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await twitter.refreshAccessToken(accessToken);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+	const refreshToken = tokens.refreshToken();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
+```
+
+## Revoke tokens
+
+Use `revokeToken()` to revoke a token. This can throw the same errors as `validateAuthorizationCode()`.
+
+```ts
+try {
+	await twitter.revokeToken(refreshToken);
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
 ```

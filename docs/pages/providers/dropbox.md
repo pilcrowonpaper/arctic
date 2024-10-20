@@ -4,9 +4,11 @@ title: "Dropbox"
 
 # Dropbox
 
-Implements OpenID Connect.
+OAuth 2.0 provider for Dropbox.
 
-For usage, see [OAuth 2.0 provider](/guides/oauth2).
+Also see the [OAuth 2.0](/guides/oauth2) guide.
+
+## Initialization
 
 ```ts
 import { Dropbox } from "arctic";
@@ -14,44 +16,131 @@ import { Dropbox } from "arctic";
 const dropbox = new Dropbox(clientId, clientSecret, redirectURI);
 ```
 
+## Create authorization URL
+
 ```ts
-const url: URL = await dropbox.createAuthorizationURL(state, {
-	// optional
-	scopes // "openid" is always included
-});
-const tokens: DropboxTokens = await dropbox.validateAuthorizationCode(code);
-const tokens: DropboxRefreshedTokens = await dropbox.refreshAccessToken(refreshToken);
+import { generateState } from "arctic";
+
+const state = generateState();
+const scopes = ["account_info.read", "files.content.read"];
+const url = dropbox.createAuthorizationURL(state, scopes);
 ```
 
-## Get user profile
+## Validate authorization code
 
-Add the `profile` scope. Optionally add the `email` scope to get user email.
-
-Parse the ID token or use the [`userinfo` endpoint](https://api.dropboxapi.com/2/openid/userinfo). See [supported claims](https://developers.dropbox.com/oidc-guide#oidc-standard).
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Dropbox returns an access token and its expiration.
 
 ```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await dropbox.validateAuthorizationCode(code);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
+}
+```
+
+## OpenID Connect
+
+Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
+
+Also see [supported claims](https://developers.dropbox.com/oidc-guide#oidc-standard).
+
+```ts
+const scopes = ["openid"];
+const url = dropbox.createAuthorizationURL(state, scopes);
+```
+
+```ts
+import { decodeIdToken } from "arctic";
+
 const tokens = await dropbox.validateAuthorizationCode(code);
+const idToken = tokens.idToken();
+const claims = decodeIdToken(idToken);
+```
+
+```ts
 const response = await fetch("https://api.dropboxapi.com/2/openid/userinfo", {
-	method: "POST".
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const user = await response.json();
 ```
 
-The [`/users/get_current_account` endpoint](https://www.dropbox.com/developers/documentation/http/documentation#users-get_current_account) can also be used.
+### Get user profile
 
-## Get refresh token
-
-Set `access_type` params to `offline`.
+Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
 
 ```ts
-const url = await dropbox.createAuthorizationURL();
+const scopes = ["openid", "profile", "email"];
+const url = dropbox.createAuthorizationURL(state, scopes);
+```
+
+The [`/users/get_current_account` endpoint](https://www.dropbox.com/developers/documentation/http/documentation#users-get_current_account) can also be used.
+
+## Refresh access tokens
+
+Set the `access_type` parameter to `offline` to get refresh tokens.
+
+```ts
+const url = dropbox.createAuthorizationURL(state, scopes);
 url.searchParams.set("access_type", "offline");
 ```
 
 ```ts
 const tokens = await dropbox.validateAuthorizationCode(code);
-const refreshToken: string | null = tokens.refreshToken;
+const accessToken = tokens.accessToken();
+const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+const refreshToken = tokens.refreshToken();
+```
+
+Use `refreshAccessToken()` to get a new access token using a refresh token. Dropbox will only return the access token and its expiration. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await dropbox.refreshAccessToken(accessToken);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
+```
+
+## Revoke tokens
+
+Pass a token to `revokeToken()` to revoke all tokens associated with the authorization (in other words, both tokens will be revoked regardless of which one you passed). This can throw the same errors as `validateAuthorizationCode()`.
+
+```ts
+try {
+	await dropbox.revokeToken(token);
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
 ```

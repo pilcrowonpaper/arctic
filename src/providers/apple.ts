@@ -1,127 +1,90 @@
-import { TimeSpan, createDate } from "oslo";
-import { base64 } from "oslo/encoding";
-import { createJWT } from "oslo/jwt";
-import { OAuth2Client } from "oslo/oauth2";
+import { createOAuth2Request, sendTokenRequest } from "../request.js";
+import { createJWTSignatureMessage, encodeJWT } from "@oslojs/jwt";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://appleid.apple.com/auth/authorize";
+const authorizationEndpoint = "https://appleid.apple.com/auth/authorize";
 const tokenEndpoint = "https://appleid.apple.com/auth/token";
 
-export class Apple implements OAuth2Provider {
-	private client: OAuth2Client;
-	private credentials: AppleCredentials;
+export class Apple {
+	private clientId: string;
+	private teamId: string;
+	private keyId: string;
+	private pkcs8PrivateKey: Uint8Array;
+	private redirectURI: string;
 
-	constructor(credentials: AppleCredentials, redirectURI: string) {
-		this.client = new OAuth2Client(credentials.clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
-		this.credentials = credentials;
+	constructor(
+		clientId: string,
+		teamId: string,
+		keyId: string,
+		pkcs8PrivateKey: Uint8Array,
+		redirectURI: string
+	) {
+		this.clientId = clientId;
+		this.teamId = teamId;
+		this.keyId = keyId;
+		this.pkcs8PrivateKey = pkcs8PrivateKey;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state,
-			scopes: options?.scopes
-		});
+	public createAuthorizationURL(state: string, scopes: string[]): URL {
+		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("scope", scopes.join(" "));
+		url.searchParams.set("redirect_uri", this.redirectURI);
+		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<AppleTokens> {
-		const result = await this.client.validateAuthorizationCode<AuthorizationCodeResponseBody>(
-			code,
-			{
-				authenticateWith: "request_body",
-				credentials: await this.createClientSecret()
-			}
-		);
-		const tokens: AppleTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token ?? null,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token
-		};
-		return tokens;
-	}
-
-	public async refreshAccessToken(refreshToken: string): Promise<AppleRefreshedTokens> {
-		const result = await this.client.refreshAccessToken<RefreshTokenResponseBody>(refreshToken, {
-			authenticateWith: "request_body",
-			credentials: await this.createClientSecret()
-		});
-		const tokens: AppleRefreshedTokens = {
-			accessToken: result.access_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		body.set("redirect_uri", this.redirectURI);
+		body.set("client_id", this.clientId);
+		const clientSecret = await this.createClientSecret();
+		body.set("client_secret", clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 
 	private async createClientSecret(): Promise<string> {
-		const audience = "https://appleid.apple.com";
-		const payload = {};
-		const jwt = await createJWT("ES256", parsePKCS8PEM(this.credentials.certificate), payload, {
-			headers: {
-				kid: this.credentials.keyId
+		const privateKey = await crypto.subtle.importKey(
+			"pkcs8",
+			this.pkcs8PrivateKey,
+			{
+				name: "ECDSA",
+				namedCurve: "P-256"
 			},
-			issuer: this.credentials.teamId,
-			includeIssuedTimestamp: true,
-			expiresIn: new TimeSpan(5, "m"),
-			audiences: [audience],
-			subject: this.credentials.clientId
+			false,
+			["sign"]
+		);
+		const now = Math.floor(Date.now() / 1000);
+		const headerJSON = JSON.stringify({
+			typ: "JWT",
+			alg: "ES256",
+			kid: this.keyId
 		});
+		const payloadJSON = JSON.stringify({
+			iss: this.teamId,
+			exp: now + 5 * 60,
+			aud: ["https://appleid.apple.com"],
+			sub: this.clientId,
+			iat: now
+		});
+		const signature = new Uint8Array(
+			await crypto.subtle.sign(
+				{
+					name: "ECDSA",
+					hash: "SHA-256"
+				},
+				privateKey,
+				createJWTSignatureMessage(headerJSON, payloadJSON)
+			)
+		);
+		const jwt = encodeJWT(headerJSON, payloadJSON, signature);
 		return jwt;
 	}
-}
-
-interface AuthorizationCodeResponseBody {
-	access_token: string;
-	refresh_token?: string;
-	expires_in: number;
-	id_token: string;
-}
-
-interface RefreshTokenResponseBody {
-	access_token: string;
-	refresh_token?: string;
-	expires_in: number;
-	id_token: string;
-}
-
-export interface AppleTokens {
-	accessToken: string;
-	refreshToken: string | null;
-	accessTokenExpiresAt: Date;
-	idToken: string;
-}
-
-export interface AppleRefreshedTokens {
-	accessToken: string;
-	accessTokenExpiresAt: Date;
-	idToken: string;
-}
-
-export interface AppleCredentials {
-	clientId: string;
-	teamId: string;
-	keyId: string;
-	certificate: string;
-}
-
-function parsePKCS8PEM(pkcs8: string): Uint8Array {
-	return base64.decode(
-		pkcs8
-			.replace("-----BEGIN PRIVATE KEY-----", "")
-			.replace("-----END PRIVATE KEY-----", "")
-			.replaceAll("\r", "")
-			.replaceAll("\n", "")
-			.trim(),
-		{
-			strict: false
-		}
-	);
 }

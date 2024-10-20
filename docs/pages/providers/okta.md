@@ -4,71 +4,97 @@ title: "Okta"
 
 # Okta
 
-Implements OpenID Connect.
+OAuth 2.0 provider for Okta.
 
-For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
+Also see the [OAuth 2.0](/guides/oauth2) guide.
 
-**Note:** This provider implements a subset of Okta's full OAuth2 implementation. Specifically for applications of the "Web Application" type when using the OIDC sign-in method.
+## Initialization
 
-It is also recommended to toggle "Require PKCE as additional verification" under client credentials after creating your application in the Okta admin dashboard, as the implementation forces you to use PKCE anyway.
-
-If you want to utilize the refresh functionality of Arctic you need to toggle the "Refresh Token" option for "Client acting on behalf of a user". You can find this option under "Grant type" in the general settings for the application.
+The `domain` parameter should not include the protocol or path. The `authorizationServerId` parameter is optional.
 
 ```ts
 import { Okta } from "arctic";
 
-const oktaDomain = "https://example.okta.com";
+const domain = "auth.example.com";
 
-const okta = new Okta(oktaDomain, clientId, clientSecret, redirectURI, {
-	// optional
-	authServerId
-});
+const okta = new Okta(domain, null, clientId, clientSecret, redirectURI);
+const okta = new Okta(domain, authorizationServerId, clientId, clientSecret, redirectURI);
 ```
 
+## Create authorization URL
+
 ```ts
-const url: URL = await okta.createAuthorizationURL(state, codeVerifier, {
-	// optional
-	scopes // "openid" always included
-});
+import { generateState, generateCodeVerifier } from "arctic";
 
-const tokens: OktaTokens = await okta.validateAuthorizationCode(code, codeVerifier);
-
-const tokens: OktaTokens = await okta.refreshAccessToken(refreshToken, {
-	// optional
-	scopes
-});
+const state = generateState();
+const codeVerifier = generateCodeVerifier();
+const scopes = ["openid", "profile"];
+const url = okta.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
-## Get user profile
+## Validate authorization code
 
-Add the `profile` scope for basic information. Optionally add the `email` scope to get user email. See [Scopes](https://developer.okta.com/docs/reference/api/oidc/#scopes) for available scopes.
-
-```ts
-const url = await okta.createAuthorizationURL(state, codeVerifier, {
-	scopes: ["profile", "email"]
-});
-```
-
-Parse the ID token or use the [`userinfo` endpoint](https://developer.okta.com/docs/reference/api/oidc/#userinfo). See [ID token](https://developer.okta.com/docs/reference/api/oidc/#id-token).
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Actual values returned by Okta depends on your configuration.
 
 ```ts
-const tokens = await okta.validateAuthorizationCode(code, codeVerifier);
-const response = await fetch(oktaDomain + "/oauth2/v1/userinfo", {
-	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await okta.validateAuthorizationCode(code, codeVerifier);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+	const refreshToken = tokens.refreshToken();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
 	}
-});
-const user = await response.json();
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
+}
 ```
 
-## Custom auhtorization server
+## Refresh access tokens
 
-If you are using a [custom authorization server](https://developer.okta.com/docs/concepts/auth-servers/) pass the ID of it to the constructor options.
+Use `refreshAccessToken()` to get a new access token using a refresh token. Okta requires you to pass scopes when refreshing tokens. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
-import { Okta } from "arctic";
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
-const okta = new Okta(oktaDomain, clientId, clientSecret, redirectURI, {
-	authServerId
-});
+try {
+	const tokens = await okta.refreshAccessToken(accessToken, scopes);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
+```
+
+## Revoke tokens
+
+Use `revokeToken()` to revoke a token. This can throw the same errors as `validateAuthorizationCode()`.
+
+```ts
+try {
+	await okta.revokeToken(token);
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
 ```

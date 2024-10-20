@@ -1,39 +1,39 @@
-import { OAuth2Client } from "oslo/oauth2";
+import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://api.workos.com/sso/authorize";
+const authorizationEndpoint = "https://api.workos.com/sso/authorize";
 const tokenEndpoint = "https://api.workos.com/sso/token";
 
-export class WorkOS implements OAuth2Provider {
-	private client: OAuth2Client;
+export class WorkOS {
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
 	constructor(clientId: string, clientSecret: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(state: string): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state
-		});
+	public createAuthorizationURL(state: string): URL {
+		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("redirect_uri", this.redirectURI);
+		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<WorkOSTokens> {
-		const result = await this.client.validateAuthorizationCode(code, {
-			authenticateWith: "request_body",
-			credentials: this.clientSecret
-		});
-		const tokens: WorkOSTokens = {
-			accessToken: result.access_token
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		body.set("redirect_uri", this.redirectURI);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
-}
-
-export interface WorkOSTokens {
-	accessToken: string;
 }

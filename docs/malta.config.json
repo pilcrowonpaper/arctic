@@ -1,15 +1,16 @@
 {
 	"name": "Arctic",
-	"description": "Arctic is a library that provides OAuth 2.0 clients for major providers.",
+	"description": "Arctic is a collection of OAuth 2.0 clients for popular providers.",
 	"domain": "https://arctic.js.org",
 	"twitter": "@pilcrowonpaper",
+	"asset_hashing": true,
 	"sidebar": [
 		{
 			"title": "Guides",
 			"pages": [
 				["OAuth 2.0", "/guides/oauth2"],
 				["OAuth 2.0 with PKCE", "/guides/oauth2-pkce"],
-				["OpenID Connect", "/guides/oidc"]
+				["Migrate to v2", "/guides/migrate-v2"]
 			]
 		},
 		{
@@ -24,6 +25,7 @@
 				["Authentik", "/providers/authentik"],
 				["Bitbucket", "/providers/bitbucket"],
 				["Box", "/providers/box"],
+				["Bungie", "/providers/bungie"],
 				["Coinbase", "/providers/coinbase"],
 				["Discord", "/providers/discord"],
 				["Dribbble", "/providers/dribbble"],
@@ -35,7 +37,7 @@
 				["Google", "/providers/google"],
 				["Intuit", "/providers/intuit"],
 				["Kakao", "/providers/kakao"],
-				["Keycloak", "/providers/keycloak"],
+				["KeyCloak", "/providers/keycloak"],
 				["Lichess", "/providers/lichess"],
 				["Line", "/providers/line"],
 				["Linear", "/providers/linear"],
@@ -46,12 +48,14 @@
 				["Okta", "/providers/okta"],
 				["osu!", "/providers/osu"],
 				["Patreon", "/providers/patreon"],
+				["Polar", "/providers/polar"],
 				["Reddit", "/providers/reddit"],
 				["Roblox", "/providers/roblox"],
 				["Salesforce", "/providers/salesforce"],
 				["Shikimori", "/providers/shikimori"],
 				["Slack", "/providers/slack"],
 				["Spotify", "/providers/spotify"],
+				["Start.gg", "/providers/startgg"],
 				["Strava", "/providers/strava"],
 				["Tiltify", "/providers/tiltify"],
 				["Tumblr", "/providers/tumblr"],
@@ -65,9 +69,13 @@
 			]
 		},
 		{
+			"title": "API reference",
+			"pages": [["arctic", "/reference/main"]]
+		},
+		{
 			"title": "Links",
 			"pages": [
-				["Upgrade to v2 beta", "https://arcticjs.dev"],
+				["v1 docs", "https://v1.arcticjs.dev"],
 				["GitHub", "https://github.com/pilcrowonpaper/arctic"],
 				["Twitter", "https://twitter.com/pilcrowonpaper"],
 				["Donate", "https://github.com/sponsors/pilcrowOnPaper"]

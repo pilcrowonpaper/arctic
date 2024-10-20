@@ -1,82 +1,77 @@
-import { OAuth2Client } from "oslo/oauth2";
-import { TimeSpan, createDate } from "oslo";
+import { createS256CodeChallenge } from "../oauth2.js";
+import {
+	createOAuth2Request,
+	encodeBasicCredentials,
+	sendTokenRequest,
+	sendTokenRevocationRequest
+} from "../request.js";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-export class Keycloak implements OAuth2ProviderWithPKCE {
-	private client: OAuth2Client;
-	private realmURL: string;
+export class KeyCloak {
+	private authorizationEndpoint: string;
+	private tokenEndpoint: string;
+	private tokenRevocationEndpoint: string;
+
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
 	constructor(realmURL: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.realmURL = realmURL;
-		const authorizeEndpoint = this.realmURL + "/protocol/openid-connect/auth";
-		const tokenEndpoint = this.realmURL + "/protocol/openid-connect/token";
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.authorizationEndpoint = realmURL + "/protocol/openid-connect/auth";
+		this.tokenEndpoint = realmURL + "/protocol/openid-connect/token";
+		this.tokenRevocationEndpoint = realmURL + "/protocol/openid-connect/revoke";
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		codeVerifier: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		const scopes = options?.scopes ?? [];
-		return await this.client.createAuthorizationURL({
-			state,
-			codeVerifier,
-			scopes: [...scopes, "openid"]
-		});
+	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
+		const url = new URL(this.authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("scope", scopes.join(" "));
+		url.searchParams.set("redirect_uri", this.redirectURI);
+		const codeChallenge = createS256CodeChallenge(codeVerifier);
+		url.searchParams.set("code_challenge_method", "S256");
+		url.searchParams.set("code_challenge", codeChallenge);
+		return url;
 	}
+
 	public async validateAuthorizationCode(
 		code: string,
 		codeVerifier: string
-	): Promise<KeycloakTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			codeVerifier,
-			credentials: this.clientSecret
-		});
-		const tokens: KeycloakTokens = {
-			accessToken: result.access_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			refreshToken: result.refresh_token,
-			refreshTokenExpiresAt: createDate(new TimeSpan(result.refresh_expires_in, "s")),
-			idToken: result.id_token
-		};
+	): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		body.set("code_verifier", codeVerifier);
+		body.set("redirect_uri", this.redirectURI);
+		const request = createOAuth2Request(this.tokenEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<KeycloakTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			credentials: this.clientSecret
-		});
-		const tokens: KeycloakTokens = {
-			accessToken: result.access_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			refreshToken: result.refresh_token,
-			refreshTokenExpiresAt: createDate(new TimeSpan(result.refresh_expires_in, "s")),
-			idToken: result.id_token
-		};
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
+		body.set("refresh_token", refreshToken);
+		const request = createOAuth2Request(this.tokenEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
-}
 
-interface TokenResponseBody {
-	access_token: string;
-	refresh_token: string;
-	id_token: string;
-	expires_in: number;
-	refresh_expires_in: number;
-}
-
-export interface KeycloakTokens {
-	accessToken: string;
-	accessTokenExpiresAt: Date;
-	refreshToken: string | null;
-	refreshTokenExpiresAt: Date | null;
-	idToken: string;
+	public async revokeToken(token: string): Promise<void> {
+		const body = new URLSearchParams();
+		body.set("token", token);
+		const request = createOAuth2Request(this.tokenRevocationEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		await sendTokenRevocationRequest(request);
+	}
 }

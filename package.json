@@ -1,7 +1,7 @@
 {
 	"name": "arctic",
 	"type": "module",
-	"version": "1.9.2",
+	"version": "2.0.0",
 	"description": "OAuth 2.0 clients for popular providers",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -25,12 +25,15 @@
 		"@types/node": "^20.8.6",
 		"@typescript-eslint/eslint-plugin": "^6.7.5",
 		"@typescript-eslint/parser": "^6.7.5",
-		"auri": "1.0.2",
+		"auri": "2.0.0",
 		"eslint": "^8.51.0",
 		"prettier": "^3.0.3",
-		"typescript": "^5.2.2"
+		"typescript": "^5.2.2",
+		"vitest": "1.6.0"
 	},
 	"dependencies": {
-		"oslo": "1.2.0"
+		"@oslojs/crypto": "1.0.1",
+		"@oslojs/encoding": "1.1.0",
+		"@oslojs/jwt": "0.2.0"
 	}
 }
