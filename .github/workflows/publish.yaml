@@ -7,6 +7,7 @@ on:
 env:
   CLOUDFLARE_API_TOKEN: ${{secrets.CLOUDFLARE_API_TOKEN_V2}}
 
+jobs:
   publish-docs:
     name: Publish v2 docs
     runs-on: ubuntu-latest
