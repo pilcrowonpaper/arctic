@@ -1,10 +1,10 @@
 import { createS256CodeChallenge } from "../oauth2.js";
-import { createOAuth2Request, sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
+import { createOAuth2Request, encodeBasicCredentials, sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizationEndpoint = "https://www.etsy.com/oauth";
-const tokenEndpoint = "https://api.etsy.com/v3/public/oauth";
+const authorizationEndpoint = "https://www.etsy.com/oauth/connect";
+const tokenEndpoint = "https://api.etsy.com/v3/public/oauth/token";
 
 export class Etsy {
 	private clientId: string;

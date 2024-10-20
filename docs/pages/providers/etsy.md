@@ -11,20 +11,42 @@ For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
 ```ts
 import { Etsy } from "arctic";
 
-const etsy = new Etsy(clientId, clientSecret, {
-	redirectURI: "https://example.com/callback"
-});
+const etsy = new Etsy(clientId, clientSecret, redirectURI);
 ```
 
 ```ts
-const url: URL = await etsy.createAuthorizationURL(state, codeVerifier, {
-	// optional
-	scopes // No default scopes
-});
-const tokens: EtsyTokens = await etsy.validateAuthorizationCode(
-	code,
-	codeVerifier
-);
+const state = generateState();
+const codeVerifier = generateCodeVerifier();
+const scopes = ['listings_r', 'listings_w',];
+
+const url: URL = await etsy.createAuthorizationURL(state, codeVerifier, scopes);
+```
+
+## Validate authorization code
+
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Cognito returns an access token, the access token expiration, and a refresh token.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens: OAuth2Tokens = await etsy.validateAuthorizationCode(code, codeVerifier);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+	const refreshToken = tokens.refreshToken();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
+}
 ```
 
 ## Get user profile
