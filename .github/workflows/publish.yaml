@@ -1,4 +1,4 @@
-name: "Publish package and docs"
+name: "Publish v1 package and docs"
 on: [push]
 
 permissions:
@@ -51,16 +51,18 @@ jobs:
 
   publish-docs:
     name: Publish docs
-    needs: check-changesets
-    if: needs.check-changesets.check-changesets.outputs.changesets == 0 && github.ref_name == 'main'
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    needs: check-changesets
+    if: needs.check-changesets.check-changesets.outputs.changesets == 0 && github.ref_name == 'v1'
     steps:
-      - name: Set up actions
+      - name: setup actions
         uses: actions/checkout@v3
-      - name: Install malta
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.5.1
+          registry-url: https://registry.npmjs.org
+      - name: install malta
         working-directory: docs
         run: |
           curl -o malta.tgz -L https://github.com/pilcrowonpaper/malta/releases/latest/download/linux-amd64.tgz
@@ -68,10 +70,7 @@ jobs:
       - name: build
         working-directory: docs
         run: ./linux-amd64/malta build
-      - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: "docs/dist"
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
+      - name: install wrangler
+        run: npm i -g wrangler
+      - name: deploy
+        run: wrangler pages deploy docs/dist --project-name arctic-v1 --branch v1
