@@ -4,86 +4,85 @@ title: "Apple"
 
 # Apple
 
-Supported scopes are `email` and `name`.
+OAuth 2.0 provider for Apple.
 
-For usage, see [OAuth 2.0 provider](/guides/oauth2).
+Also see the [OAuth 2.0](/guides/oauth2) guide.
+
+## Initialization
+
+The PKCS#8 private key is an instance of `Uint8Array`.
 
 ```ts
 import { Apple } from "arctic";
 
-import type { AppleCredentials } from "arctic";
-
-const credentials: AppleCredentials = {
-	clientId,
-	teamId,
-	keyId,
-	certificate
-};
-
-const apple = new Apple(credentials, redirectURI);
+const apple = new Apple(clientId, teamId, keyId, pkcs8PrivateKey, redirectURI);
 ```
+
+Here is an example to extract the PKCS#8 key from the PEM certificate.
 
 ```ts
-const url: URL = await apple.createAuthorizationURL(state, {
-	// optional
-	scopes
-});
-const tokens: AppleTokens = await apple.validateAuthorizationCode(code);
-const tokens: AppleRefreshedTokens = await apple.refreshAccessToken(refreshToken);
+import { decodeBase64IgnorePadding } from "@oslojs/encoding";
+
+const certificate = `-----BEGIN PRIVATE KEY-----
+TmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXANCk5ldmVyIGdvbm5hIGxldCB5b3UgZG93bg0KTmV2ZXIgZ29ubmEgcnVuIGFyb3VuZCBhbmQgZGVzZXJ0IHlvdQ0KTmV2ZXIgZ29ubmEgbWFrZSB5b3UgY3J5DQpOZXZlciBnb25uYSBzYXkgZ29vZGJ5ZQ0KTmV2ZXIgZ29ubmEgdGVsbCBhIGxpZSBhbmQgaHVydCB5b3U
+-----END PRIVATE KEY-----`;
+const privateKey = decodeBase64IgnorePadding(
+	certificate
+		.replace("-----BEGIN PRIVATE KEY-----", "")
+		.replace("-----END PRIVATE KEY-----", "")
+		.replaceAll("\r", "")
+		.replaceAll("\n", "")
+		.trim()
+);
 ```
 
-## Get user profile
-
-Parse the ID token. See [ID token claims](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api/authenticating_users_with_sign_in_with_apple#3383773).
-
-## Requesting scopes
-
-When requesting scopes, the `response_mode` param must be set to `form_post`. Unlike the default `"query"` response mode, **Apple will send an application/x-www-form-urlencoded POST request as the callback,** and the user JSON object will be sent in the request body. This is only available the first time the user signs in. Make sure to set the state cookie with the `SameSite=None` attribute.
+## Create authorization URL
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
-const url = await apple.createAuthorizationURL(state);
-url.searchParams.set("response_mode", "query");
-
-setCookie("state", state, {
-	secure: true, // set to false in localhost
-	path: "/",
-	httpOnly: true,
-	maxAge: 60 * 10, // 10 min
-	sameSite: "none" // IMPORTANT!
-});
+const scopes = ["name", "email"];
+const url = apple.createAuthorizationURL(state, scopes);
 ```
 
+### Requesting scopes
+
+When requesting scopes, the `response_mode` param must be set to `form_post`. Unlike the default `"query"` response mode, **Apple will send an application/x-www-form-urlencoded POST request as the callback,** and the user JSON object will be sent in the request body. This is only available the first time the user signs in.
+
+Since this is a cross-origin form request, make sure to relax your CSRF protections, including setting `SameSite` attribute of the state cookie to `None`.
+
+```
+/callback?user=%7B%22name%22%3A%7B%22firstName%22%3A%22John%22%2C%22lastName%22%3A%22Doe%22%7D%2C%22email%22%3A%22john%40example.com%22%7D&state=STATE
+```
+
+```json
+{ "name": { "firstName": "John", "lastName": "Doe" }, "email": "john@example.com" }
+```
+
+## Validate authorization code
+
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). The ID token will always be returned regardless of the scope. T access token and refresh token currently does not have any uses.
+
+Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the ID token's payload.
+
 ```ts
-app.post("/login/apple/callback", async (request: Request) => {
-	const formData = await request.formData();
-	const userJSON = formData.get("user");
-	if (typeof userJSON === "string") {
-		const user = JSON.parse(userJSON);
-		const {
-			name: { firstName, lastName },
-			email
-		} = user;
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await apple.validateAuthorizationCode(code, codeVerifier);
+	const idToken = tokens.idToken();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
 	}
-});
-```
-
-If you have CSRF protection implemented, you must allow form submissions from Apple or disable CSRF protection for specific routes.
-
-```ts
-import { verifyRequestOrigin } from "lucia";
-
-const originHeader = request.headers.get("Origin");
-const hostHeader = request.headers.get("Host");
-if (
-	!originHeader ||
-	!hostHeader ||
-	!verifyRequestOrigin(originHeader, [hostHeader, "appleid.apple.com"])
-) {
-	return new Response(null, {
-		status: 403
-	});
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
 }
 ```

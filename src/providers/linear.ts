@@ -1,54 +1,40 @@
-import { OAuth2Client } from "oslo/oauth2";
-import { TimeSpan, createDate } from "oslo";
+import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://linear.app/oauth/authorize";
+const authorizationEndpoint = "https://linear.app/oauth/authorize";
 const tokenEndpoint = "https://api.linear.app/oauth/token";
 
-export class Linear implements OAuth2Provider {
-	private client: OAuth2Client;
+export class Linear {
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
 	constructor(clientId: string, clientSecret: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		const scopes = options?.scopes ?? [];
-		return await this.client.createAuthorizationURL({
-			state,
-			scopes: [...scopes, "read"]
-		});
+	public createAuthorizationURL(state: string, scopes: string[]): URL {
+		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("scope", scopes.join(" "));
+		url.searchParams.set("redirect_uri", this.redirectURI);
+		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<LinearTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			authenticateWith: "request_body",
-			credentials: this.clientSecret
-		});
-		const tokens: LinearTokens = {
-			accessToken: result.access_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		body.set("redirect_uri", this.redirectURI);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
-}
-
-interface TokenResponseBody {
-	access_token: string;
-	expires_in: number;
-}
-
-export interface LinearTokens {
-	accessToken: string;
-	accessTokenExpiresAt: Date;
 }

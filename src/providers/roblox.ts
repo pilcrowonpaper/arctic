@@ -1,79 +1,69 @@
-import { TimeSpan, createDate } from "oslo";
-import { OAuth2Client } from "oslo/oauth2";
+import { createS256CodeChallenge } from "../oauth2.js";
+import { createOAuth2Request, sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://apis.roblox.com/oauth/v1/authorize";
+const authorizationEndpoint = "https://apis.roblox.com/oauth/v1/authorize";
 const tokenEndpoint = "https://apis.roblox.com/oauth/v1/token";
+const tokenRevocationEndpoint = "https://apis.roblox.com/oauth/v1/token/revoke";
 
-export class Roblox implements OAuth2ProviderWithPKCE {
-	private client: OAuth2Client;
+export class Roblox {
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
 	constructor(clientId: string, clientSecret: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		codeVerifier: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		const scopes = options?.scopes ?? [];
-		return await this.client.createAuthorizationURL({
-			state,
-			codeVerifier,
-			scopes: [...scopes, "openid"]
-		});
+	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
+		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("scope", scopes.join(" "));
+		url.searchParams.set("redirect_uri", this.redirectURI);
+		const codeChallenge = createS256CodeChallenge(codeVerifier);
+		url.searchParams.set("code_challenge_method", "S256");
+		url.searchParams.set("code_challenge", codeChallenge);
+		return url;
 	}
 
 	public async validateAuthorizationCode(
 		code: string,
 		codeVerifier: string
-	): Promise<RobloxTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret,
-			codeVerifier,
-			authenticateWith: "request_body" // Roblox doesn't support HTTP basic auth
-		});
-		const tokens: RobloxTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token
-		};
+	): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		body.set("code_verifier", codeVerifier);
+		body.set("redirect_uri", this.redirectURI);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<RobloxTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			credentials: this.clientSecret
-		});
-		const tokens: RobloxTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token
-		};
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
+		body.set("refresh_token", refreshToken);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
-}
 
-interface TokenResponseBody {
-	access_token: string;
-	refresh_token: string;
-	expires_in: number;
-	id_token: string;
-}
-
-export interface RobloxTokens {
-	accessToken: string;
-	refreshToken: string;
-	accessTokenExpiresAt: Date;
-	idToken: string;
+	public async revokeToken(token: string): Promise<void> {
+		const body = new URLSearchParams();
+		body.set("token", token);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenRevocationEndpoint, body);
+		await sendTokenRevocationRequest(request);
+	}
 }

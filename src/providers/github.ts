@@ -1,54 +1,55 @@
-import { OAuth2Client } from "oslo/oauth2";
+import { createOAuth2Request, encodeBasicCredentials, sendTokenRequest } from "../request.js";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-export class GitHub implements OAuth2Provider {
-	private client: OAuth2Client;
+const authorizationEndpoint = "https://github.com/login/oauth/authorize";
+const tokenEndpoint = "https://github.com/login/oauth/access_token";
+
+export class GitHub {
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string | null;
 
-	constructor(
-		clientId: string,
-		clientSecret: string,
-		options?: {
-			redirectURI?: string;
-			enterpriseDomain?: string;
-		}
-	) {
-		const baseUrl = options?.enterpriseDomain ?? "https://github.com";
-
-		const authorizeEndpoint = baseUrl + "/login/oauth/authorize";
-		const tokenEndpoint = baseUrl + "/login/oauth/access_token";
-
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI: options?.redirectURI
-		});
+	constructor(clientId: string, clientSecret: string, redirectURI: string | null) {
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		options?: {
-			scopes?: string[];
+	public createAuthorizationURL(state: string, scopes: string[]): URL {
+		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("scope", scopes.join(" "));
+		if (this.redirectURI !== null) {
+			url.searchParams.set("redirect_uri", this.redirectURI);
 		}
-	): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state,
-			scopes: options?.scopes ?? []
-		});
+		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<GitHubTokens> {
-		const result = await this.client.validateAuthorizationCode(code, {
-			authenticateWith: "request_body",
-			credentials: this.clientSecret
-		});
-		const tokens: GitHubTokens = {
-			accessToken: result.access_token
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		if (this.redirectURI !== null) {
+			body.set("redirect_uri", this.redirectURI);
+		}
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
-}
 
-export interface GitHubTokens {
-	accessToken: string;
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
+		body.set("refresh_token", refreshToken);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		const tokens = await sendTokenRequest(request);
+		return tokens;
+	}
 }

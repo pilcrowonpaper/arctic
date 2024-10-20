@@ -2,46 +2,112 @@
 title: "Authentik"
 ---
 
-# Authentik
+# Okta
 
-For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
+OAuth 2.0 provider for Authentik.
+
+Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
+
+## Initialization
+
+The `domain` parameter should not include the protocol or path.
 
 ```ts
 import { Authentik } from "arctic";
 
-const realmURL = "http://example.com";
-const authentik = new Authentik(realmURL, clientId, clientSecret, redirectURI);
+const domain = "auth.example.com";
+const authentik = new Authentik(domain, clientId, clientSecret, redirectURI);
 ```
 
+## Create authorization URL
+
 ```ts
-const url: URL = await authentik.createAuthorizationURL(state, codeVerifier, {
-	// optional
-	scopes // "openid" always included
-});
-const tokens: AuthentikTokens = await authentik.validateAuthorizationCode(code, codeVerifier);
-const tokens: AuthentikTokens = await authentik.refreshAccessToken(refreshToken);
+import { generateState, generateCodeVerifier } from "arctic";
+
+const state = generateState();
+const codeVerifier = generateCodeVerifier();
+const scopes = ["openid", "profile"];
+const url = authentik.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
-## Get refresh token
+## Validate authorization code
 
-Authentik with version 2024.2 and higher only provides the access token by default. To get the refresh token as well, you'll need to include the `offline_access` scope. The scope also needs to be enabled in your app's advanced settings (Application > Providers > Edit > Advanced protocol settings > Scopes).
-
-```ts
-const url: URL = await authentik.createAuthorizationURL(state, codeVerifier, {
-	scopes: ["profile", "email", "offline_access"]
-});
-```
-
-## Get user profile
-
-Authentik provides endpoint `/application/o/userinfo/` that you can use to fetch the user info once you obtain the Bearer token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Actual values returned by Authentik depends on your configuration and version.
 
 ```ts
-const tokens = await authentik.validateAuthorizationCode(code, codeVerifier);
-const response = await fetch("https://example.com/application/o/userinfo/", {
-	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await authentik.validateAuthorizationCode(code, codeVerifier);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+	const refreshToken = tokens.refreshToken();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
 	}
-});
-const user = await response.json();
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
+}
+```
+
+## OpenID Connect
+
+Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
+
+```ts
+const scopes = ["openid"];
+const url = authentik.createAuthorizationURL(state, codeVerifier, scopes);
+```
+
+```ts
+import { decodeIdToken } from "arctic";
+
+const tokens = await authentik.validateAuthorizationCode(code, codeVerifier);
+const idToken = tokens.idToken();
+const claims = decodeIdToken(idToken);
+```
+
+## Refresh access tokens
+
+Use `refreshAccessToken()` to get a new access token using a refresh token. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await authentik.refreshAccessToken(accessToken);
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
+```
+
+## Revoke tokens
+
+Use `revokeToken()` to revoke a token. This can throw the same errors as `validateAuthorizationCode()`.
+
+```ts
+try {
+	await authentik.revokeToken(token);
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
 ```

@@ -1,67 +1,51 @@
-import { TimeSpan, createDate } from "oslo";
-import { OAuth2Client } from "oslo/oauth2";
+import { createOAuth2Request, encodeBasicCredentials, sendTokenRequest } from "../request.js";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://accounts.spotify.com/authorize";
+const authorizationEndpoint = "https://accounts.spotify.com/authorize";
 const tokenEndpoint = "https://accounts.spotify.com/api/token";
 
-export class Spotify implements OAuth2Provider {
-	private client: OAuth2Client;
+export class Spotify {
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
 	constructor(clientId: string, clientSecret: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state,
-			scopes: options?.scopes ?? []
-		});
+	public createAuthorizationURL(state: string, scopes: string[]): URL {
+		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("scope", scopes.join(" "));
+		url.searchParams.set("redirect_uri", this.redirectURI);
+		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<SpotifyTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			credentials: this.clientSecret
-		});
-		const tokens: SpotifyTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		body.set("redirect_uri", this.redirectURI);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<SpotifyTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			credentials: this.clientSecret
-		});
-		const tokens: SpotifyTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
-		};
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
+		body.set("refresh_token", refreshToken);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
-}
-
-interface TokenResponseBody {
-	access_token: string;
-	expires_in: number;
-	refresh_token: string;
-}
-
-export interface SpotifyTokens {
-	accessToken: string;
-	refreshToken: string;
-	accessTokenExpiresAt: Date;
 }

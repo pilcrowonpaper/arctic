@@ -1,6 +1,10 @@
 # Arctic
 
-Arctic is an OAuth 2.0 library for JavaScript/TypeScript that supports numerous providers. It's light weight, fully-typed, and runtime-agnostic. [Read the documentation →](https://arctic.js.org)
+Arctic is a collection of OAuth 2.0 clients for popular providers. It only supports the authorization code grant type and intended to be used server-side. Built on top of the Fetch API, it's light weight, fully-typed, and runtime-agnostic.
+
+```
+npm install arctic
+```
 
 ```ts
 import { GitHub, generateState } from "arctic";
@@ -8,16 +12,16 @@ import { GitHub, generateState } from "arctic";
 const github = new GitHub(clientId, clientSecret);
 
 const state = generateState();
-const authorizationURL = await github.createAuthorizationURL(state, {
-	scopes: ["user:email"]
-});
+const scopes = ["user:email"];
+const authorizationURL = github.createAuthorizationURL(state, scopes);
+
+// ...
 
 const tokens = await github.validateAuthorizationCode(code);
+const accessToken = tokens.accessToken();
 ```
 
-For a flexible OAuth 2.0 client, see [`oslo/oauth2`](http://github.com/pilcrowonpaper/oslo).
-
-> Arctic only supports providers that strictly follow the OAuth 2.0 spec (including PKCE).
+> Arctic only supports providers that follow the OAuth 2.0 spec (including PKCE and token revocation).
 
 ## Semver
 
@@ -34,6 +38,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Authentik
 - Bitbucket
 - Box
+- Bungie
 - Coinbase
 - Discord
 - Dribbble
@@ -41,12 +46,11 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Etsy
 - Facebook
 - Figma
-- Github
+- GitHub
 - GitLab
 - Google
 - Intuit
 - Kakao
-- Keycloak
 - Lichess
 - Line
 - Linear
@@ -57,12 +61,14 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Okta
 - osu!
 - Patreon
+- Polar
 - Reddit
 - Roblox
 - Salesforce
 - Shikimori
 - Slack
 - Spotify
+- Start.gg
 - Strava
 - Tiltify
 - Tumblr

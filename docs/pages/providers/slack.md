@@ -2,44 +2,83 @@
 title: "Slack"
 ---
 
-# Slack
+# Slack (OpenID)
 
-Implements OpenID Connect.
+OAuth 2.0 provider for Slack (OpenID Connect).
 
-For usage, see [OAuth 2.0 provider](/guides/oauth2).
+Also see the [OAuth 2.0](/guides/oauth2) guide.
+
+## Initialization
+
+The redirect URI is optional.
 
 ```ts
-import { Slack } from "arctic";
+import { SlackOIDC } from "arctic";
 
-const slack = new Slack(clientId, clientSecret, redirectURI);
+const slack = new SlackOIDC(clientId, clientSecret, null);
+const slack = new SlackOIDC(clientId, clientSecret, redirectURI);
 ```
 
+## Create authorization URL
+
+**The `openid` scope is required.**
+
 ```ts
-const url: URL = await slack.createAuthorizationURL(state, {
-	// optional
-	scopes // "openid" always included
-});
-const tokens: SlackTokens = await slack.validateAuthorizationCode(code);
+import { generateState } from "arctic";
+
+const state = generateState();
+const scopes = ["openid", "profile"];
+const url = slack.createAuthorizationURL(state, scopes);
+```
+
+## Validate authorization code
+
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Slack will return an access token (no expiration) and an ID token.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await slack.validateAuthorizationCode(code);
+	const accessToken = tokens.accessToken();
+	const idToken = tokens.idToken();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+		const code = e.code;
+		// ...
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+		const cause = e.cause;
+		// ...
+	}
+	// Parse error
+}
 ```
 
 ## Get user profile
 
-Add the `profile` scope. Optionally add the `email` scope to get user email.
+Decode the ID token or the `userinfo` endpoint to get the user profile. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
 
 ```ts
-const url = await slack.createAuthorizationURL(state, {
-	scopes: ["profile", "email"]
-});
+import { decodeIdToken } from "arctic";
+
+const claims = decodeIdToken(idToken);
 ```
 
-Parse the ID token or use the `userinfo` endpoint. See [example ID token claims](https://api.slack.com/authentication/sign-in-with-slack#response).
-
 ```ts
-const tokens = await slack.validateAuthorizationCode(code);
-const response = await fetch("https://slack.com/api/openid.connect.userInfo", {
+const response = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const user = await response.json();
+```
+
+Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
+
+```ts
+const scopes = ["openid", "profile", "email"];
+const url = slack.createAuthorizationURL(state, codeVerifier, scopes);
 ```

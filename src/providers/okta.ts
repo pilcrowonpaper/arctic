@@ -1,110 +1,88 @@
-import { OAuth2Client } from "oslo/oauth2";
-import { TimeSpan, createDate } from "oslo";
+import { createS256CodeChallenge } from "../oauth2.js";
+import {
+	createOAuth2Request,
+	encodeBasicCredentials,
+	sendTokenRequest,
+	sendTokenRevocationRequest
+} from "../request.js";
 
-import type { OAuth2ProviderWithPKCE } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-export class Okta implements OAuth2ProviderWithPKCE {
-	private client: OAuth2Client;
+export class Okta {
+	private authorizationEndpoint: string;
+	private tokenEndpoint: string;
+	private tokenRevocationEndpoint: string;
+
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
 	constructor(
-		oktaDomain: string,
+		domain: string,
+		authorizationServerId: string | null,
 		clientId: string,
 		clientSecret: string,
-		redirectURI: string,
-		options?: {
-			authorizationServerId?: string;
-		}
+		redirectURI: string
 	) {
-		let authorizeEndpoint;
-		let tokenEndpoint;
-
-		if (options?.authorizationServerId) {
-			authorizeEndpoint = `${oktaDomain}/oauth2/${options.authorizationServerId}/v1/authorize`;
-			tokenEndpoint = `${oktaDomain}/oauth2/${options.authorizationServerId}/v1/token`;
-		} else {
-			authorizeEndpoint = `${oktaDomain}/oauth2/v1/authorize`;
-			tokenEndpoint = `${oktaDomain}/oauth2/v1/token`;
+		let baseURL = `https://${domain}/oauth2`;
+		if (authorizationServerId !== null) {
+			baseURL = baseURL + `/${authorizationServerId}`;
 		}
-
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.authorizationEndpoint = baseURL + "/v1/authorize";
+		this.tokenEndpoint = baseURL + "/v1/token";
+		this.tokenRevocationEndpoint = baseURL + "/v1/revoke";
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		codeVerifier: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		const url = await this.client.createAuthorizationURL({
-			codeVerifier,
-			scopes: [...(options?.scopes ?? []), "openid"]
-		});
+	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
+		const url = new URL(this.authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("state", state);
-
+		url.searchParams.set("scope", scopes.join(" "));
+		url.searchParams.set("redirect_uri", this.redirectURI);
+		const codeChallenge = createS256CodeChallenge(codeVerifier);
+		url.searchParams.set("code_challenge_method", "S256");
+		url.searchParams.set("code_challenge", codeChallenge);
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<OktaTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			codeVerifier,
-			credentials: this.clientSecret,
-			authenticateWith: "request_body"
-		});
-
-		const tokens: OktaTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token ?? null,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token,
-			deviceSecret: result.device_secret ?? null
-		};
-
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier: string
+	): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		body.set("code_verifier", codeVerifier);
+		body.set("redirect_uri", this.redirectURI);
+		const request = createOAuth2Request(this.tokenEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 
-	public async refreshAccessToken(
-		refreshToken: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<OktaTokens> {
-		const result = await this.client.refreshAccessToken<TokenResponseBody>(refreshToken, {
-			credentials: this.clientSecret,
-			authenticateWith: "request_body",
-			scopes: options?.scopes ?? []
-		});
-
-		const tokens: OktaTokens = {
-			accessToken: result.access_token,
-			refreshToken: result.refresh_token ?? null,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s")),
-			idToken: result.id_token,
-			deviceSecret: result.device_secret ?? null
-		};
-
+	public async refreshAccessToken(refreshToken: string, scopes: string[]): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
+		body.set("refresh_token", refreshToken);
+		body.set("scope", scopes.join(" "));
+		const request = createOAuth2Request(this.tokenEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
-}
 
-interface TokenResponseBody {
-	access_token: string;
-	token_type: string;
-	expires_in: number;
-	scope: string;
-	refresh_token?: string;
-	id_token: string;
-	device_secret?: string;
-}
-
-export interface OktaTokens {
-	idToken: string;
-	accessToken: string;
-	accessTokenExpiresAt: Date;
-	refreshToken: string | null;
-	deviceSecret: string | null;
+	public async revokeToken(token: string): Promise<void> {
+		const body = new URLSearchParams();
+		body.set("token", token);
+		const request = createOAuth2Request(this.tokenRevocationEndpoint, body);
+		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		await sendTokenRevocationRequest(request);
+	}
 }

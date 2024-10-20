@@ -25,22 +25,3 @@ pnpm test
 
 pnpm build
 ```
-
-### Creating changesets
-
-When creating a PR, create a changeset with `pnpm auri add`. If you made multiple changes, create multiple changesets. Use `minor` for new features, and use `patch` for bug fixes:
-
-```
-pnpm auri add minor
-pnpm auri add patch
-```
-
-A new markdown file should be created in `.changesets` directory. Write a short summary of the change:
-
-```
-Fix: Handle negative numbers in `sqrt()`
-```
-
-```
-Feat: Add `greet()`
-```

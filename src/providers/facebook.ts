@@ -1,53 +1,40 @@
-import { OAuth2Client } from "oslo/oauth2";
-import { TimeSpan, createDate } from "oslo";
+import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
-import type { OAuth2Provider } from "../index.js";
+import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizeEndpoint = "https://www.facebook.com/v16.0/dialog/oauth";
+const authorizationEndpoint = "https://www.facebook.com/v16.0/dialog/oauth";
 const tokenEndpoint = "https://graph.facebook.com/v16.0/oauth/access_token";
 
-export class Facebook implements OAuth2Provider {
-	private client: OAuth2Client;
+export class Facebook {
+	private clientId: string;
 	private clientSecret: string;
+	private redirectURI: string;
 
 	constructor(clientId: string, clientSecret: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, authorizeEndpoint, tokenEndpoint, {
-			redirectURI
-		});
+		this.clientId = clientId;
 		this.clientSecret = clientSecret;
+		this.redirectURI = redirectURI;
 	}
 
-	public async createAuthorizationURL(
-		state: string,
-		options?: {
-			scopes?: string[];
-		}
-	): Promise<URL> {
-		return await this.client.createAuthorizationURL({
-			state,
-			scopes: options?.scopes ?? []
-		});
+	public createAuthorizationURL(state: string, scopes: string[]): URL {
+		const url = new URL(authorizationEndpoint);
+		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("state", state);
+		url.searchParams.set("scope", scopes.join(" "));
+		url.searchParams.set("redirect_uri", this.redirectURI);
+		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<FacebookTokens> {
-		const result = await this.client.validateAuthorizationCode<TokenResponseBody>(code, {
-			authenticateWith: "request_body",
-			credentials: this.clientSecret
-		});
-		const tokens: FacebookTokens = {
-			accessToken: result.access_token,
-			accessTokenExpiresAt: createDate(new TimeSpan(result.expires_in, "s"))
-		};
+	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		body.set("redirect_uri", this.redirectURI);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
-}
-
-interface TokenResponseBody {
-	access_token: string;
-	expires_in: number;
-}
-
-export interface FacebookTokens {
-	accessToken: string;
-	accessTokenExpiresAt: Date;
 }
