@@ -1,7 +1,7 @@
 {
-	"name": "Arctic",
+	"name": "Arctic v1",
 	"description": "Arctic is a library that provides OAuth 2.0 clients for major providers.",
-	"domain": "https://arctic.js.org",
+	"domain": "https://v1.arcticjs.dev",
 	"twitter": "@pilcrowonpaper",
 	"sidebar": [
 		{
@@ -67,7 +67,7 @@
 		{
 			"title": "Links",
 			"pages": [
-				["Upgrade to v2 beta", "https://arcticjs.dev"],
+				["Upgrade to v2", "https://arcticjs.dev"],
 				["GitHub", "https://github.com/pilcrowonpaper/arctic"],
 				["Twitter", "https://twitter.com/pilcrowonpaper"],
 				["Donate", "https://github.com/sponsors/pilcrowOnPaper"]
