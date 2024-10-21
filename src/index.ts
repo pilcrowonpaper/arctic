@@ -11,6 +11,7 @@ export { Coinbase } from "./providers/coinbase.js";
 export { Discord } from "./providers/discord.js";
 export { Dribbble } from "./providers/dribbble.js";
 export { Dropbox } from "./providers/dropbox.js";
+export { Etsy } from "./providers/etsy.js";
 export { Facebook } from "./providers/facebook.js";
 export { Figma } from "./providers/figma.js";
 export { Intuit } from "./providers/intuit.js";
