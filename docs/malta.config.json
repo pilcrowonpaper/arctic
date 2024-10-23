@@ -30,6 +30,7 @@
 				["Discord", "/providers/discord"],
 				["Dribbble", "/providers/dribbble"],
 				["Dropbox", "/providers/dropbox"],
+				["Epic Games", "/providers/epicgames"],
 				["Facebook", "/providers/facebook"],
 				["Figma", "/providers/figma"],
 				["GitHub", "/providers/github"],
