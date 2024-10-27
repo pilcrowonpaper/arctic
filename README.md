@@ -58,6 +58,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - LinkedIn
 - Microsoft Entra ID
 - MyAnimeList
+- Naver
 - Notion
 - Okta
 - osu!
