@@ -1,5 +1,9 @@
 # arctic
 
+## 2.2.1
+
+- Fix GitLab provider endpoints.
+
 ## 2.2.0
 
 - Add Epic Games provider.
