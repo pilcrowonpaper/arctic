@@ -56,14 +56,14 @@ try {
 The refresh token expiration is returned as `refresh_expires` and `refresh_expires_at`.
 
 ```ts
-const tokens = await keycloak.validateAuthorizationCode(code);
+const tokens = await epicgames.validateAuthorizationCode(code);
 if ("refresh_expires" in tokens.data && typeof tokens.data.refresh_expires === "number") {
 	const refreshTokenExpiresInSeconds = tokens.data.refresh_expires;
 }
 ```
 
 ```ts
-const tokens = await keycloak.validateAuthorizationCode(code);
+const tokens = await epicgames.validateAuthorizationCode(code);
 if ("refresh_expires_at" in tokens.data && typeof tokens.data.refresh_expires_at === "string") {
 	const refreshTokenExpiresAt = new Date(tokens.data.refresh_expires_at);
 }
