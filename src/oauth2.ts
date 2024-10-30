@@ -23,12 +23,8 @@ export class OAuth2Tokens {
 	}
 
 	public accessTokenExpiresInSeconds(): number {
-		if ("expires_in" in this.data) {
-			const expires_in = parseInt(`${this.data.expires_in}`);
-
-			if (typeof expires_in === "number" && !Number.isNaN(expires_in)) {
-				return expires_in;
-			}
+		if ("expires_in" in this.data && typeof this.data.expires_in === "number") {
+			return this.data.expires_in;
 		}
 		throw new Error("Missing or invalid 'expires_in' field");
 	}
