@@ -19,10 +19,7 @@ const naver = new Naver(clientId, clientSecret, redirectURI);
 ## Create authorization URL
 
 ```ts
-import { generateState } from "arctic";
-
-const state = generateState();
-const url = naver.createAuthorizationURL(state);
+const url = naver.createAuthorizationURL();
 ```
 
 ## Validate authorization code
