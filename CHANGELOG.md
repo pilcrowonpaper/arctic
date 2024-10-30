@@ -1,5 +1,9 @@
 # arctic
 
+## 2.1.0
+
+- Add Epic Games provider.
+
 ## 2.0.1
 
 - Update README

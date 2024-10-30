@@ -76,7 +76,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Sale
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await salesforce.refreshAccessToken(accessToken);
+	const tokens = await salesforce.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {

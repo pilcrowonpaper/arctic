@@ -113,7 +113,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Drop
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await dropbox.refreshAccessToken(accessToken);
+	const tokens = await dropbox.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {

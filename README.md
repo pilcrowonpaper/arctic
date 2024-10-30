@@ -1,5 +1,7 @@
 # Arctic
 
+**Documentation: [arcticjs.dev](https://arcticjs.dev)**
+
 Arctic is a collection of OAuth 2.0 clients for popular providers. It only supports the authorization code grant type and intended to be used server-side. Built on top of the Fetch API, it's light weight, fully-typed, and runtime-agnostic.
 
 ```
@@ -44,6 +46,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Dribbble
 - Dropbox
 - Etsy
+- Epic Games
 - Facebook
 - Figma
 - GitHub
@@ -57,6 +60,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - LinkedIn
 - Microsoft Entra ID
 - MyAnimeList
+- Naver
 - Notion
 - Okta
 - osu!

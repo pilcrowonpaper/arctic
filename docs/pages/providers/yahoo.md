@@ -6,7 +6,7 @@ title: "Yahoo"
 
 OAuth 2.0 provider for Yahoo.
 
-Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
+Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
@@ -19,12 +19,11 @@ const yahoo = new Yahoo(clientId, clientSecret, redirectURI);
 ## Create authorization URL
 
 ```ts
-import { generateState, generateCodeVerifier } from "arctic";
+import { generateState } from "arctic";
 
 const state = generateState();
-const codeVerifier = generateCodeVerifier();
 const scopes = ["openid", "profile"];
-const url = yahoo.createAuthorizationURL(state, codeVerifier, scopes);
+const url = yahoo.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -35,7 +34,7 @@ const url = yahoo.createAuthorizationURL(state, codeVerifier, scopes);
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await yahoo.validateAuthorizationCode(code, codeVerifier);
+	const tokens = await yahoo.validateAuthorizationCode(code);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
@@ -62,7 +61,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Yaho
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await yahoo.refreshAccessToken(accessToken);
+	const tokens = await yahoo.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
@@ -82,13 +81,13 @@ Use OpenID Connect with the `openid` scope to get the user's profile with an ID 
 
 ```ts
 const scopes = ["openid"];
-const url = yahoo.createAuthorizationURL(state, codeVerifier, scopes);
+const url = yahoo.createAuthorizationURL(state, scopes);
 ```
 
 ```ts
 import { decodeIdToken } from "arctic";
 
-const tokens = await yahoo.validateAuthorizationCode(code, codeVerifier);
+const tokens = await yahoo.validateAuthorizationCode(code);
 const idToken = tokens.idToken();
 const claims = decodeIdToken(idToken);
 ```
@@ -108,5 +107,5 @@ Make sure to add the `profile` scope to get the user profile and the `email` sco
 
 ```ts
 const scopes = ["openid", "profile", "email"];
-const url = yahoo.createAuthorizationURL(state, codeVerifier, scopes);
+const url = yahoo.createAuthorizationURL(state, scopes);
 ```

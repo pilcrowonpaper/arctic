@@ -60,7 +60,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Shik
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await shikimori.refreshAccessToken(accessToken);
+	const tokens = await shikimori.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();

@@ -12,6 +12,11 @@ import { GitHub } from "arctic";
 const github = new GitHub(clientId, clientSecret, redirectURI);
 ```
 
+If this is your first time working with OAuth, consider reading one of these articles:
+
+- [OAuth](https://thecopenhagenbook.com/oauth) (The Copenhagen Book)
+- [A beginner's guide to OAuth 2.0](https://pilcrowonpaper.com/blog/oauth-guide/) (by Pilcrow)
+
 ## Create authorization URL
 
 Generate state using `generateState()` and store it as a cookie. Use it to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
