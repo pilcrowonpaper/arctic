@@ -45,6 +45,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Discord
 - Dribbble
 - Dropbox
+- Etsy
 - Epic Games
 - Facebook
 - Figma
