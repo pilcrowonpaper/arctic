@@ -1,5 +1,10 @@
 # arctic
 
+## 2.2.0
+
+- Add Epic Games provider.
+- Add Naver provider.
+
 ## 2.1.0
 
 - Add Epic Games provider.
