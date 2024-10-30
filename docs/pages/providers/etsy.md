@@ -17,14 +17,14 @@ const etsy = new Etsy(clientId, clientSecret, redirectURI);
 ```ts
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
-const scopes = ['listings_r', 'listings_w',];
+const scopes = ["listings_r", "listings_w"];
 
 const url: URL = await etsy.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Cognito returns an access token, the access token expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Etsy returns an access token, the access token expiration, and a refresh token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
@@ -51,17 +51,28 @@ try {
 
 ## Get user profile
 
-Use the Etsy API to fetch user information. Refer to the [Etsy API documentation](https://developer.etsy.com/documentation/essentials/authentication/#scopes) for available endpoints and required scopes.
+Add the `shops_r` and `email_r` scope. First use the [`getMe` endpoint](https://developer.etsy.com/documentation/reference#operation/getMe) to get the user's ID.
 
 ```ts
 const tokens = await etsy.validateAuthorizationCode(code, codeVerifier);
 const response = await fetch("https://openapi.etsy.com/v3/application/users/me", {
 	headers: {
-        x-api-key: <Client_ID>
+		"X-Api-Key": clientId,
+		Authorization: `Bearer ${tokens.accessToken}`
+	}
+});
+const result = await response.json();
+const userId = result.user_id;
+```
+
+Then use the [`getUser` endpoint](https://developer.etsy.com/documentation/reference#operation/getUser) with the user ID to get the user's profile.
+
+```ts
+const response = await fetch(`https://openapi.etsy.com/v3/application/users/${userId}`, {
+	headers: {
+		"X-Api-Key": clientId,
 		Authorization: `Bearer ${tokens.accessToken}`
 	}
 });
 const user = await response.json();
 ```
-
-Note: Make sure to include the necessary scopes (e.g., "profile_r") when creating the authorization URL to access user information.
