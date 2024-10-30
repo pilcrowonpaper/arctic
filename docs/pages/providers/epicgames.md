@@ -77,7 +77,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Epic
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await epicgames.refreshAccessToken(accessToken);
+	const tokens = await epicgames.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();

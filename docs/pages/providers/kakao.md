@@ -73,7 +73,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Kaka
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await kakao.refreshAccessToken(accessToken);
+	const tokens = await kakao.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();

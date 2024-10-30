@@ -63,7 +63,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Link
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await linkedin.refreshAccessToken(accessToken);
+	const tokens = await linkedin.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();

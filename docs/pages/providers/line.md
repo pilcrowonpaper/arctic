@@ -62,7 +62,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Line
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await line.refreshAccessToken(accessToken);
+	const tokens = await line.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {

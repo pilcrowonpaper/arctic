@@ -83,7 +83,7 @@ For GitHub Apps, use `refreshAccessToken()` to get a new access token using a re
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await github.refreshAccessToken(accessToken);
+	const tokens = await github.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();

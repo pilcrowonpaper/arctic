@@ -60,7 +60,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. This
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await bitBucket.refreshAccessToken(accessToken);
+	const tokens = await bitBucket.refreshAccessToken(refreshToken);
 	// Accessing other fields will throw an error
 	const accessToken = tokens.accessToken();
 	const refreshToken = tokens.refreshToken();

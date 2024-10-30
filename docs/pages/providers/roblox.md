@@ -62,7 +62,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Robl
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await roblox.refreshAccessToken(accessToken);
+	const tokens = await roblox.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {

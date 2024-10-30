@@ -61,7 +61,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Tilt
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await tiltify.refreshAccessToken(accessToken);
+	const tokens = await tiltify.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();

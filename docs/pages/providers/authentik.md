@@ -82,7 +82,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. This
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await authentik.refreshAccessToken(accessToken);
+	const tokens = await authentik.refreshAccessToken(refreshToken);
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI

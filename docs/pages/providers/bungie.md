@@ -77,7 +77,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. The 
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await bungie.refreshAccessToken(accessToken);
+	const tokens = await bungie.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();

@@ -61,7 +61,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Figm
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await figma.refreshAccessToken(accessToken);
+	const tokens = await figma.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {

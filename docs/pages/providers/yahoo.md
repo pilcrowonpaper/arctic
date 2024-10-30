@@ -61,7 +61,7 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Yaho
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await yahoo.refreshAccessToken(accessToken);
+	const tokens = await yahoo.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
