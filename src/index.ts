@@ -26,6 +26,7 @@ export { Linear } from "./providers/linear.js";
 export { LinkedIn } from "./providers/linkedin.js";
 export { MicrosoftEntraId } from "./providers/microsoft-entra-id.js";
 export { MyAnimeList } from "./providers/myanimelist.js";
+export { Naver } from "./providers/naver.js";
 export { Notion } from "./providers/notion.js";
 export { Okta } from "./providers/okta.js";
 export { Osu } from "./providers/osu.js";
