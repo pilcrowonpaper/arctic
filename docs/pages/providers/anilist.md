@@ -49,3 +49,28 @@ try {
 	// Parse error
 }
 ```
+
+## Get user profile
+
+Use the `Viewer` query to get the [user object](https://docs.anilist.co/reference/object/user).
+
+```ts
+const query = `query {
+	Viewer {
+		id
+		name
+	}
+}`;
+const response = await fetch("https://graphql.anilist.co", {
+	method: "POST",
+	headers: {
+		Authorization: `Bearer ${tokens.accessToken}`,
+		"Content-Type": "application/json",
+		Accept: "application/json"
+	},
+	body: JSON.stringify({
+		query
+	})
+});
+const user = await response.json();
+```
