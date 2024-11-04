@@ -97,7 +97,7 @@ Set the `access_type` parameter to `offline` to get refresh tokens.
 
 ```ts
 const url = dropbox.createAuthorizationURL(state, scopes);
-url.searchParams.set("access_type", "offline");
+url.searchParams.set("token_access_type", "offline");
 ```
 
 ```ts
