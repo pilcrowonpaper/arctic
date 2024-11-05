@@ -93,7 +93,7 @@ The [`/users/get_current_account` endpoint](https://www.dropbox.com/developers/d
 
 ## Refresh access tokens
 
-Set the `access_type` parameter to `offline` to get refresh tokens.
+Set the `token_access_type` parameter to `offline` to get refresh tokens.
 
 ```ts
 const url = dropbox.createAuthorizationURL(state, scopes);
