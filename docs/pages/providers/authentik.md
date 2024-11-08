@@ -2,7 +2,7 @@
 title: "Authentik"
 ---
 
-# Okta
+# Authentik
 
 OAuth 2.0 provider for Authentik.
 
