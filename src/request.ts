@@ -47,7 +47,7 @@ export async function sendTokenRevocationRequest(request: Request): Promise<void
 	} catch (e) {
 		throw new ArcticFetchError(e);
 	}
-	if (response.ok && response.body === null) {
+	if (response.ok && (response.body === null || response.headers.get("Content-Length") === "0")) {
 		return;
 	}
 	let data: unknown;
