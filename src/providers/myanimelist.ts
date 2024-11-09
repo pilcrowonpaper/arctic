@@ -35,7 +35,10 @@ export class MyAnimeList {
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<OAuth2Tokens> {
+	public async validateAuthorizationCode(
+		code: string,
+		codeVerifier: string
+	): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
 		body.set("grant_type", "authorization_code");
 		body.set("code", code);

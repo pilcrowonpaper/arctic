@@ -1,5 +1,9 @@
 # arctic
 
+## 2.2.2
+
+- Fix MyAnimeList provider.
+
 ## 2.2.1
 
 - Fix GitLab provider endpoints.
