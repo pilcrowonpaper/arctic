@@ -35,10 +35,11 @@ export class MyAnimeList {
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+	public async validateAuthorizationCode(code: string, codeVerifier: string): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
 		body.set("grant_type", "authorization_code");
 		body.set("code", code);
+		body.set("code_verifier", codeVerifier);
 		if (this.redirectURI !== null) {
 			body.set("redirect_uri", this.redirectURI);
 		}
