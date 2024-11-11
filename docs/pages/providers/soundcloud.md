@@ -22,9 +22,9 @@ const soundcloud = new SoundCloud(clientId, clientSecret, redirectURI);
 import { generateState, createS256CodeChallenge } from "arctic";
 
 const state = generateState();
-const s256Challenge = createS256CodeChallenge();
+const codeVerifier = generateCodeVerifier();
 
-const url = soundcloud.createAuthorizationURL(state, s256Challenge);
+const url = soundcloud.createAuthorizationURL(state, codeVerifier);
 ```
 
 ## Validate authorization code
