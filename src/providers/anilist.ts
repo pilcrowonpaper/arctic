@@ -13,7 +13,7 @@ export class AniList {
 	}
 
 	public createAuthorizationURL(state: string): URL {
-		const url = this.client.createAuthorizationURL(authorizationEndpoint, state, []);
+		const url = this.client.createAuthorizationURL(authorizationEndpoint, state, null);
 		return url;
 	}
 
