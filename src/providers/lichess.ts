@@ -32,6 +32,7 @@ export class Lichess {
 		codeVerifier: string
 	): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
+		body.set("client_id", this.clientId);
 		body.set("grant_type", "authorization_code");
 		body.set("code", code);
 		body.set("code_verifier", codeVerifier);
