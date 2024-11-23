@@ -38,6 +38,7 @@ export class Strava {
 		return tokens;
 	}
 
+	// TODO: Remove
 	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
 		body.set("grant_type", "refresh_token");
