@@ -21,10 +21,4 @@ export class Figma {
 		const tokens = await this.client.validateAuthorizationCode(tokenEndpoint, code, null);
 		return tokens;
 	}
-
-	// TODO: Remove
-	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
-		const tokens = await this.client.refreshAccessToken(tokenEndpoint, refreshToken, []);
-		return tokens;
-	}
 }

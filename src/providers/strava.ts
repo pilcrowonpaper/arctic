@@ -37,16 +37,4 @@ export class Strava {
 		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
-
-	// TODO: Remove
-	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
-		const body = new URLSearchParams();
-		body.set("grant_type", "refresh_token");
-		body.set("refresh_token", refreshToken);
-		body.set("client_id", this.clientId);
-		body.set("client_secret", this.clientSecret);
-		const request = createOAuth2Request(tokenEndpoint, body);
-		const tokens = await sendTokenRequest(request);
-		return tokens;
-	}
 }
