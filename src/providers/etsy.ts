@@ -11,6 +11,7 @@ export class Etsy {
 	private clientSecret: string;
 	private redirectURI: string;
 
+	// TODO: Remove client secret
 	constructor(clientId: string, clientSecret: string, redirectURI: string) {
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
