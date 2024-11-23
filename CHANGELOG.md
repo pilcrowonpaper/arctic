@@ -1,8 +1,11 @@
 # arctic
 
-## Next
+## 2.3.0
 
 - Add a generic OAuth 2.0 client.
+- Fix token revocation response checks.
+- Fix `validateAuthorizationCode()` method in Naver provider.
+- [Breaking] Remove `refreshAccessToken()` method from Figma and Strava provider.
 
 ## 2.2.2
 
