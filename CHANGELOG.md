@@ -1,5 +1,9 @@
 # arctic
 
+## Next
+
+- Add a generic OAuth 2.0 client.
+
 ## 2.2.2
 
 - Fix MyAnimeList provider.

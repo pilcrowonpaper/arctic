@@ -6,19 +6,20 @@ import type { OAuth2Tokens } from "./oauth2.js";
 
 export class OAuth2Client {
 	public clientId: string;
-	public clientSecret: string | null;
-	public redirectURI: string | null;
 
-	constructor(clientId: string, clientSecret: string | null, redirectURI: string | null) {
+	private clientPassword: string | null;
+	private redirectURI: string | null;
+
+	constructor(clientId: string, clientPassword: string | null, redirectURI: string | null) {
 		this.clientId = clientId;
-		this.clientSecret = clientSecret;
+		this.clientPassword = clientPassword;
 		this.redirectURI = redirectURI;
 	}
 
 	public createAuthorizationURL(
 		authorizationEndpoint: string,
 		state: string,
-		scopes: string[] | null
+		scopes: string[]
 	): URL {
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set("response_type", "code");
@@ -27,10 +28,7 @@ export class OAuth2Client {
 			url.searchParams.set("redirect_uri", this.redirectURI);
 		}
 		url.searchParams.set("state", state);
-		// Since an empty parameter value is the same as omitting the parameter entirely per the RFC,
-		// we could just use empty arrays, but using `null` feels more consistent
-		// with `clientSecret` and `redirectURI`.
-		if (scopes !== null) {
+		if (scopes.length > 0) {
 			url.searchParams.set("scope", scopes.join(" "));
 		}
 		return url;
@@ -41,7 +39,7 @@ export class OAuth2Client {
 		state: string,
 		codeChallengeMethod: CodeChallengeMethod,
 		codeVerifier: string,
-		scopes: string[] | null
+		scopes: string[]
 	): URL {
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set("response_type", "code");
@@ -58,10 +56,7 @@ export class OAuth2Client {
 			url.searchParams.set("code_challenge_method", "plain");
 			url.searchParams.set("code_challenge", codeVerifier);
 		}
-		// Since an empty parameter value is the same as omitting the parameter entirely per the RFC,
-		// we could just use empty arrays, but using `null` feels more consistent
-		// with `clientSecret` and `redirectURI`.
-		if (scopes !== null) {
+		if (scopes.length > 0) {
 			url.searchParams.set("scope", scopes.join(" "));
 		}
 		return url;
@@ -81,12 +76,12 @@ export class OAuth2Client {
 		if (codeVerifier !== null) {
 			body.set("code_verifier", codeVerifier);
 		}
-		if (this.clientSecret === null) {
+		if (this.clientPassword === null) {
 			body.set("client_id", this.clientId);
 		}
 		const request = createOAuth2Request(tokenEndpoint, body);
-		if (this.clientSecret !== null) {
-			const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		if (this.clientPassword !== null) {
+			const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientPassword);
 			request.headers.set("Authorization", `Basic ${encodedCredentials}`);
 		}
 		const tokens = await sendTokenRequest(request);
@@ -96,20 +91,20 @@ export class OAuth2Client {
 	public async refreshAccessToken(
 		tokenEndpoint: string,
 		refreshToken: string,
-		scopes: string[] | null
+		scopes: string[]
 	): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
 		body.set("grant_type", "refresh_token");
 		body.set("refresh_token", refreshToken);
-		if (this.clientSecret === null) {
+		if (this.clientPassword === null) {
 			body.set("client_id", this.clientId);
 		}
-		if (scopes !== null) {
+		if (scopes.length > 0) {
 			body.set("scope", scopes.join(" "));
 		}
 		const request = createOAuth2Request(tokenEndpoint, body);
-		if (this.clientSecret !== null) {
-			const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		if (this.clientPassword !== null) {
+			const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientPassword);
 			request.headers.set("Authorization", `Basic ${encodedCredentials}`);
 		}
 		const tokens = await sendTokenRequest(request);
@@ -119,12 +114,12 @@ export class OAuth2Client {
 	public async revokeToken(tokenRevocationEndpoint: string, token: string): Promise<void> {
 		const body = new URLSearchParams();
 		body.set("token", token);
-		if (this.clientSecret === null) {
+		if (this.clientPassword === null) {
 			body.set("client_id", this.clientId);
 		}
 		const request = createOAuth2Request(tokenRevocationEndpoint, body);
-		if (this.clientSecret !== null) {
-			const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
+		if (this.clientPassword !== null) {
+			const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientPassword);
 			request.headers.set("Authorization", `Basic ${encodedCredentials}`);
 		}
 		await sendTokenRevocationRequest(request);
