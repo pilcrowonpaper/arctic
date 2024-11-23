@@ -64,6 +64,29 @@ const response = await fetch("https://api.box.com/2.0/users/me", {
 const user = await response.json();
 ```
 
+## Refresh access tokens
+
+Use `refreshAccessToken()` to get a new access token using a refresh token. The behavior is identical to `validateAuthorizationCode()`.
+
+```ts
+import { OAuth2RequestError, ArcticFetchError } from "arctic";
+
+try {
+	const tokens = await box.refreshAccessToken(refreshToken);
+	const accessToken = tokens.accessToken();
+	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
+	const refreshToken = tokens.refreshToken();
+} catch (e) {
+	if (e instanceof OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
+```
+
 ## Revoke tokens
 
 Revoke tokens with `revokeToken()`. Revoking a refresh token will also invalidate access tokens issued with it. It throws the same errors as `validateAuthorizationCode()`.
