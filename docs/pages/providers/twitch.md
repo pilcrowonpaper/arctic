@@ -53,6 +53,34 @@ try {
 }
 ```
 
+## OpenID Connect
+
+Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
+
+Also see [ID token claims](https://dev.twitch.tv/docs/authentication/getting-tokens-oidc/).
+
+```ts
+const scopes = ["openid"];
+const url = twitch.createAuthorizationURL(state, scopes);
+```
+
+```ts
+import { decodeIdToken } from "arctic";
+
+const tokens = await twitch.validateAuthorizationCode(code);
+const idToken = tokens.idToken();
+const claims = decodeIdToken(idToken);
+```
+
+```ts
+const response = await fetch("https://id.twitch.tv/oauth2/userinfo", {
+	headers: {
+		Authorization: `Bearer ${accessToken}`
+	}
+});
+const user = await response.json();
+```
+
 ## Refresh access tokens
 
 Use `refreshAccessToken()` to get a new access token using a refresh token. Twitch returns the same values as during the authorization code validation. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
