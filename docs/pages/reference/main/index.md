@@ -13,8 +13,8 @@ title: "arctic"
 
 ## Functions
 
-- [`generateCodeVerifier()`](https://oauth2.oslojs.dev/reference/main/generateCodeVerifier)
-- [`generateState()`](https://oauth2.oslojs.dev/reference/main/generateState)
+- [`generateCodeVerifier()`](/reference/main/generateCodeVerifier)
+- [`generateState()`](/reference/main/generateState)
 - [`decodeIdToken()`](/reference/main/decodeIdToken)
 
 ## Enums
