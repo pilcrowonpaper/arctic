@@ -4,7 +4,7 @@ title: "OAuth2Client.refreshAccessToken()"
 
 # OAuth2Client.refreshAccessToken()
 
-Refreshes an access token with a refresh token. The `scope` query parameter will not be set if `scopes` parameter is `null`.
+Refreshes an access token with a refresh token. The `scope` request parameter will not be set if `scopes` parameter is a empty array.
 
 ## Definition
 
@@ -13,7 +13,7 @@ Refreshes an access token with a refresh token. The `scope` query parameter will
 async function refreshAccessToken(
 	tokenEndpoint: string,
 	refreshToken: string,
-	scopes: string[] | null
+	scopes: string[]
 ): Promise<$$OAuth2Tokens>;
 ```
 

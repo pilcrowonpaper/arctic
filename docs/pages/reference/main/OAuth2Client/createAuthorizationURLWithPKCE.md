@@ -4,7 +4,7 @@ title: "OAuth2Client.createAuthorizationURLWithPKCE()"
 
 # OAuth2Client.createAuthorizationURLWithPKCE()
 
-Creates an authorization URL for PKCE flow. The `scope` query parameter will not be set if `scopes` parameter is `null`.
+Creates an authorization URL for PKCE flow. The `scope` query parameter will not be set if `scopes` parameter is a empty array.
 
 ## Definition
 
@@ -15,7 +15,7 @@ function createAuthorizationURLWithPKCE(
 	state: string,
 	codeChallengeMethod: $$CodeChallengeMethod,
 	codeVerifier: string,
-	scopes: string[] | null
+	scopes: string[]
 );
 ```
 

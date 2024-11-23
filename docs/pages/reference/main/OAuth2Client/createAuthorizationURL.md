@@ -4,7 +4,7 @@ title: "OAuth2Client.createAuthorizationURL()"
 
 # OAuth2Client.createAuthorizationURL()
 
-Creates an authorization URL. The `scope` query parameter will not be set if `scopes` parameter is `null`.
+Creates an authorization URL. The `scope` query parameter will not be set if `scopes` parameter is a empty array.
 
 ## Definition
 
@@ -12,7 +12,7 @@ Creates an authorization URL. The `scope` query parameter will not be set if `sc
 function createAuthorizationURL(
 	authorizationEndpoint: string,
 	state: string,
-	scopes: string[] | null
+	scopes: string[]
 ): URL;
 ```
 
