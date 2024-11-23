@@ -32,6 +32,7 @@
 				["Dribbble", "/providers/dribbble"],
 				["Dropbox", "/providers/dropbox"],
 				["Epic Games", "/providers/epicgames"],
+				["Etsy", "/providers/etsy"],
 				["Facebook", "/providers/facebook"],
 				["Figma", "/providers/figma"],
 				["GitHub", "/providers/github"],
