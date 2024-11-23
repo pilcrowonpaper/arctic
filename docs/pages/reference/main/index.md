@@ -6,6 +6,7 @@ title: "arctic"
 
 ## Classes
 
+- [`OAuth2Client`](/reference/main/OAuth2Client)
 - [`ArcticFetchError`](/reference/main/ArcticFetchError)
 - [`OAuth2RequestError`](/reference/main/OAuth2RequestError)
 - [`OAuth2Tokens`](/reference/main/OAuth2Tokens)
@@ -15,3 +16,7 @@ title: "arctic"
 - [`generateCodeVerifier()`](https://oauth2.oslojs.dev/reference/main/generateCodeVerifier)
 - [`generateState()`](https://oauth2.oslojs.dev/reference/main/generateState)
 - [`decodeIdToken()`](/reference/main/decodeIdToken)
+
+## Enums
+
+- [`CodeChallengeMethod`](/reference/main/CodeChallengeMethod)

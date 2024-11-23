@@ -1,5 +1,5 @@
 import { createS256CodeChallenge } from "../oauth2.js";
-import { createOAuth2Request, encodeBasicCredentials, sendTokenRequest } from "../request.js";
+import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
