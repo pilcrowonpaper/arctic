@@ -40,7 +40,7 @@ export class Authentik {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
-		const tokens = await this.client.refreshAccessToken(this.tokenEndpoint, refreshToken, null);
+		const tokens = await this.client.refreshAccessToken(this.tokenEndpoint, refreshToken, []);
 		return tokens;
 	}
 

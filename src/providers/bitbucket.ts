@@ -13,7 +13,7 @@ export class Bitbucket {
 	}
 
 	public createAuthorizationURL(state: string): URL {
-		const url = this.client.createAuthorizationURL(authorizationEndpoint, state, null);
+		const url = this.client.createAuthorizationURL(authorizationEndpoint, state, []);
 		return url;
 	}
 
@@ -23,7 +23,7 @@ export class Bitbucket {
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
-		const tokens = await this.client.refreshAccessToken(tokenEndpoint, refreshToken, null);
+		const tokens = await this.client.refreshAccessToken(tokenEndpoint, refreshToken, []);
 		return tokens;
 	}
 }
