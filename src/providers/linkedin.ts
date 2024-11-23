@@ -1,3 +1,4 @@
+// LinkedIn doesn't seem to support HTTP Basic Auth
 import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
