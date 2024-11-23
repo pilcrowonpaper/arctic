@@ -1,10 +1,4 @@
-import { createS256CodeChallenge } from "../oauth2.js";
-import {
-	createOAuth2Request,
-	encodeBasicCredentials,
-	sendTokenRequest,
-	sendTokenRevocationRequest
-} from "../request.js";
+import { CodeChallengeMethod, OAuth2Client } from "../client.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -13,9 +7,7 @@ export class Okta {
 	private tokenEndpoint: string;
 	private tokenRevocationEndpoint: string;
 
-	private clientId: string;
-	private clientSecret: string;
-	private redirectURI: string;
+	private client: OAuth2Client;
 
 	constructor(
 		domain: string,
@@ -31,21 +23,17 @@ export class Okta {
 		this.authorizationEndpoint = baseURL + "/v1/authorize";
 		this.tokenEndpoint = baseURL + "/v1/token";
 		this.tokenRevocationEndpoint = baseURL + "/v1/revoke";
-		this.clientId = clientId;
-		this.clientSecret = clientSecret;
-		this.redirectURI = redirectURI;
+		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
 	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
-		const url = new URL(this.authorizationEndpoint);
-		url.searchParams.set("response_type", "code");
-		url.searchParams.set("client_id", this.clientId);
-		url.searchParams.set("state", state);
-		url.searchParams.set("scope", scopes.join(" "));
-		url.searchParams.set("redirect_uri", this.redirectURI);
-		const codeChallenge = createS256CodeChallenge(codeVerifier);
-		url.searchParams.set("code_challenge_method", "S256");
-		url.searchParams.set("code_challenge", codeChallenge);
+		const url = this.client.createAuthorizationURLWithPKCE(
+			this.authorizationEndpoint,
+			state,
+			CodeChallengeMethod.S256,
+			codeVerifier,
+			scopes
+		);
 		return url;
 	}
 
@@ -53,36 +41,20 @@ export class Okta {
 		code: string,
 		codeVerifier: string
 	): Promise<OAuth2Tokens> {
-		const body = new URLSearchParams();
-		body.set("grant_type", "authorization_code");
-		body.set("code", code);
-		body.set("code_verifier", codeVerifier);
-		body.set("redirect_uri", this.redirectURI);
-		const request = createOAuth2Request(this.tokenEndpoint, body);
-		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
-		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
-		const tokens = await sendTokenRequest(request);
+		const tokens = await this.client.validateAuthorizationCode(
+			this.tokenEndpoint,
+			code,
+			codeVerifier
+		);
 		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string, scopes: string[]): Promise<OAuth2Tokens> {
-		const body = new URLSearchParams();
-		body.set("grant_type", "refresh_token");
-		body.set("refresh_token", refreshToken);
-		body.set("scope", scopes.join(" "));
-		const request = createOAuth2Request(this.tokenEndpoint, body);
-		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
-		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
-		const tokens = await sendTokenRequest(request);
+		const tokens = await this.client.refreshAccessToken(this.tokenEndpoint, refreshToken, scopes);
 		return tokens;
 	}
 
 	public async revokeToken(token: string): Promise<void> {
-		const body = new URLSearchParams();
-		body.set("token", token);
-		const request = createOAuth2Request(this.tokenRevocationEndpoint, body);
-		const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
-		request.headers.set("Authorization", `Basic ${encodedCredentials}`);
-		await sendTokenRevocationRequest(request);
+		await this.client.revokeToken(this.tokenRevocationEndpoint, token);
 	}
 }

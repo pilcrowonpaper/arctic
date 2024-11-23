@@ -39,6 +39,17 @@ export class Box {
 		return tokens;
 	}
 
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
+		body.set("refresh_token", refreshToken);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
+		return tokens;
+	}
+
 	public async revokeToken(token: string): Promise<void> {
 		const body = new URLSearchParams();
 		body.set("token", token);

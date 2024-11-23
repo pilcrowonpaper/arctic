@@ -13,10 +13,10 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 The redirect URI is optional.
 
 ```ts
-import { SlackOIDC } from "arctic";
+import { Slack } from "arctic";
 
-const slack = new SlackOIDC(clientId, clientSecret, null);
-const slack = new SlackOIDC(clientId, clientSecret, redirectURI);
+const slack = new Slack(clientId, clientSecret, null);
+const slack = new Slack(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
