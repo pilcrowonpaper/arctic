@@ -1,5 +1,4 @@
-import { createS256CodeChallenge } from "../oauth2.js";
-import { createOAuth2Request, sendTokenRequest } from "../request.js";
+import { CodeChallengeMethod, OAuth2Client } from "../client.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -7,27 +6,21 @@ const authorizationEndpoint = "https://www.etsy.com/oauth/connect";
 const tokenEndpoint = "https://api.etsy.com/v3/public/oauth/token";
 
 export class Etsy {
-	private clientId: string;
-	private clientSecret: string;
-	private redirectURI: string;
+	private client: OAuth2Client;
 
-	// TODO: Remove client secret
-	constructor(clientId: string, clientSecret: string, redirectURI: string) {
-		this.clientId = clientId;
-		this.clientSecret = clientSecret;
-		this.redirectURI = redirectURI;
+	// v3: Remove `_ignore`
+	constructor(clientId: string, _ignore: any, redirectURI: string) {
+		this.client = new OAuth2Client(clientId, null, redirectURI);
 	}
 
 	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
-		const url = new URL(authorizationEndpoint);
-		url.searchParams.set("response_type", "code");
-		url.searchParams.set("client_id", this.clientId);
-		url.searchParams.set("state", state);
-		url.searchParams.set("scope", scopes.join(" "));
-		url.searchParams.set("redirect_uri", this.redirectURI);
-		const codeChallenge = createS256CodeChallenge(codeVerifier);
-		url.searchParams.set("code_challenge_method", "S256");
-		url.searchParams.set("code_challenge", codeChallenge);
+		const url = this.client.createAuthorizationURLWithPKCE(
+			authorizationEndpoint,
+			state,
+			CodeChallengeMethod.S256,
+			codeVerifier,
+			scopes
+		);
 		return url;
 	}
 
@@ -35,26 +28,12 @@ export class Etsy {
 		code: string,
 		codeVerifier: string
 	): Promise<OAuth2Tokens> {
-		const body = new URLSearchParams();
-		body.set("grant_type", "authorization_code");
-		body.set("code", code);
-		body.set("code_verifier", codeVerifier);
-		body.set("redirect_uri", this.redirectURI);
-		body.set("client_id", this.clientId);
-		body.set("client_secret", this.clientSecret);
-		const request = createOAuth2Request(tokenEndpoint, body);
-		const tokens = await sendTokenRequest(request);
+		const tokens = await this.client.validateAuthorizationCode(tokenEndpoint, code, codeVerifier);
 		return tokens;
 	}
 
 	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
-		const body = new URLSearchParams();
-		body.set("grant_type", "refresh_token");
-		body.set("refresh_token", refreshToken);
-		body.set("client_id", this.clientId);
-		body.set("client_secret", this.clientSecret);
-		const request = createOAuth2Request(tokenEndpoint, body);
-		const tokens = await sendTokenRequest(request);
+		const tokens = await this.client.refreshAccessToken(tokenEndpoint, refreshToken, []);
 		return tokens;
 	}
 }
