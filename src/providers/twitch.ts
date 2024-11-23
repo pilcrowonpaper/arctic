@@ -1,3 +1,4 @@
+// Does not support HTTP Basic Auth scheme.
 import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
