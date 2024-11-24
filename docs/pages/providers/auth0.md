@@ -120,7 +120,7 @@ Revoke tokens with `revokeToken()`. Currently, only refresh tokens can be revoke
 
 ```ts
 try {
-	await box.revokeToken(refreshToken);
+	await auth0.revokeToken(refreshToken);
 } catch (e) {
 	// Handle errors
 }
