@@ -48,7 +48,14 @@ const url = apple.createAuthorizationURL(state, scopes);
 
 ### Requesting scopes
 
-When requesting scopes, the `response_mode` param must be set to `form_post`. Unlike the default `"query"` response mode, **Apple will send an application/x-www-form-urlencoded POST request as the callback,** and the user JSON object will be sent in the request body. This is only available the first time the user signs in.
+When requesting scopes, the `response_mode` query parameter must be set to `form_post`. 
+
+```ts
+const url = apple.createAuthorizationURL(state, scopes);
+url.searchParams.set("response_mode", "form_post");
+```
+
+Unlike the default `"query"` response mode, **Apple will send an application/x-www-form-urlencoded POST request as the callback,** and the user JSON object will be sent in the request body. This is only available the first time the user signs in.
 
 Since this is a cross-origin form request, make sure to relax your CSRF protections, including setting `SameSite` attribute of the state cookie to `None`.
 
