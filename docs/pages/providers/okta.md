@@ -67,7 +67,8 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Okta
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await okta.refreshAccessToken(accessToken, scopes);
+	// Pass an empty `scopes` array to keep using the same scopes.
+	const tokens = await okta.refreshAccessToken(refreshToken, scopes);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {

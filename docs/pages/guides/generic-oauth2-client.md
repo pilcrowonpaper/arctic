@@ -88,6 +88,7 @@ Use `OAuth2Client.refreshAccessToken()` to refresh access tokens. This also retu
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
+	// Pass an empty `scopes` array to keep using the same scopes.
 	const tokens = await client.refreshAccessToken(tokenEndpoint, refreshToken, scopes);
 	const accessToken = tokens.accessToken();
 } catch (e) {

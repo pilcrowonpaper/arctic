@@ -65,7 +65,8 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. This
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await cognito.refreshAccessToken(refreshToken);
+	// Pass an empty `scopes` array to keep using the same scopes.
+	const tokens = await cognito.refreshAccessToken(refreshToken, scopes);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {

@@ -41,9 +41,8 @@ export class AmazonCognito {
 		return tokens;
 	}
 
-	// TODO: Add `scopes` parameter
-	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
-		const tokens = await this.client.refreshAccessToken(this.tokenEndpoint, refreshToken, []);
+	public async refreshAccessToken(refreshToken: string, scopes: string[]): Promise<OAuth2Tokens> {
+		const tokens = await this.client.refreshAccessToken(this.tokenEndpoint, refreshToken, scopes);
 		return tokens;
 	}
 
