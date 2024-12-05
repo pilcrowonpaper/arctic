@@ -1,4 +1,5 @@
 import { CodeChallengeMethod, OAuth2Client } from "../client.js";
+import { joinURIAndPath } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -9,10 +10,10 @@ export class Authentik {
 
 	private client: OAuth2Client;
 
-	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.authorizationEndpoint = `https://${domain}/application/o/authorize/`;
-		this.tokenEndpoint = `https://${domain}/application/o/token/`;
-		this.tokenRevocationEndpoint = `https://${domain}/application/o/revoke`;
+	constructor(baseURL: string, clientId: string, clientSecret: string, redirectURI: string) {
+		this.authorizationEndpoint = joinURIAndPath(baseURL, "/application/o/authorize");
+		this.tokenEndpoint = joinURIAndPath(baseURL, "/application/o/token");
+		this.tokenRevocationEndpoint = joinURIAndPath(baseURL, "/application/o/revoke");
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 

@@ -10,12 +10,12 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
-The `domain` parameter should not include the protocol or path.
+The `baseURL` parameter is the full URL where the Authentik instance is hosted.
 
 ```ts
 import { Authentik } from "arctic";
 
-const domain = "auth.example.com";
+const domain = "https://my-app.com/authentik";
 const authentik = new Authentik(domain, clientId, clientSecret, redirectURI);
 ```
 

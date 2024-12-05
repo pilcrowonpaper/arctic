@@ -10,13 +10,15 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
-The `domain` parameter should not include the protocol or path. Use `gitlab.com` for GitLab.com.
+The `baseURL` parameter is the full URL where the GitLab instance is hosted. Use `https://gitlab.com` for managed servers.
 
 ```ts
 import { GitLab } from "arctic";
 
-const gitlab = new GitLab("gitlab.com", clientId, clientSecret, redirectURI);
-const gitlab = new GitLab(domain, clientId, clientSecret, redirectURI);
+const baseURL = "https://gitlab.com";
+const baseURL = "https://my-app.com/gitlab";
+const gitlab = new GitLab(baseURL, clientId, clientSecret, redirectURI);
+const gitlab = new GitLab(baseURL, clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL

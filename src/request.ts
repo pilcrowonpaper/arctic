@@ -1,5 +1,15 @@
 import { encodeBase64 } from "@oslojs/encoding";
 import { OAuth2Tokens } from "./oauth2.js";
+import { trimLeft, trimRight } from "./utils.js";
+
+export function joinURIAndPath(base: string, ...path: string[]): string {
+	let joined = trimRight(base, "/");
+	for (const part of path) {
+		joined += "/";
+		joined += trimRight(trimLeft(part, "/"), "/");
+	}
+	return joined;
+}
 
 export function createOAuth2Request(endpoint: string, body: URLSearchParams): Request {
 	const request = new Request(endpoint, {
