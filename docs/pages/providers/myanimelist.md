@@ -10,9 +10,12 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
+The redirect URI is optional.
+
 ```ts
 import { MyAnimeList } from "arctic";
 
+const mal = new MyAnimeList(clientId, clientSecret, null);
 const mal = new MyAnimeList(clientId, clientSecret, redirectURI);
 ```
 
