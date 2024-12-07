@@ -9,7 +9,7 @@ export class Salesforce {
 
 	private client: OAuth2Client;
 
-	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
+	constructor(domain: string, clientId: string, clientSecret: string | null, redirectURI: string) {
 		this.authorizationEndpoint = `https://${domain}/services/oauth2/authorize`;
 		this.tokenEndpoint = `https://${domain}/services/oauth2/token`;
 		this.tokenRevocationEndpoint = `https://${domain}/services/oauth2/revoke`;

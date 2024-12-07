@@ -51,7 +51,7 @@ const url = client.createAuthorizationURLWithPKCE(
 
 ## Validate authorization code
 
-Use `OAuth2Client.validateAuthorizationCode()` to validate authorization codes. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens) instance, or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors).
+Use `OAuth2Client.validateAuthorizationCode()` to validate authorization codes. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens) instance, or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError)..
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
@@ -88,6 +88,7 @@ Use `OAuth2Client.refreshAccessToken()` to refresh access tokens. This also retu
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
+	// Pass an empty `scopes` array to keep using the same scopes.
 	const tokens = await client.refreshAccessToken(tokenEndpoint, refreshToken, scopes);
 	const accessToken = tokens.accessToken();
 } catch (e) {

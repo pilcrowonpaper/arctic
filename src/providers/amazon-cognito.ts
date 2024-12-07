@@ -9,10 +9,10 @@ export class AmazonCognito {
 
 	private client: OAuth2Client;
 
-	constructor(userPool: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.authorizationEndpoint = userPool + "/oauth2/authorize";
-		this.tokenEndpoint = userPool + "/oauth2/token";
-		this.tokenRevocationEndpoint = userPool + "/oauth2/revoke";
+	constructor(domain: string, clientId: string, clientSecret: string | null, redirectURI: string) {
+		this.authorizationEndpoint = `https://${domain}/oauth2/authorize`;
+		this.tokenEndpoint = `https://${domain}/oauth2/token`;
+		this.tokenRevocationEndpoint = `https://${domain}/oauth2/revoke`;
 
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
@@ -40,9 +40,8 @@ export class AmazonCognito {
 		return tokens;
 	}
 
-	// TODO: Add `scopes` parameter
-	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
-		const tokens = await this.client.refreshAccessToken(this.tokenEndpoint, refreshToken, []);
+	public async refreshAccessToken(refreshToken: string, scopes: string[]): Promise<OAuth2Tokens> {
+		const tokens = await this.client.refreshAccessToken(this.tokenEndpoint, refreshToken, scopes);
 		return tokens;
 	}
 

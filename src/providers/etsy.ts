@@ -8,8 +8,7 @@ const tokenEndpoint = "https://api.etsy.com/v3/public/oauth/token";
 export class Etsy {
 	private client: OAuth2Client;
 
-	// v3: Remove `_ignore`
-	constructor(clientId: string, _ignore: any, redirectURI: string) {
+	constructor(clientId: string, redirectURI: string) {
 		this.client = new OAuth2Client(clientId, null, redirectURI);
 	}
 

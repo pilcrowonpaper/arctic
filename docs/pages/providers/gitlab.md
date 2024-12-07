@@ -10,13 +10,15 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
-The `domain` parameter should not include the protocol or path. Use `gitlab.com` for GitLab.com.
+The `baseURL` parameter is the full URL where the GitLab instance is hosted. Use `https://gitlab.com` for managed servers. Pass the client secret for confidential clients.
 
 ```ts
 import { GitLab } from "arctic";
 
-const gitlab = new GitLab("gitlab.com", clientId, clientSecret, redirectURI);
-const gitlab = new GitLab(domain, clientId, clientSecret, redirectURI);
+const baseURL = "https://gitlab.com";
+const baseURL = "https://my-app.com/gitlab";
+const gitlab = new GitLab(baseURL, clientId, clientSecret, redirectURI);
+const gitlab = new GitLab(baseURL, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
@@ -31,7 +33,7 @@ const url = gitlab.createAuthorizationURL(state, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). GitLab returns an access token, the access token expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). GitLab returns an access token, the access token expiration, and a refresh token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
