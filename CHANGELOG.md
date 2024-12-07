@@ -8,6 +8,8 @@
 - [Breaking] Replaced `poolURL` parameter with `domain` parameter for `AmazonCognito` constructor.
 - [Breaking] Add `scopes` parameter to `refreshAccessToken()` in `AmazonCognito`, `MicrosoftEntraId`.
 - [Breaking] Update `MyAnimeList` constructor.
+- [Breaking] Stricter compliance to RFC 6749 for `OAuth2Client`.
+- Add `UnexpectedResponseError` and `UnexpectedErrorResponseBodyError` errors.
 - Allow `null` as `clientSecret` in `AmazonCognito`, `Auth0`, `Authentik`, `Bungie`, `Discord`, `GitLab`, `KeyCloak`, `MicrosoftEntraId`, `Roblox`, `Salesforce`, `Spotify`, `Twitter`, `WorkOS` constructor.
 - Fix `scopes` parameter in `Strava.createAuthorizationURL()`.
 

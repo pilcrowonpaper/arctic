@@ -29,7 +29,7 @@ const url = polar.createAuthorizationURL(state, codeVerifier, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Polar returns an access token, its expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Polar returns an access token, its expiration, and a refresh token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

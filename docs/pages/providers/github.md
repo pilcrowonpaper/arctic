@@ -31,7 +31,7 @@ const url = github.createAuthorizationURL(state, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). OAuth Apps will only return an access token (no expiration).
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). OAuth Apps will only return an access token (no expiration).
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

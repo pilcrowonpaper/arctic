@@ -32,4 +32,4 @@ interface Properties {
 }
 ```
 
-- `data`: The raw JSON-parsed response body.
+- `data`: `JSON.parse()`-ed response body.

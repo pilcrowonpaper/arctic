@@ -69,7 +69,7 @@ Since this is a cross-origin form request, make sure to relax your CSRF protecti
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). The ID token will always be returned regardless of the scope. T access token and refresh token currently does not have any uses.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). The ID token will always be returned regardless of the scope. T access token and refresh token currently does not have any uses.
 
 Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the ID token's payload.
 

@@ -45,7 +45,7 @@ return redirect(url);
 
 ## Validate authorization code
 
-Compare the state, and use `validateAuthorizationCode()` to validate the authorization code and code verifier. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors).
+Compare the state, and use `validateAuthorizationCode()` to validate the authorization code and code verifier. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError)..
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

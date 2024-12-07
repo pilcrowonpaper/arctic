@@ -28,7 +28,7 @@ const url = startgg.createAuthorizationURL(state, scopes);
 
 ## Validate authorization code
 
-Start.gg requires a list of scopes in addition to the authorization code. `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Start.gg returns an access token, the access token expiration, and a refresh token.
+Start.gg requires a list of scopes in addition to the authorization code. `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Start.gg returns an access token, the access token expiration, and a refresh token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

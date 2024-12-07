@@ -28,7 +28,9 @@ const url = facebook.createAuthorizationURL(state, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Facebook will return an access token with an expiration.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Facebook will return an access token with an expiration.
+
+Unlike other providers, this will not throw `OAuth2RequestError`. Facebook's error response is not compliant with the RFC and you must manually parse the response body to get the specific error message.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
@@ -38,9 +40,9 @@ try {
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof UnexpectedErrorResponseBody) {
 		// Invalid authorization code, credentials, or redirect URI
-		const code = e.code;
+		const responseBody = e.data;
 		// ...
 	}
 	if (e instanceof ArcticFetchError) {
