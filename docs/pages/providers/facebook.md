@@ -33,14 +33,14 @@ const url = facebook.createAuthorizationURL(state, scopes);
 Unlike other providers, this will not throw `OAuth2RequestError`. Facebook's error response is not compliant with the RFC and you must manually parse the response body to get the specific error message.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import { UnexpectedErrorResponseBodyError, ArcticFetchError } from "arctic";
 
 try {
 	const tokens = await facebook.validateAuthorizationCode(code);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
-	if (e instanceof UnexpectedErrorResponseBody) {
+	if (e instanceof UnexpectedErrorResponseBodyError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const responseBody = e.data;
 		// ...
