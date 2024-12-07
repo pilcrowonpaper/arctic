@@ -10,7 +10,7 @@ export class GitLab {
 
 	private client: OAuth2Client;
 
-	constructor(baseURL: string, clientId: string, clientSecret: string, redirectURI: string) {
+	constructor(baseURL: string, clientId: string, clientSecret: string | null, redirectURI: string) {
 		this.authorizationEndpoint = joinURIAndPath(baseURL, "/oauth/authorize");
 		this.tokenEndpoint = joinURIAndPath(baseURL, "/oauth/token");
 		this.tokenRevocationEndpoint = joinURIAndPath(baseURL, "/oauth/revoke");

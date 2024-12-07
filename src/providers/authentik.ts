@@ -10,7 +10,7 @@ export class Authentik {
 
 	private client: OAuth2Client;
 
-	constructor(baseURL: string, clientId: string, clientSecret: string, redirectURI: string) {
+	constructor(baseURL: string, clientId: string, clientSecret: string | null, redirectURI: string) {
 		this.authorizationEndpoint = joinURIAndPath(baseURL, "/application/o/authorize");
 		this.tokenEndpoint = joinURIAndPath(baseURL, "/application/o/token");
 		this.tokenRevocationEndpoint = joinURIAndPath(baseURL, "/application/o/revoke");

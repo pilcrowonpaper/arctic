@@ -9,7 +9,7 @@ export class MicrosoftEntraId {
 
 	private client: OAuth2Client;
 
-	constructor(tenant: string, clientId: string, clientSecret: string, redirectURI: string) {
+	constructor(tenant: string, clientId: string, clientSecret: string | null, redirectURI: string) {
 		this.authorizationEndpoint = joinURIAndPath(
 			"https://login.microsoftonline.com",
 			tenant,

@@ -8,13 +8,19 @@ Implements OAuth 2.0 with PKCE.
 
 For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
 
+## Initialization
+
 ```ts
 import { Etsy } from "arctic";
 
-const etsy = new Etsy(clientId, clientSecret, redirectURI);
+const etsy = new Etsy(clientId, redirectURI);
 ```
 
+## Create authorization URL
+
 ```ts
+import { generateState, generateCodeVerifier } from "arctic";
+
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
 const scopes = ["listings_r", "listings_w"];

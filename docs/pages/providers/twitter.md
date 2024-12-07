@@ -10,10 +10,13 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
+Pass the client secret for confidential clients.
+
 ```ts
 import { Twitter } from "arctic";
 
 const twitter = new Twitter(clientId, clientSecret, redirectURI);
+const twitter = new Twitter(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL

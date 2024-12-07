@@ -10,10 +10,13 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
+Pass the client secret for confidential clients.
+
 ```ts
 import { WorkOS } from "arctic";
 
 const workos = new WorkOS(clientId, clientSecret, redirectURI);
+const workos = new WorkOS(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
@@ -27,13 +30,15 @@ const url = workos.createAuthorizationURL(state);
 
 ## Validate authorization code
 
+For confidential clients, pass the authorization code.
+
 `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). WorkOS will only return an access token (no expiration).
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await workos.validateAuthorizationCode(code);
+	const tokens = await workos.validateAuthorizationCode(code, null);
 	const accessToken = tokens.accessToken();
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
@@ -48,6 +53,12 @@ try {
 	}
 	// Parse error
 }
+```
+
+For public clients, pass the authorization code and code verifier.
+
+```ts
+const tokens = await workos.validateAuthorizationCode(code, codeVerifier);
 ```
 
 ## Get user profile

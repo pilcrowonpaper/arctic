@@ -10,10 +10,13 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
+Pass the client secret for confidential clients.
+
 ```ts
 import { Bungie } from "arctic";
 
 const bungie = new Bungie(clientId, clientSecret, redirectURI);
+const bungie = new Bungie(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL

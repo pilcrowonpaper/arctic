@@ -1,5 +1,12 @@
 # arctic
 
+## 3.0.0
+
+- [Breaking] Remove `clientSecret` parameter from `Etsy` constructor.
+- [Breaking] Add `codeVerifier` parameter to `createAuthorizationURL()` and `validateAuthorizationCode()` in `Auth0`, `Discord`, `Spotify`, `WorkOS`.
+- [Breaking] Replaced `domain` parameter with `baseURL` parameter for `Authentik`, `GitLab` constructor.
+- Allow `null` as `clientSecret` argument in `AmazonCognito`, `Auth0`, `Authentik`, `Bungie`, `Discord`, `GitLab`, `KeyCloak`, `MicrosoftEntraId`, `Roblox`, `Salesforce`, `Spotify`, `Twitter`, `WorkOS` constructor.
+
 ## 2.3.0
 
 - Add a generic OAuth 2.0 client.

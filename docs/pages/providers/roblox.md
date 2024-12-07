@@ -10,10 +10,13 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
+Pass the client secret for confidential clients.
+
 ```ts
 import { Roblox } from "arctic";
 
 const roblox = new Roblox(clientId, clientSecret, redirectURI);
+const roblox = new Roblox(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL

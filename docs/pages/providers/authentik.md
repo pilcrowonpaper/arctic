@@ -10,13 +10,14 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
-The `baseURL` parameter is the full URL where the Authentik instance is hosted.
+The `baseURL` parameter is the full URL where the Authentik instance is hosted. Pass the client secret for confidential clients.
 
 ```ts
 import { Authentik } from "arctic";
 
-const domain = "https://my-app.com/authentik";
-const authentik = new Authentik(domain, clientId, clientSecret, redirectURI);
+const baseURL = "https://my-app.com/authentik";
+const authentik = new Authentik(baseURL, clientId, clientSecret, redirectURI);
+const authentik = new Authentik(baseURL, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL

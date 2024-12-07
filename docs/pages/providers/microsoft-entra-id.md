@@ -10,12 +10,13 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
-See [Endpoints](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints) for more on the `tenant` parameter.
+See [Endpoints](https://learn.microsoft.com/en-us/entra/identity-platform/v2-protocols#endpoints) for more on the `tenant` parameter. Pass the client secret for confidential clients.
 
 ```ts
 import { MicrosoftEntraId } from "arctic";
 
 const entraId = new MicrosoftEntraId(tenant, clientId, clientSecret, redirectURI);
+const entraId = new MicrosoftEntraId(tenant, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL

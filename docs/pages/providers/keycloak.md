@@ -10,13 +10,14 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
-The realm URL should not include trailing slashes.
+Pass the client secret for confidential clients.
 
 ```ts
 import { KeyCloak } from "arctic";
 
 const realmURL = "https://auth.example.com/realms/myrealm";
 const keycloak = new KeyCloak(realmURL, clientId, clientSecret, redirectURI);
+const keycloak = new KeyCloak(realmURL, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL

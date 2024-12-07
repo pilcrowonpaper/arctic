@@ -10,13 +10,14 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
-The `domain` parameter should not include paths or protocol.
+The `domain` parameter should not include paths or protocol. Pass the client secret for confidential clients.
 
 ```ts
 import { Salesforce } from "arctic";
 
 const domain = "login.salesforce.com";
 const salesforce = new Salesforce(domain, clientId, clientSecret, redirectURI);
+const salesforce = new Salesforce(domain, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL

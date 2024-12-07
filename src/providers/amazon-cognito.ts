@@ -10,7 +10,12 @@ export class AmazonCognito {
 
 	private client: OAuth2Client;
 
-	constructor(userPool: string, clientId: string, clientSecret: string, redirectURI: string) {
+	constructor(
+		userPool: string,
+		clientId: string,
+		clientSecret: string | null,
+		redirectURI: string
+	) {
 		this.authorizationEndpoint = joinURIAndPath(userPool, "/oauth2/authorize");
 		this.tokenEndpoint = joinURIAndPath(userPool, "/oauth2/token");
 		this.tokenRevocationEndpoint = joinURIAndPath(userPool, "/oauth2/revoke");

@@ -6,24 +6,40 @@ title: "Discord"
 
 OAuth 2.0 provider for Discord.
 
-Also see the [OAuth 2.0](/guides/oauth2) guide.
+Also see the [OAuth 2.0](/guides/oauth2) guide for confidential clients and the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide for public clients.
 
 ## Initialization
+
+Pass the client secret for confidential clients.
 
 ```ts
 import { Discord } from "arctic";
 
 const discord = new Discord(clientId, clientSecret, redirectURI);
+const discord = new Discord(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
+
+For confidential clients, pass the state and scopes. **PKCE is not supported for confidential clients.**
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const scopes = ["email", "activities.read"];
-const url = discord.createAuthorizationURL(state, scopes);
+const url = discord.createAuthorizationURL(state, null, scopes);
+```
+
+For public clients, pass the state, PKCE code verifier, and scopes.
+
+```ts
+import { generateState, generateCodeVerifier } from "arctic";
+
+const state = generateState();
+const codeVerifier = generateCodeVerifier();
+const scopes = ["email", "activities.read"];
+const url = discord.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code

@@ -10,13 +10,14 @@ Also see [OAuth 2.0 with PKCE](/guides/oauth2-pkce).
 
 ## Initialization
 
-The user pool should not include trailing slashes.
+Pass a client secret for confidential clients.
 
 ```ts
 import { AmazonCognito } from "arctic";
 
 const userPool = "https://cognito-idp.{region}.amazonaws.com/{pool-id}";
 const cognito = new AmazonCognito(userPool, clientId, clientSecret, redirectURI);
+const cognito = new AmazonCognito(userPool, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL

@@ -6,30 +6,46 @@ title: "Auth0"
 
 OAuth 2.0 provider for Auth0.
 
-Also see the [OAuth 2.0](/guides/oauth2) guide.
+Also see the [OAuth 2.0](/guides/oauth2) guide for confidential clients and the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide for public clients.
 
 ## Initialization
 
-The domain should not include the protocol or path.
+The domain should not include the protocol or path. Pass the client secret for confidential clien.ts
 
 ```ts
 import { Auth0 } from "arctic";
 
 const domain = "xxx.auth0.com";
 const auth0 = new Auth0(domain, clientId, clientSecret, redirectURI);
+const auth0 = new Auth0(domain, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
+
+For confidential clients, pass the state and scopes. **PKCE is not supported for confidential clients.**
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const scopes = ["openid", "profile"];
-const url = auth0.createAuthorizationURL(state, scopes);
+const url = auth0.createAuthorizationURL(state, null, scopes);
+```
+
+For public clients, pass the state, PKCE code verifier, and scopes.
+
+```ts
+import { generateState, generateCodeVerifier } from "arctic";
+
+const state = generateState();
+const codeVerifier = generateCodeVerifier();
+const scopes = ["openid", "profile"];
+const url = auth0.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
+
+For confidential clients, pass the authorization code.
 
 `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Auth0 returns an access token, the access token expiration, and a refresh token.
 
@@ -37,7 +53,7 @@ const url = auth0.createAuthorizationURL(state, scopes);
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await auth0.validateAuthorizationCode(code);
+	const tokens = await auth0.validateAuthorizationCode(code, null);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
@@ -54,6 +70,12 @@ try {
 	}
 	// Parse error
 }
+```
+
+For public clients, pass the authorization code and code verifier.
+
+```ts
+const tokens = await auth0.validateAuthorizationCode(code, codeVerifier);
 ```
 
 ## Refresh access tokens
