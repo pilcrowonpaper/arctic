@@ -10,14 +10,14 @@ Also see [OAuth 2.0 with PKCE](/guides/oauth2-pkce).
 
 ## Initialization
 
-Pass a client secret for confidential clients.
+The domain should not include the protocol or path. Pass a client secret for confidential clients.
 
 ```ts
 import { AmazonCognito } from "arctic";
 
-const userPool = "https://cognito-idp.{region}.amazonaws.com/{pool-id}";
-const cognito = new AmazonCognito(userPool, clientId, clientSecret, redirectURI);
-const cognito = new AmazonCognito(userPool, clientId, null, redirectURI);
+const domain = "{pool-domain}.auth.{region}.amazoncognito.com";
+const cognito = new AmazonCognito(domain, clientId, clientSecret, redirectURI);
+const cognito = new AmazonCognito(domain, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL

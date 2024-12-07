@@ -1,5 +1,4 @@
 import { OAuth2Client, CodeChallengeMethod } from "../client.js";
-import { joinURIAndPath } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -10,15 +9,10 @@ export class AmazonCognito {
 
 	private client: OAuth2Client;
 
-	constructor(
-		userPool: string,
-		clientId: string,
-		clientSecret: string | null,
-		redirectURI: string
-	) {
-		this.authorizationEndpoint = joinURIAndPath(userPool, "/oauth2/authorize");
-		this.tokenEndpoint = joinURIAndPath(userPool, "/oauth2/token");
-		this.tokenRevocationEndpoint = joinURIAndPath(userPool, "/oauth2/revoke");
+	constructor(domain: string, clientId: string, clientSecret: string | null, redirectURI: string) {
+		this.authorizationEndpoint = `https://${domain}/oauth2/authorize`;
+		this.tokenEndpoint = `https://${domain}/oauth2/token`;
+		this.tokenRevocationEndpoint = `https://${domain}/oauth2/revoke`;
 
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}

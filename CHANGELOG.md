@@ -5,7 +5,11 @@
 - [Breaking] Remove `clientSecret` parameter from `Etsy` constructor.
 - [Breaking] Add `codeVerifier` parameter to `createAuthorizationURL()` and `validateAuthorizationCode()` in `Auth0`, `Discord`, `Spotify`, `WorkOS`.
 - [Breaking] Replaced `domain` parameter with `baseURL` parameter for `Authentik`, `GitLab` constructor.
-- Allow `null` as `clientSecret` argument in `AmazonCognito`, `Auth0`, `Authentik`, `Bungie`, `Discord`, `GitLab`, `KeyCloak`, `MicrosoftEntraId`, `Roblox`, `Salesforce`, `Spotify`, `Twitter`, `WorkOS` constructor.
+- [Breaking] Replaced `poolURL` parameter with `domain` parameter for `AmazonCognito` constructor.
+- [Breaking] Add `scopes` parameter to `refreshAccessToken()` in `AmazonCognito`, `MicrosoftEntraId`.
+- [Breaking] Update `MyAnimeList` constructor.
+- Allow `null` as `clientSecret` in `AmazonCognito`, `Auth0`, `Authentik`, `Bungie`, `Discord`, `GitLab`, `KeyCloak`, `MicrosoftEntraId`, `Roblox`, `Salesforce`, `Spotify`, `Twitter`, `WorkOS` constructor.
+- Fix `scopes` parameter in `Strava.createAuthorizationURL()`.
 
 ## 2.3.0
 
