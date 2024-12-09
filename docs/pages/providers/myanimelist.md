@@ -10,9 +10,12 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
+The redirect URI is optional.
+
 ```ts
 import { MyAnimeList } from "arctic";
 
+const mal = new MyAnimeList(clientId, clientSecret, null);
 const mal = new MyAnimeList(clientId, clientSecret, redirectURI);
 ```
 
@@ -28,7 +31,7 @@ const url = mal.createAuthorizationURL(state, codeVerifier);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). MyAnimeList returns an access token, the access token expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). MyAnimeList returns an access token, the access token expiration, and a refresh token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

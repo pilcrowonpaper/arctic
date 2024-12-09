@@ -10,31 +10,49 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 
 ## Initialization
 
+Pass the client secret for confidential clients.
+
 ```ts
 import { Spotify } from "arctic";
 
 const spotify = new Spotify(clientId, clientSecret, redirectURI);
+const spotify = new Spotify(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
+
+For confidential clients, pass the state and scopes. **PKCE is not supported for confidential clients.**
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const scopes = ["user-read-email", "user-read-private"];
-const url = spotify.createAuthorizationURL(state, scopes);
+const url = spotify.createAuthorizationURL(state, null, scopes);
+```
+
+For public clients, pass the state, PKCE code verifier, and scopes.
+
+```ts
+import { generateState, generateCodeVerifier } from "arctic";
+
+const state = generateState();
+const codeVerifier = generateCodeVerifier();
+const scopes = ["user-read-email", "user-read-private"];
+const url = spotify.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Spotify returns an access token, the access token expiration, and a refresh token.
+For confidential clients, pass the authorization code.
+
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Spotify returns an access token, the access token expiration, and a refresh token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await spotify.validateAuthorizationCode(code);
+	const tokens = await spotify.validateAuthorizationCode(code, null);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
@@ -51,6 +69,12 @@ try {
 	}
 	// Parse error
 }
+```
+
+For public clients, pass the authorization code and code verifier.
+
+```ts
+const tokens = await spotify.validateAuthorizationCode(code, codeVerifier);
 ```
 
 ## Refresh access tokens

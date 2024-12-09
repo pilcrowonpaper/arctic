@@ -8,13 +8,19 @@ Implements OAuth 2.0 with PKCE.
 
 For usage, see [OAuth 2.0 provider with PKCE](/guides/oauth2-pkce).
 
+## Initialization
+
 ```ts
 import { Etsy } from "arctic";
 
-const etsy = new Etsy(clientId, clientSecret, redirectURI);
+const etsy = new Etsy(clientId, redirectURI);
 ```
 
+## Create authorization URL
+
 ```ts
+import { generateState, generateCodeVerifier } from "arctic";
+
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
 const scopes = ["listings_r", "listings_w"];
@@ -24,7 +30,7 @@ const url: URL = await etsy.createAuthorizationURL(state, codeVerifier, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Etsy returns an access token, the access token expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Etsy returns an access token, the access token expiration, and a refresh token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

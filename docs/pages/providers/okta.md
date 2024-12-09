@@ -34,7 +34,7 @@ const url = okta.createAuthorizationURL(state, codeVerifier, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Actual values returned by Okta depends on your configuration.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Actual values returned by Okta depends on your configuration.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
@@ -67,7 +67,8 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Okta
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await okta.refreshAccessToken(accessToken, scopes);
+	// Pass an empty `scopes` array to keep using the same scopes.
+	const tokens = await okta.refreshAccessToken(refreshToken, scopes);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {

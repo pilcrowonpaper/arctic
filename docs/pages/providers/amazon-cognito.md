@@ -10,13 +10,14 @@ Also see [OAuth 2.0 with PKCE](/guides/oauth2-pkce).
 
 ## Initialization
 
-The user pool should not include trailing slashes.
+The domain should not include the protocol or path. Pass a client secret for confidential clients.
 
 ```ts
 import { AmazonCognito } from "arctic";
 
-const userPool = "https://cognito-idp.{region}.amazonaws.com/{pool-id}";
-const cognito = new AmazonCognito(userPool, clientId, clientSecret, redirectURI);
+const domain = "{pool-domain}.auth.{region}.amazoncognito.com";
+const cognito = new AmazonCognito(domain, clientId, clientSecret, redirectURI);
+const cognito = new AmazonCognito(domain, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
@@ -32,7 +33,7 @@ const url = cognito.createAuthorizationURL(state, codeVerifier, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Cognito returns an access token, the access token expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Cognito returns an access token, the access token expiration, and a refresh token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
@@ -65,7 +66,8 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. This
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await cognito.refreshAccessToken(refreshToken);
+	// Pass an empty `scopes` array to keep using the same scopes.
+	const tokens = await cognito.refreshAccessToken(refreshToken, scopes);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {

@@ -6,29 +6,45 @@ title: "Discord"
 
 OAuth 2.0 provider for Discord.
 
-Also see the [OAuth 2.0](/guides/oauth2) guide.
+Also see the [OAuth 2.0](/guides/oauth2) guide for confidential clients and the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide for public clients.
 
 ## Initialization
+
+Pass the client secret for confidential clients.
 
 ```ts
 import { Discord } from "arctic";
 
 const discord = new Discord(clientId, clientSecret, redirectURI);
+const discord = new Discord(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
+
+For confidential clients, pass the state and scopes. **PKCE is not supported for confidential clients.**
 
 ```ts
 import { generateState } from "arctic";
 
 const state = generateState();
 const scopes = ["email", "activities.read"];
-const url = discord.createAuthorizationURL(state, scopes);
+const url = discord.createAuthorizationURL(state, null, scopes);
+```
+
+For public clients, pass the state, PKCE code verifier, and scopes.
+
+```ts
+import { generateState, generateCodeVerifier } from "arctic";
+
+const state = generateState();
+const codeVerifier = generateCodeVerifier();
+const scopes = ["email", "activities.read"];
+const url = discord.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Discord returns an access token, the access token expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Discord returns an access token, the access token expiration, and a refresh token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

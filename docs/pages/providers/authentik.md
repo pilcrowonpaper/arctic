@@ -10,13 +10,14 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
-The `domain` parameter should not include the protocol or path.
+The `baseURL` parameter is the full URL where the Authentik instance is hosted. Pass the client secret for confidential clients.
 
 ```ts
 import { Authentik } from "arctic";
 
-const domain = "auth.example.com";
-const authentik = new Authentik(domain, clientId, clientSecret, redirectURI);
+const baseURL = "https://my-app.com/authentik";
+const authentik = new Authentik(baseURL, clientId, clientSecret, redirectURI);
+const authentik = new Authentik(baseURL, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
@@ -32,7 +33,7 @@ const url = authentik.createAuthorizationURL(state, codeVerifier, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Actual values returned by Authentik depends on your configuration and version.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Actual values returned by Authentik depends on your configuration and version.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

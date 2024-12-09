@@ -1,4 +1,5 @@
 import { OAuth2Client } from "../client.js";
+import { joinURIAndPath } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -9,10 +10,10 @@ export class GitLab {
 
 	private client: OAuth2Client;
 
-	constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.authorizationEndpoint = `https://${domain}/oauth/authorize`;
-		this.tokenEndpoint = `https://${domain}/oauth/token`;
-		this.tokenRevocationEndpoint = `https://${domain}/oauth/revoke`;
+	constructor(baseURL: string, clientId: string, clientSecret: string | null, redirectURI: string) {
+		this.authorizationEndpoint = joinURIAndPath(baseURL, "/oauth/authorize");
+		this.tokenEndpoint = joinURIAndPath(baseURL, "/oauth/token");
+		this.tokenRevocationEndpoint = joinURIAndPath(baseURL, "/oauth/revoke");
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
