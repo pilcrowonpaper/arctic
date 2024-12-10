@@ -47,7 +47,6 @@ export class MercadoPago {
 	}
 
 	public async refreshAccessToken(
-		tokenEndpoint: string,
 		refreshToken: string
 	): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
