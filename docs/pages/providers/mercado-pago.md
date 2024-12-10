@@ -29,14 +29,14 @@ const url = mercadoPago.createAuthorizationURL(state, codeVerifier, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Strava returns an access token, the access token expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Mercado Pago returns an access token, the access token expiration, and a refresh token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 let tokens: OAuth2Tokens
 try {
-	tokens = await strava.validateAuthorizationCode(code, codeVerifier);
+	tokens = await mercadoPago.validateAuthorizationCode(code, codeVerifier);
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
@@ -57,7 +57,7 @@ const refreshToken = tokens.refreshToken();
 
 ## Refresh access tokens
 
-Use `refreshAccessToken()` to get a new access token using a refresh token. Strava returns the same values as during the authorization code validation. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
+Use `refreshAccessToken()` to get a new access token using a refresh token. Mercado Pago returns the same values as during the authorization code validation. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
