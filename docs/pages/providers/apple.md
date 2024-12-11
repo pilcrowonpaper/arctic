@@ -48,7 +48,7 @@ const url = apple.createAuthorizationURL(state, scopes);
 
 ### Requesting scopes
 
-When requesting scopes, the `response_mode` query parameter must be set to `form_post`. 
+When requesting scopes, the `response_mode` query parameter must be set to `form_post`.
 
 ```ts
 const url = apple.createAuthorizationURL(state, scopes);
