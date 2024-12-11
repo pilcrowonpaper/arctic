@@ -1,5 +1,9 @@
 # arctic
 
+## 2.3.1
+
+- Fix AWS Cognito client authentication.
+
 ## 2.3.0
 
 - Add a generic OAuth 2.0 client.
