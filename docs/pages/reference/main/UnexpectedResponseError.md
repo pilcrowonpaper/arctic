@@ -12,7 +12,7 @@ Indicates an unexpected response status or unexpected response body content type
 
 ```ts
 interface Properties {
-    status: number;
+	status: number;
 }
 ```
 
