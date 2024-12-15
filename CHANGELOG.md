@@ -1,5 +1,9 @@
 # arctic
 
+## 2.3.2
+
+- Fix MyAnimeList code challenge method.
+
 ## 2.3.1
 
 - Fix AWS Cognito client authentication.
