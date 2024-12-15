@@ -34,6 +34,9 @@ export class Apple {
 		url.searchParams.set("state", state);
 		url.searchParams.set("scope", scopes.join(" "));
 		url.searchParams.set("redirect_uri", this.redirectURI);
+		if (scopes.some((scope) => ["email", "name"].includes(scope))) {
+			url.searchParams.set("response_mode", "form_post");
+		}
 		return url;
 	}
 
