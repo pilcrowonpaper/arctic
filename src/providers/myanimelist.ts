@@ -23,7 +23,7 @@ export class MyAnimeList {
 		const url = this.client.createAuthorizationURLWithPKCE(
 			authorizationEndpoint,
 			state,
-			CodeChallengeMethod.S256,
+			CodeChallengeMethod.Plain,
 			codeVerifier,
 			[]
 		);
