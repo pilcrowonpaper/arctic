@@ -110,7 +110,7 @@ const claims = decodeIdToken(idToken);
 ```
 
 ```ts
-const response = await fetch(userPool + "/oauth/userInfo", {
+const response = await fetch(userPool + "/oauth2/userInfo", {
 	headers: {
 		Authorization: `Bearer ${accessToken}`
 	}
