@@ -16,7 +16,12 @@ The user pool should not include trailing slashes.
 import { AmazonCognito } from "arctic";
 
 const userPool = "https://cognito-idp.{region}.amazonaws.com/{pool-id}";
-const cognito = new AmazonCognito(userPool, clientId, clientSecret, redirectURI);
+const cognito = new AmazonCognito({
+	userPool,
+	clientId,
+	clientSecret,
+	redirectURI
+});
 ```
 
 ## Create authorization URL
@@ -27,7 +32,11 @@ import { generateState, generateCodeVerifier } from "arctic";
 const state = generateState();
 const codeVerifier = generateCodeVerifier();
 const scopes = ["openid", "profile"];
-const url = cognito.createAuthorizationURL(state, codeVerifier, scopes);
+const url = cognito.createAuthorizationURL({
+	state,
+	codeVerifier,
+	scopes
+});
 ```
 
 ## Validate authorization code
@@ -85,7 +94,11 @@ Use OpenID Connect with the `openid` scope to get the user's profile with an ID 
 
 ```ts
 const scopes = ["openid"];
-const url = cognito.createAuthorizationURL(state, codeVerifier, scopes);
+const url = cognito.createAuthorizationURL({
+	state,
+	codeVerifier,
+	scopes
+});
 ```
 
 ```ts
