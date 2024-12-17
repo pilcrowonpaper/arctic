@@ -2,13 +2,17 @@ import { encodeBase64 } from "@oslojs/encoding";
 import { OAuth2Tokens } from "./oauth2.js";
 
 export function createOAuth2Request(endpoint: string, body: URLSearchParams): Request {
+	const bodyBytes = new TextEncoder().encode(body.toString());
 	const request = new Request(endpoint, {
 		method: "POST",
-		body
+		body: bodyBytes
 	});
 	request.headers.set("Content-Type", "application/x-www-form-urlencoded");
 	request.headers.set("Accept", "application/json");
+	// Required by GitHub, and probably by others as well
 	request.headers.set("User-Agent", "arctic");
+	// Required by Reddit
+	request.headers.set("Content-Length", bodyBytes.byteLength.toString());
 	return request;
 }
 
