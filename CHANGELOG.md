@@ -1,5 +1,9 @@
 # arctic
 
+## 2.3.3
+
+- Set `Content-Length` request header.
+
 ## 2.3.2
 
 - Fix MyAnimeList code challenge method.
