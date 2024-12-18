@@ -8,15 +8,8 @@ const tokenEndpoint = "https://myanimelist.net/v1/oauth2/token";
 export class MyAnimeList {
 	private client;
 
-	// v3 TODO: fix
-	constructor(
-		clientId: string,
-		clientSecret: string,
-		options?: {
-			redirectURI?: string;
-		}
-	) {
-		this.client = new OAuth2Client(clientId, clientSecret, options?.redirectURI ?? null);
+	constructor(clientId: string, clientSecret: string, redirectURI: string | null) {
+		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
 	public createAuthorizationURL(state: string, codeVerifier: string): URL {

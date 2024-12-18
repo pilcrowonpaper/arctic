@@ -1,6 +1,7 @@
 import { CodeChallengeMethod, OAuth2Client } from "../client.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
+import { joinURIAndPath } from "../request.js";
 
 export class Okta {
 	private authorizationEndpoint: string;
@@ -18,11 +19,11 @@ export class Okta {
 	) {
 		let baseURL = `https://${domain}/oauth2`;
 		if (authorizationServerId !== null) {
-			baseURL = baseURL + `/${authorizationServerId}`;
+			baseURL = joinURIAndPath(baseURL, authorizationServerId);
 		}
-		this.authorizationEndpoint = baseURL + "/v1/authorize";
-		this.tokenEndpoint = baseURL + "/v1/token";
-		this.tokenRevocationEndpoint = baseURL + "/v1/revoke";
+		this.authorizationEndpoint = joinURIAndPath(baseURL, "/v1/authorize");
+		this.tokenEndpoint = joinURIAndPath(baseURL, "/v1/token");
+		this.tokenRevocationEndpoint = joinURIAndPath(baseURL, "/v1/revoke");
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 

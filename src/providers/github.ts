@@ -1,6 +1,12 @@
-import { createOAuth2Request, encodeBasicCredentials, sendTokenRequest } from "../request.js";
-
-import type { OAuth2Tokens } from "../oauth2.js";
+import {
+	ArcticFetchError,
+	createOAuth2Request,
+	createOAuth2RequestError,
+	encodeBasicCredentials,
+	UnexpectedErrorResponseBodyError,
+	UnexpectedResponseError
+} from "../request.js";
+import { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://github.com/login/oauth/authorize";
 const tokenEndpoint = "https://github.com/login/oauth/access_token";
@@ -21,7 +27,9 @@ export class GitHub {
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("state", state);
-		url.searchParams.set("scope", scopes.join(" "));
+		if (scopes.length > 0) {
+			url.searchParams.set("scope", scopes.join(" "));
+		}
 		if (this.redirectURI !== null) {
 			url.searchParams.set("redirect_uri", this.redirectURI);
 		}
@@ -52,4 +60,41 @@ export class GitHub {
 		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
+}
+
+async function sendTokenRequest(request: Request): Promise<OAuth2Tokens> {
+	let response: Response;
+	try {
+		response = await fetch(request);
+	} catch (e) {
+		throw new ArcticFetchError(e);
+	}
+
+	if (response.status !== 200) {
+		if (response.body !== null) {
+			await response.body.cancel();
+		}
+		throw new UnexpectedResponseError(response.status);
+	}
+
+	let data: unknown;
+	try {
+		data = await response.json();
+	} catch {
+		throw new UnexpectedResponseError(response.status);
+	}
+	if (typeof data !== "object" || data === null) {
+		throw new UnexpectedErrorResponseBodyError(response.status, data);
+	}
+	if ("error" in data && typeof data.error === "string") {
+		let error: Error;
+		try {
+			error = createOAuth2RequestError(data);
+		} catch {
+			throw new UnexpectedErrorResponseBodyError(response.status, data);
+		}
+		throw error;
+	}
+	const tokens = new OAuth2Tokens(data);
+	return tokens;
 }

@@ -21,7 +21,10 @@ export class Strava {
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("state", state);
-		url.searchParams.set("scope", scopes.join(" "));
+		// Strava deviates from the RFC and uses a comma-delimitated string instead of space.
+		if (scopes.length > 0) {
+			url.searchParams.set("scope", scopes.join(","));
+		}
 		url.searchParams.set("redirect_uri", this.redirectURI);
 		return url;
 	}

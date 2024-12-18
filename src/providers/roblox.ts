@@ -9,7 +9,7 @@ const tokenRevocationEndpoint = "https://apis.roblox.com/oauth/v1/token/revoke";
 export class Roblox {
 	private client: OAuth2Client;
 
-	constructor(clientId: string, clientSecret: string, redirectURI: string) {
+	constructor(clientId: string, clientSecret: string | null, redirectURI: string) {
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 

@@ -10,13 +10,14 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
-The `domain` parameter should not include paths or protocol.
+The `domain` parameter should not include paths or protocol. Pass the client secret for confidential clients.
 
 ```ts
 import { Salesforce } from "arctic";
 
 const domain = "login.salesforce.com";
 const salesforce = new Salesforce(domain, clientId, clientSecret, redirectURI);
+const salesforce = new Salesforce(domain, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
@@ -32,7 +33,7 @@ const url = salesforce.createAuthorizationURL(state, codeVerifier, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Salesforce only returns an access token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Salesforce only returns an access token.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";

@@ -22,7 +22,9 @@ export class StartGG {
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("state", state);
-		url.searchParams.set("scope", scopes.join(" "));
+		if (scopes.length > 0) {
+			url.searchParams.set("scope", scopes.join(" "));
+		}
 		url.searchParams.set("redirect_uri", this.redirectURI);
 		return url;
 	}
@@ -34,7 +36,9 @@ export class StartGG {
 		body.set("redirect_uri", this.redirectURI);
 		body.set("client_id", this.clientId);
 		body.set("client_secret", this.clientSecret);
-		body.set("scope", scopes.join(" "));
+		if (scopes.length > 0) {
+			body.set("scope", scopes.join(" "));
+		}
 		const request = createOAuth2Request(tokenEndpoint, body);
 		const tokens = await sendTokenRequest(request);
 		return tokens;
@@ -47,7 +51,9 @@ export class StartGG {
 		body.set("redirect_uri", this.redirectURI);
 		body.set("client_id", this.clientId);
 		body.set("client_secret", this.clientSecret);
-		body.set("scope", scopes.join(" "));
+		if (scopes.length > 0) {
+			body.set("scope", scopes.join(" "));
+		}
 		const request = createOAuth2Request(refreshEndpoint, body);
 		const tokens = await sendTokenRequest(request);
 		return tokens;

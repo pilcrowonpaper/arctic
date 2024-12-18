@@ -10,10 +10,13 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
+Pass the client secret for confidential clients.
+
 ```ts
 import { Twitter } from "arctic";
 
 const twitter = new Twitter(clientId, clientSecret, redirectURI);
+const twitter = new Twitter(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
@@ -28,7 +31,7 @@ const url = twitter.createAuthorizationURL(state, codeVerifier, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Twitter returns an access token and its expiration.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Twitter returns an access token and its expiration.
 
 ```ts
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
