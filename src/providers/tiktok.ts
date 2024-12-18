@@ -43,25 +43,18 @@ export class TikTok {
 		body.set("redirect_uri", this.redirectURI);
 		body.set("code_verifier", codeVerifier);
 		body.set("client_key", this.clientKey);
-		if (this.clientSecret !== null) {
-			body.set("client_secret", this.clientSecret);
-		}
+		body.set("client_secret", this.clientSecret);
 		const request = createOAuth2Request(tokenEndpoint, body);
 		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string, scopes: string[]): Promise<OAuth2Tokens> {
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
 		body.set("grant_type", "refresh_token");
 		body.set("refresh_token", refreshToken);
 		body.set("client_key", this.clientKey);
-		if (this.clientSecret !== null) {
-			body.set("client_secret", this.clientSecret);
-		}
-		if (scopes.length > 0) {
-			body.set("scope", scopes.join(" "));
-		}
+		body.set("client_secret", this.clientSecret);
 		const request = createOAuth2Request(tokenEndpoint, body);
 		const tokens = await sendTokenRequest(request);
 		return tokens;
@@ -71,9 +64,7 @@ export class TikTok {
 		const body = new URLSearchParams();
 		body.set("token", token);
 		body.set("client_key", this.clientKey);
-		if (this.clientSecret !== null) {
-			body.set("client_secret", this.clientSecret);
-		}
+		body.set("client_secret", this.clientSecret);
 		const request = createOAuth2Request(tokenRevocationEndpoint, body);
 		await sendTokenRevocationRequest(request);
 	}
