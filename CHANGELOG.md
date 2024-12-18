@@ -12,6 +12,7 @@
 - Add `UnexpectedResponseError` and `UnexpectedErrorResponseBodyError` errors.
 - Allow `null` as `clientSecret` in `AmazonCognito`, `Auth0`, `Authentik`, `Bungie`, `Discord`, `GitLab`, `KeyCloak`, `MicrosoftEntraId`, `Roblox`, `Salesforce`, `Spotify`, `Twitter`, `WorkOS` constructor.
 - Fix `scopes` parameter in `Strava.createAuthorizationURL()`.
+- Add TikTok provider.
 
 ## 2.3.3
 

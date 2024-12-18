@@ -61,6 +61,7 @@
 				["Spotify", "/providers/spotify"],
 				["Start.gg", "/providers/startgg"],
 				["Strava", "/providers/strava"],
+				["TikTok", "/providers/tiktok"],
 				["Tiltify", "/providers/tiltify"],
 				["Tumblr", "/providers/tumblr"],
 				["Twitch", "/providers/twitch"],
