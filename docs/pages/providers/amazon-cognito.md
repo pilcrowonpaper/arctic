@@ -116,9 +116,9 @@ const scopes = ["openid", "profile", "email"];
 const url = cognito.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
-## Revoke tokens
+## Revoke refresh tokens
 
-Pass a token to `revokeToken()` to revoke all tokens associated with the authorization. This can throw the same errors as `validateAuthorizationCode()`.
+Pass a refresh token to `revokeToken()` to revoke all tokens associated with the authorization. This can throw the same errors as `validateAuthorizationCode()`.
 
 ```ts
 try {
