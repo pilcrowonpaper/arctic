@@ -76,9 +76,7 @@ export class OAuth2Client {
 		if (codeVerifier !== null) {
 			body.set("code_verifier", codeVerifier);
 		}
-		if (this.clientPassword === null) {
-			body.set("client_id", this.clientId);
-		}
+		body.set("client_id", this.clientId);
 		const request = createOAuth2Request(tokenEndpoint, body);
 		if (this.clientPassword !== null) {
 			const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientPassword);
