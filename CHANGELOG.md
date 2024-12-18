@@ -13,6 +13,18 @@
 - Allow `null` as `clientSecret` in `AmazonCognito`, `Auth0`, `Authentik`, `Bungie`, `Discord`, `GitLab`, `KeyCloak`, `MicrosoftEntraId`, `Roblox`, `Salesforce`, `Spotify`, `Twitter`, `WorkOS` constructor.
 - Fix `scopes` parameter in `Strava.createAuthorizationURL()`.
 
+## 2.3.3
+
+- Set `Content-Length` request header.
+
+## 2.3.2
+
+- Fix MyAnimeList code challenge method.
+
+## 2.3.1
+
+- Fix AWS Cognito client authentication.
+
 ## 2.3.0
 
 - Add a generic OAuth 2.0 client.

@@ -77,7 +77,7 @@ Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding 
 import { OAuth2RequestError, ArcticFetchError } from "arctic";
 
 try {
-	const tokens = await apple.validateAuthorizationCode(code, codeVerifier);
+	const tokens = await apple.validateAuthorizationCode(code);
 	const idToken = tokens.idToken();
 } catch (e) {
 	if (e instanceof OAuth2RequestError) {
