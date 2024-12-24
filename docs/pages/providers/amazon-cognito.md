@@ -15,7 +15,7 @@ The user pool should not include trailing slashes.
 ```ts
 import { AmazonCognito } from "arctic";
 
-const userPool = "https://cognito-idp.{region}.amazonaws.com/{pool-id}";
+const userPool = "https://{pool-domain}.auth.{region}.amazoncognito.com";
 const cognito = new AmazonCognito(userPool, clientId, clientSecret, redirectURI);
 ```
 
