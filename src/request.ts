@@ -52,6 +52,9 @@ export async function sendTokenRevocationRequest(request: Request): Promise<void
 		throw new ArcticFetchError(e);
 	}
 	if (response.ok) {
+		if (response.body !== null) {
+			await response.body.cancel();
+		}
 		return;
 	}
 	let data: unknown;
