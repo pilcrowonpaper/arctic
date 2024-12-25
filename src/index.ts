@@ -51,6 +51,7 @@ export { Yahoo } from "./providers/yahoo.js";
 export { Yandex } from "./providers/yandex.js";
 export { Zoom } from "./providers/zoom.js";
 export { FortyTwo } from "./providers/42.js";
+export { TikTok } from "./providers/tiktok.js";
 
 export { OAuth2Client, CodeChallengeMethod } from "./client.js";
 export { OAuth2Tokens, generateCodeVerifier, generateState } from "./oauth2.js";
