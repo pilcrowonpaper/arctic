@@ -1,15 +1,21 @@
-export function trimLeft(s: string, cutset: string): string {
-	let result = s;
-	while (result.length >= cutset.length && result.slice(0, cutset.length) === cutset) {
-		result = result.slice(cutset.length);
+export function trimLeft(s: string, character: string): string {
+	if (character.length !== 1) {
+		throw new TypeError("Invalid character string");
 	}
-	return s;
+	let start = 0;
+	while (start < s.length && s[start] === character) {
+		start++;
+	}
+	return s.slice(start);
 }
 
-export function trimRight(s: string, cutset: string): string {
-	let result = s;
-	while (result.length >= cutset.length && result.slice(cutset.length * -1) === cutset) {
-		result = result.slice(0, cutset.length * -1);
+export function trimRight(s: string, character: string): string {
+	if (character.length !== 1) {
+		throw new TypeError("Invalid character string");
 	}
-	return s;
+	let end = s.length;
+	while (end > 0 && s[end - 1] === character) {
+		end--;
+	}
+	return s.slice(0, end);
 }
