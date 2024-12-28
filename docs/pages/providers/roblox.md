@@ -13,19 +13,19 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 Pass the client secret for confidential clients.
 
 ```ts
-import { Roblox } from "arctic";
+import * as arctic from "arctic";
 
-const roblox = new Roblox(clientId, clientSecret, redirectURI);
-const roblox = new Roblox(clientId, null, redirectURI);
+const roblox = new arctic.Roblox(clientId, clientSecret, redirectURI);
+const roblox = new arctic.Roblox(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
 
 ```ts
-import { generateState, generateCodeVerifier } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
-const codeVerifier = generateCodeVerifier();
+const state = arctic.generateState();
+const codeVerifier = arctic.generateCodeVerifier();
 const scopes = ["openid", "profile"];
 const url = roblox.createAuthorizationURL(state, codeVerifier, scopes);
 ```
@@ -35,7 +35,7 @@ const url = roblox.createAuthorizationURL(state, codeVerifier, scopes);
 `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Roblox returns an access token, the access token expiration, and a refresh token.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await roblox.validateAuthorizationCode(code, codeVerifier);
@@ -43,12 +43,12 @@ try {
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -62,17 +62,17 @@ try {
 Use `refreshAccessToken()` to get a new access token using a refresh token. Roblox returns the same values as during the authorization code validation. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await roblox.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error
@@ -89,11 +89,11 @@ const url = roblox.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
-import { decodeIdToken } from "arctic";
+import * as arctic from "arctic";
 
 const tokens = await roblox.validateAuthorizationCode(code, codeVerifier);
 const idToken = tokens.idToken();
-const claims = decodeIdToken(idToken);
+const claims = arctic.decodeIdToken(idToken);
 ```
 
 ```ts
@@ -122,10 +122,10 @@ Pass a token to `revokeToken()` to revoke all tokens associated with the authori
 try {
 	await cognito.revokeToken(refreshToken);
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error

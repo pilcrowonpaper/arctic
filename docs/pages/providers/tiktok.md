@@ -11,18 +11,18 @@ Also see [OAuth 2.0 with PKCE](/guides/oauth2-pkce).
 ## Initialization
 
 ```ts
-import { TikTok } from "arctic";
+import * as arctic from "arctic";
 
-const tiktok = new TikTok(clientKey, clientSecret, redirectURI);
+const tiktok = new arctic.TikTok(clientKey, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
 
 ```ts
-import { generateState, generateCodeVerifier } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
-const codeVerifier = generateCodeVerifier();
+const state = arctic.generateState();
+const codeVerifier = arctic.generateCodeVerifier();
 const scopes = ["user.info.basic", "video.list"];
 const url = tiktok.createAuthorizationURL(state, codeVerifier, scopes);
 ```
@@ -32,7 +32,7 @@ const url = tiktok.createAuthorizationURL(state, codeVerifier, scopes);
 `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). TikTok returns an access token, the access token expiration, and a refresh token.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await tiktok.validateAuthorizationCode(code, codeVerifier);
@@ -40,12 +40,12 @@ try {
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -68,7 +68,7 @@ if ("refresh_expires_in" in tokens.data && typeof tokens.data.refresh_expires_in
 Use `refreshAccessToken()` to get a new access token using a refresh token. This method's behavior is identical to `validateAuthorizationCode()`.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await tiktok.refreshAccessToken(refreshToken);
@@ -76,10 +76,10 @@ try {
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error
@@ -94,10 +94,10 @@ Pass a token to `revokeToken()` to revoke a token. This can throw the same error
 try {
 	await tiktok.revokeToken(refreshToken);
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error

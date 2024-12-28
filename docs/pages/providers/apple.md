@@ -13,20 +13,20 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 The PKCS#8 private key is an instance of `Uint8Array`.
 
 ```ts
-import { Apple } from "arctic";
+import * as arctic from "arctic";
 
-const apple = new Apple(clientId, teamId, keyId, pkcs8PrivateKey, redirectURI);
+const apple = new arctic.Apple(clientId, teamId, keyId, pkcs8PrivateKey, redirectURI);
 ```
 
 Here is an example to extract the PKCS#8 key from the PEM certificate.
 
 ```ts
-import { decodeBase64IgnorePadding } from "@oslojs/encoding";
+import * as encoding from "@oslojs/encoding";
 
 const certificate = `-----BEGIN PRIVATE KEY-----
 TmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXANCk5ldmVyIGdvbm5hIGxldCB5b3UgZG93bg0KTmV2ZXIgZ29ubmEgcnVuIGFyb3VuZCBhbmQgZGVzZXJ0IHlvdQ0KTmV2ZXIgZ29ubmEgbWFrZSB5b3UgY3J5DQpOZXZlciBnb25uYSBzYXkgZ29vZGJ5ZQ0KTmV2ZXIgZ29ubmEgdGVsbCBhIGxpZSBhbmQgaHVydCB5b3U
 -----END PRIVATE KEY-----`;
-const privateKey = decodeBase64IgnorePadding(
+const privateKey = encoding.decodeBase64IgnorePadding(
 	certificate
 		.replace("-----BEGIN PRIVATE KEY-----", "")
 		.replace("-----END PRIVATE KEY-----", "")
@@ -39,9 +39,9 @@ const privateKey = decodeBase64IgnorePadding(
 ## Create authorization URL
 
 ```ts
-import { generateState } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
+const state = arctic.generateState();
 const scopes = ["name", "email"];
 const url = apple.createAuthorizationURL(state, scopes);
 ```
@@ -74,18 +74,18 @@ Since this is a cross-origin form request, make sure to relax your CSRF protecti
 Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the ID token's payload.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await apple.validateAuthorizationCode(code);
 	const idToken = tokens.idToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...

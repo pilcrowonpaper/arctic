@@ -9,11 +9,11 @@ npm install arctic
 ```
 
 ```ts
-import { GitHub, generateState } from "arctic";
+import * as arctic from "arctic";
 
-const github = new GitHub(clientId, clientSecret);
+const github = new arctic.GitHub(clientId, clientSecret);
 
-const state = generateState();
+const state = arctic.generateState();
 const scopes = ["user:email"];
 const authorizationURL = github.createAuthorizationURL(state, scopes);
 

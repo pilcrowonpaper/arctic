@@ -13,10 +13,10 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 The redirect URI is optional.
 
 ```ts
-import { Slack } from "arctic";
+import * as arctic from "arctic";
 
-const slack = new Slack(clientId, clientSecret, null);
-const slack = new Slack(clientId, clientSecret, redirectURI);
+const slack = new arctic.Slack(clientId, clientSecret, null);
+const slack = new arctic.Slack(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
@@ -24,9 +24,9 @@ const slack = new Slack(clientId, clientSecret, redirectURI);
 **The `openid` scope is required.**
 
 ```ts
-import { generateState } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
+const state = arctic.generateState();
 const scopes = ["openid", "profile"];
 const url = slack.createAuthorizationURL(state, scopes);
 ```
@@ -36,19 +36,19 @@ const url = slack.createAuthorizationURL(state, scopes);
 `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Slack will return an access token (no expiration) and an ID token.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await slack.validateAuthorizationCode(code);
 	const accessToken = tokens.accessToken();
 	const idToken = tokens.idToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -62,9 +62,9 @@ try {
 Decode the ID token or the `userinfo` endpoint to get the user profile. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
 
 ```ts
-import { decodeIdToken } from "arctic";
+import * as arctic from "arctic";
 
-const claims = decodeIdToken(idToken);
+const claims = arctic.decodeIdToken(idToken);
 ```
 
 ```ts

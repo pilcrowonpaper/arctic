@@ -13,18 +13,18 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 The redirect URI is optional but required by GitHub if there are multiple URIs defined.
 
 ```ts
-import { GitHub } from "arctic";
+import * as arctic from "arctic";
 
-const github = new GitHub(clientId, clientSecret, null);
-const github = new GitHub(clientId, clientSecret, redirectURI);
+const github = new arctic.GitHub(clientId, clientSecret, null);
+const github = new arctic.GitHub(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
 
 ```ts
-import { generateState } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
+const state = arctic.generateState();
 const scopes = ["user:email", "repo"];
 const url = github.createAuthorizationURL(state, scopes);
 ```
@@ -34,18 +34,18 @@ const url = github.createAuthorizationURL(state, scopes);
 `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). OAuth Apps will only return an access token (no expiration).
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await github.validateAuthorizationCode(code);
 	const accessToken = tokens.accessToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -80,7 +80,7 @@ if (
 For GitHub Apps, use `refreshAccessToken()` to get a new access token using a refresh token. The behavior is identical to `validateAuthorizationCode()`.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await github.refreshAccessToken(refreshToken);
@@ -88,10 +88,10 @@ try {
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error

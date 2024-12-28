@@ -11,17 +11,17 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 ## Initialization
 
 ```ts
-import { Facebook } from "arctic";
+import * as arctic from "arctic";
 
-const facebook = new Facebook(clientId, clientSecret, redirectURI);
+const facebook = new arctic.Facebook(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
 
 ```ts
-import { generateState } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
+const state = arctic.generateState();
 const scopes = ["email", "public_profile"];
 const url = facebook.createAuthorizationURL(state, scopes);
 ```
@@ -33,19 +33,19 @@ const url = facebook.createAuthorizationURL(state, scopes);
 Unlike other providers, this will not throw `OAuth2RequestError`. Facebook's error response is not compliant with the RFC and you must manually parse the response body to get the specific error message.
 
 ```ts
-import { UnexpectedErrorResponseBodyError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await facebook.validateAuthorizationCode(code);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
-	if (e instanceof UnexpectedErrorResponseBodyError) {
+	if (e instanceof arctic.UnexpectedErrorResponseBodyError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const responseBody = e.data;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...

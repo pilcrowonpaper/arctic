@@ -13,20 +13,20 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 The `baseURL` parameter is the full URL where the GitLab instance is hosted. Use `https://gitlab.com` for managed servers. Pass the client secret for confidential clients.
 
 ```ts
-import { GitLab } from "arctic";
+import * as arctic from "arctic";
 
 const baseURL = "https://gitlab.com";
 const baseURL = "https://my-app.com/gitlab";
-const gitlab = new GitLab(baseURL, clientId, clientSecret, redirectURI);
-const gitlab = new GitLab(baseURL, clientId, null, redirectURI);
+const gitlab = new arctic.GitLab(baseURL, clientId, clientSecret, redirectURI);
+const gitlab = new arctic.GitLab(baseURL, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
 
 ```ts
-import { generateState } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
+const state = arctic.generateState();
 const scopes = ["read_user", "profile"];
 const url = gitlab.createAuthorizationURL(state, scopes);
 ```
@@ -36,7 +36,7 @@ const url = gitlab.createAuthorizationURL(state, scopes);
 `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). GitLab returns an access token, the access token expiration, and a refresh token.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await gitlab.validateAuthorizationCode(code);
@@ -44,12 +44,12 @@ try {
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -63,7 +63,7 @@ try {
 Use `refreshAccessToken()` to get a new access token using a refresh token. This method's behavior is identical to `validateAuthorizationCode()`.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await gitlab.refreshAccessToken(refreshToken);
@@ -71,10 +71,10 @@ try {
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error
@@ -107,10 +107,10 @@ Use `revokeToken()` to revoke a token. This can throw the same errors as `valida
 try {
 	await gitlab.revokeToken(token);
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error

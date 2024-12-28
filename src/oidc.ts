@@ -1,8 +1,8 @@
-import { decodeJWT } from "@oslojs/jwt";
+import * as jwt from "@oslojs/jwt";
 
 export function decodeIdToken(idToken: string): object {
 	try {
-		return decodeJWT(idToken);
+		return jwt.decodeJWT(idToken);
 	} catch (e) {
 		throw new Error("Invalid ID token", {
 			cause: e
