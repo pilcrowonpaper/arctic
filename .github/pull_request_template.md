@@ -1,4 +1,4 @@
-<!-- WRITE YOUR PR SUMMARY HERE -->
+<!-- YOUR PR SUMMARY HERE -->
 
 ---
 
