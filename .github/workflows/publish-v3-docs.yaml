@@ -1,16 +1,14 @@
-name: "Publish v2 docs"
-on:
-  push:
-    branches:
-      - main
+name: "Publish v3 docs"
+on: [push]
 
 env:
   CLOUDFLARE_API_TOKEN: ${{secrets.CLOUDFLARE_API_TOKEN_V2}}
 
 jobs:
   publish-docs:
-    name: Publish v2 docs
+    name: Publish docs
     runs-on: ubuntu-latest
+    if: github.ref === 'refs/heads/main'
     steps:
       - name: setup actions
         uses: actions/checkout@v3
