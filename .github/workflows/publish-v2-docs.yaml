@@ -8,7 +8,7 @@ jobs:
   publish-docs:
     name: Publish docs
     runs-on: ubuntu-latest
-    if: github.ref === 'refs/heads/v2'
+    if: github.repository == 'pilcrowonpaper/arctic' && github.ref == 'refs/heads/v2'
     steps:
       - name: setup actions
         uses: actions/checkout@v3
