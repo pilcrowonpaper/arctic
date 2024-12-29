@@ -1,10 +1,12 @@
 ---
-title: "Arctic v2 documentation"
+title: "Arctic v3 documentation"
 ---
 
-# Arctic v2 documentation
+# Arctic v3 documentation
 
 _See [v1.arcticjs.dev](https://v1.arcticjs.dev) for the v1 docs._
+
+_See [v2.arcticjs.dev](https://v2.arcticjs.dev) for the v2 docs._
 
 Arctic is a collection of OAuth 2.0 clients for popular providers. Only the authorization code flow is supported. Built on top of the Fetch API, it's light weight, fully-typed, and runtime-agnostic.
 
