@@ -25,4 +25,4 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build and publish package and release
-        run: npm run auri publish
+        run: npx auri publish
