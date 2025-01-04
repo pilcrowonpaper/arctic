@@ -10,43 +10,44 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
-The `domain` parameter should not include paths or protocol.
+The `domain` parameter should not include paths or protocol. Pass the client secret for confidential clients.
 
 ```ts
-import { Salesforce } from "arctic";
+import * as arctic from "arctic";
 
 const domain = "login.salesforce.com";
-const salesforce = new Salesforce(domain, clientId, clientSecret, redirectURI);
+const salesforce = new arctic.Salesforce(domain, clientId, clientSecret, redirectURI);
+const salesforce = new arctic.Salesforce(domain, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
 
 ```ts
-import { generateState, generateCodeVerifier } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
-const codeVerifier = generateCodeVerifier();
+const state = arctic.generateState();
+const codeVerifier = arctic.generateCodeVerifier();
 const scopes = ["openid", "profile"];
 const url = salesforce.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Salesforce only returns an access token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Salesforce only returns an access token.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await salesforce.validateAuthorizationCode(code, codeVerifier);
 	const accessToken = tokens.accessToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -73,16 +74,16 @@ const refreshToken = tokens.refreshToken();
 Use `refreshAccessToken()` to get a new access token using a refresh token. Salesforce only returns an access token. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await salesforce.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error
@@ -99,11 +100,11 @@ const url = salesforce.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
-import { decodeIdToken } from "arctic";
+import * as arctic from "arctic";
 
 const tokens = await salesforce.validateAuthorizationCode(code, codeVerifier);
 const idToken = tokens.idToken();
-const claims = decodeIdToken(idToken);
+const claims = arctic.decodeIdToken(idToken);
 ```
 
 ```ts
@@ -132,10 +133,10 @@ Revoke tokens with `revokeToken()`. This can throw the same errors as `validateA
 try {
 	await salesforce.revokeToken(token);
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error

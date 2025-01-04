@@ -7,9 +7,9 @@ title: "OAuth 2.0"
 Most providers require a client ID, client secret, and redirect URI. The API is nearly identical across providers but always check each provider's guide before implementing.
 
 ```ts
-import { GitHub } from "arctic";
+import * as arctic from "arctic";
 
-const github = new GitHub(clientId, clientSecret, redirectURI);
+const github = new arctic.GitHub(clientId, clientSecret, redirectURI);
 ```
 
 If this is your first time working with OAuth, consider reading one of these articles:
@@ -22,9 +22,9 @@ If this is your first time working with OAuth, consider reading one of these art
 Generate state using `generateState()` and store it as a cookie. Use it to create an authorization URL with `createAuthorizationURL()` and redirect the user to it.
 
 ```ts
-import { generateState } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
+const state = arctic.generateState();
 
 const scopes = ["user:email", "repo"];
 const url = github.createAuthorizationURL(state, scopes);
@@ -42,10 +42,10 @@ return redirect(url);
 
 ## Validate authorization code
 
-Compare the state, and use `validateAuthorizationCode()` to validate the authorization code. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors).
+Compare the state, and use `validateAuthorizationCode()` to validate the authorization code. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError)..
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 const code = request.url.searchParams.get("code");
 const state = request.url.searchParams.get("state");
@@ -61,12 +61,12 @@ try {
 	const tokens = await github.validateAuthorizationCode(code);
 	const accessToken = tokens.accessToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -88,5 +88,5 @@ const idToken = tokens.idToken();
 Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
 
 ```ts
-const claims = decodeIdToken(idToken);
+const claims = arctic.decodeIdToken(idToken);
 ```

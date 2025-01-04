@@ -11,9 +11,9 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 ## Initialization
 
 ```ts
-import { Linear } from "arctic";
+import * as arctic from "arctic";
 
-const linear = new Linear(clientId, clientSecret, redirectURI);
+const linear = new arctic.Linear(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
@@ -21,31 +21,31 @@ const linear = new Linear(clientId, clientSecret, redirectURI);
 **The `read` scope must always be included.**
 
 ```ts
-import { generateState } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
+const state = arctic.generateState();
 const scopes = ["read", "write"];
 const url = linear.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Linear will return an access token with an expiration.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Linear will return an access token with an expiration.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await linear.validateAuthorizationCode(code);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...

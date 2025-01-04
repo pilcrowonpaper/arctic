@@ -11,40 +11,40 @@ Also see [OAuth 2.0 with PKCE](/guides/oauth2-pkce).
 ## Initialization
 
 ```ts
-import { Polar } from "arctic";
+import * as arctic from "arctic";
 
-const polar = new Polar(clientId, clientSecret, redirectURI);
+const polar = new arctic.Polar(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
 
 ```ts
-import { generateState, generateCodeVerifier } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
-const codeVerifier = generateCodeVerifier();
+const state = arctic.generateState();
+const codeVerifier = arctic.generateCodeVerifier();
 const scopes = ["openid", "profile"];
 const url = polar.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Polar returns an access token, its expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Polar returns an access token, its expiration, and a refresh token.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await polar.validateAuthorizationCode(code, codeVerifier);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -63,11 +63,11 @@ const url = polar.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
-import { decodeIdToken } from "arctic";
+import * as arctic from "arctic";
 
 const tokens = await polar.validateAuthorizationCode(code, codeVerifier);
 const idToken = tokens.idToken();
-const claims = decodeIdToken(idToken);
+const claims = arctic.decodeIdToken(idToken);
 ```
 
 ```ts
@@ -93,17 +93,17 @@ const url = polar.createAuthorizationURL(state, codeVerifier, scopes);
 Use `refreshAccessToken()` to get a new access token using a refresh token. This method's behavior is identical to `validateAuthorizationCode()`.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await polar.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error
@@ -118,10 +118,10 @@ Revoke tokens with `revokeToken()`. This can throw the same errors as `validateA
 try {
 	await polar.revokeToken(token);
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error

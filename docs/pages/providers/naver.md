@@ -11,9 +11,9 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 ## Initialization
 
 ```ts
-import { Naver } from "arctic";
+import * as arctic from "arctic";
 
-const naver = new Naver(clientId, clientSecret, redirectURI);
+const naver = new arctic.Naver(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
@@ -24,10 +24,10 @@ const url = naver.createAuthorizationURL();
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Naver returns an access token and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Naver returns an access token and a refresh token.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await naver.validateAuthorizationCode(code);
@@ -35,12 +35,12 @@ try {
 	const accessToken = tokens.accessToken();
 	const refreshToken = tokens.refreshToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -64,17 +64,17 @@ if ("expires_in" in tokens.data && typeof tokens.data.expires_in === "string") {
 Use `refreshAccessToken()` to get a new access token using a refresh token. Naver returns the same values as during the authorization code validation, including the access token expiration which needs to be manually parsed out. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await naver.refreshAccessToken(refreshToken);
 	const accessToken = tokens.accessToken();
 	const refreshToken = tokens.refreshToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error

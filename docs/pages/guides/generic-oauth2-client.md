@@ -17,9 +17,9 @@ Only client password authentication is supported.
 Initialize `OAuth2Client` with your client ID, client password (secret), and redirect URI. `clientSecret` and `redirectURI` can be `null`.
 
 ```ts
-import { OAuth2Client } from "arctic";
+import * as arctic from "arctic";
 
-const client = new OAuth2Client(clientId, clientPassword, redirectURI);
+const client = new arctic.OAuth2Client(clientId, clientPassword, redirectURI);
 ```
 
 ## Create authorization URL
@@ -27,23 +27,23 @@ const client = new OAuth2Client(clientId, clientPassword, redirectURI);
 Use `OAuth2Client.createAuthorizationURL()` to create an authorization URL.
 
 ```ts
-import { generateState } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
+const state = arctic.generateState();
 const url = client.createAuthorizationURL(authorizationEndpoint, state, scopes);
 ```
 
 For PKCE flows, use `OAuth2Client.createAuthorizationURLWithPKCE()`.
 
 ```ts
-import { generateState, generateCodeVerifier, CodeChallengeMethod } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
-const codeVerifier = generateCodeVerifier();
+const state = arctic.generateState();
+const codeVerifier = arctic.generateCodeVerifier();
 const url = client.createAuthorizationURLWithPKCE(
 	authorizationEndpoint,
 	state,
-	CodeChallengeMethod.S256,
+	arctic.CodeChallengeMethod.S256,
 	codeVerifier,
 	scopes
 );
@@ -51,21 +51,21 @@ const url = client.createAuthorizationURLWithPKCE(
 
 ## Validate authorization code
 
-Use `OAuth2Client.validateAuthorizationCode()` to validate authorization codes. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens) instance, or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors).
+Use `OAuth2Client.validateAuthorizationCode()` to validate authorization codes. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens) instance, or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError)..
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await client.validateAuthorizationCode(tokenEndpoint, code, null);
 	const accessToken = tokens.accessToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -85,18 +85,19 @@ const tokens = await client.validateAuthorizationCode(tokenEndpoint, code, codeV
 Use `OAuth2Client.refreshAccessToken()` to refresh access tokens. This also returns an `OAuth2Tokens` instance and throws the same errors as `OAuth2Client.validateAuthorizationCode()`.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
+	// Pass an empty `scopes` array to keep using the same scopes.
 	const tokens = await client.refreshAccessToken(tokenEndpoint, refreshToken, scopes);
 	const accessToken = tokens.accessToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid tokens, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -110,17 +111,17 @@ try {
 Use `OAuth2.revokeToken()` to revoke tokens. This also throws the same errors as `OAuth2Client.validateAuthorizationCode()`.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	await client.revokeToken(tokenRevocationEndpoint, token);
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid tokens, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...

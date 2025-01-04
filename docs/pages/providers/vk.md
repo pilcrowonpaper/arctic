@@ -11,9 +11,9 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 ## Initialization
 
 ```ts
-import { VK } from "arctic";
+import * as arctic from "arctic";
 
-const vk = new VK(clientId, clientSecret, redirectURI);
+const vk = new arctic.VK(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
@@ -21,19 +21,19 @@ const vk = new VK(clientId, clientSecret, redirectURI);
 Optionally use the `offline` scope to get access tokens with no expiration.
 
 ```ts
-import { generateState } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
+const state = arctic.generateState();
 const scopes = ["email", "messages", "offline"];
 const url = vk.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). VK will return an access token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). VK will return an access token.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await vk.validateAuthorizationCode(code);
@@ -41,12 +41,12 @@ try {
 	// Only if `offline` scope is not used.
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...

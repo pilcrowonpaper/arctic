@@ -10,32 +10,33 @@ Also see [OAuth 2.0 with PKCE](/guides/oauth2-pkce).
 
 ## Initialization
 
-The user pool should not include trailing slashes.
+The domain should not include the protocol or path. Pass a client secret for confidential clients.
 
 ```ts
-import { AmazonCognito } from "arctic";
+import * as arctic from "arctic";
 
-const userPool = "https://{pool-domain}.auth.{region}.amazoncognito.com";
-const cognito = new AmazonCognito(userPool, clientId, clientSecret, redirectURI);
+const domain = "<POOL-DOMAIN>.auth.<REGION>.amazoncognito.com";
+const cognito = new arctic.AmazonCognito(domain, clientId, clientSecret, redirectURI);
+const cognito = new arctic.AmazonCognito(domain, clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
 
 ```ts
-import { generateState, generateCodeVerifier } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
-const codeVerifier = generateCodeVerifier();
+const state = arctic.generateState();
+const codeVerifier = arctic.generateCodeVerifier();
 const scopes = ["openid", "profile"];
 const url = cognito.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Cognito returns an access token, the access token expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Cognito returns an access token, the access token expiration, and a refresh token.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await cognito.validateAuthorizationCode(code, codeVerifier);
@@ -43,12 +44,12 @@ try {
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -62,17 +63,18 @@ try {
 Use `refreshAccessToken()` to get a new access token using a refresh token. This method's behavior is identical to `validateAuthorizationCode()`. Cognito will only return a new access token.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
-	const tokens = await cognito.refreshAccessToken(refreshToken);
+	// Pass an empty `scopes` array to keep using the same scopes.
+	const tokens = await cognito.refreshAccessToken(refreshToken, scopes);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error
@@ -89,11 +91,11 @@ const url = cognito.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
-import { decodeIdToken } from "arctic";
+import * as arctic from "arctic";
 
 const tokens = await cognito.validateAuthorizationCode(code, codeVerifier);
 const idToken = tokens.idToken();
-const claims = decodeIdToken(idToken);
+const claims = arctic.decodeIdToken(idToken);
 ```
 
 ```ts
@@ -114,18 +116,18 @@ const scopes = ["openid", "profile", "email"];
 const url = cognito.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
-## Revoke tokens
+## Revoke refresh tokens
 
-Pass a token to `revokeToken()` to revoke all tokens associated with the authorization. This can throw the same errors as `validateAuthorizationCode()`.
+Pass a refresh token to `revokeToken()` to revoke all tokens associated with the authorization. This can throw the same errors as `validateAuthorizationCode()`.
 
 ```ts
 try {
 	await cognito.revokeToken(refreshToken);
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error

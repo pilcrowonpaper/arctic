@@ -7,7 +7,7 @@ title: "Migrate to v2"
 Arctic v2 is here! This update changes how tokens are handled and introduces various small improvements. Behind the scenes, it's also fully type-safe now! We used to heavily rely on type assertion but this upgrade adds proper `in` and `typeof` checks!
 
 ```
-npm install arctic@next
+npm install arctic@2
 ```
 
 ## Authorization URL
@@ -42,18 +42,18 @@ if (tokens.hasRefreshToken()) {
 `validateAuthorizationCode()` throws one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or `Error`.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await github.validateAuthorizationCode(code);
 	const accessToken = tokens.accessToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...

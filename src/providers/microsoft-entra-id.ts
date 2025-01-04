@@ -1,6 +1,7 @@
 import { CodeChallengeMethod, OAuth2Client } from "../client.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
+import { joinURIAndPath } from "../request.js";
 
 export class MicrosoftEntraId {
 	private authorizationEndpoint: string;
@@ -8,9 +9,17 @@ export class MicrosoftEntraId {
 
 	private client: OAuth2Client;
 
-	constructor(tenant: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.authorizationEndpoint = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize`;
-		this.tokenEndpoint = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`;
+	constructor(tenant: string, clientId: string, clientSecret: string | null, redirectURI: string) {
+		this.authorizationEndpoint = joinURIAndPath(
+			"https://login.microsoftonline.com",
+			tenant,
+			"/oauth2/v2.0/authorize"
+		);
+		this.tokenEndpoint = joinURIAndPath(
+			"https://login.microsoftonline.com",
+			tenant,
+			"/oauth2/v2.0/token"
+		);
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
@@ -37,9 +46,8 @@ export class MicrosoftEntraId {
 		return tokens;
 	}
 
-	// v3 TODO: Add `scopes` parameter
-	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
-		const tokens = await this.client.refreshAccessToken(this.tokenEndpoint, refreshToken, []);
+	public async refreshAccessToken(refreshToken: string, scopes: string[]): Promise<OAuth2Tokens> {
+		const tokens = await this.client.refreshAccessToken(this.tokenEndpoint, refreshToken, scopes);
 		return tokens;
 	}
 }

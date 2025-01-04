@@ -1,5 +1,6 @@
+import * as jwt from "@oslojs/jwt";
+
 import { createOAuth2Request, sendTokenRequest } from "../request.js";
-import { createJWTSignatureMessage, encodeJWT } from "@oslojs/jwt";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -32,7 +33,9 @@ export class Apple {
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("state", state);
-		url.searchParams.set("scope", scopes.join(" "));
+		if (scopes.length > 0) {
+			url.searchParams.set("scope", scopes.join(" "));
+		}
 		url.searchParams.set("redirect_uri", this.redirectURI);
 		return url;
 	}
@@ -81,10 +84,10 @@ export class Apple {
 					hash: "SHA-256"
 				},
 				privateKey,
-				createJWTSignatureMessage(headerJSON, payloadJSON)
+				jwt.createJWTSignatureMessage(headerJSON, payloadJSON)
 			)
 		);
-		const jwt = encodeJWT(headerJSON, payloadJSON, signature);
-		return jwt;
+		const token = jwt.encodeJWT(headerJSON, payloadJSON, signature);
+		return token;
 	}
 }

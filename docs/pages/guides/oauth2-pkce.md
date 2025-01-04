@@ -7,9 +7,9 @@ title: "OAuth 2.0 with PKCE"
 Most providers require a client ID, client secret, and redirect URI. The API is nearly identical across providers but always check each provider's guide before implementing.
 
 ```ts
-import { Google } from "arctic";
+import * as arctic from "arctic";
 
-const google = new Google(clientId, clientSecret, redirectURI);
+const google = new arctic.Google(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
@@ -17,10 +17,10 @@ const google = new Google(clientId, clientSecret, redirectURI);
 Generate a state and code verifier using `generateState()` and `generateCodeVerifier()`. Use them to create an authorization URL with `createAuthorizationURL()`, store the state and code verifier as cookies, and redirect the user to the authorization url.
 
 ```ts
-import { generateState, generateCodeVerifier } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
-const codeVerifier = generateCodeVerifier();
+const state = arctic.generateState();
+const codeVerifier = arctic.generateCodeVerifier();
 const scopes = ["user:email", "repo"];
 const url = google.createAuthorizationURL(state, codeVerifier, scopes);
 
@@ -45,10 +45,10 @@ return redirect(url);
 
 ## Validate authorization code
 
-Compare the state, and use `validateAuthorizationCode()` to validate the authorization code and code verifier. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors).
+Compare the state, and use `validateAuthorizationCode()` to validate the authorization code and code verifier. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError)..
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 const code = request.url.searchParams.get("code");
 const state = request.url.searchParams.get("state");
@@ -65,12 +65,12 @@ try {
 	const tokens = await google.validateAuthorizationCode(code, storedCodeVerifier);
 	const accessToken = tokens.accessToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -92,5 +92,5 @@ const idToken = tokens.idToken();
 Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
 
 ```ts
-const claims = decodeIdToken(idToken);
+const claims = arctic.decodeIdToken(idToken);
 ```

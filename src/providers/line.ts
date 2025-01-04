@@ -22,7 +22,9 @@ export class Line {
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("state", state);
-		url.searchParams.set("scope", scopes.join(" "));
+		if (scopes.length > 0) {
+			url.searchParams.set("scope", scopes.join(" "));
+		}
 		url.searchParams.set("redirect_uri", this.redirectURI);
 		const codeChallenge = createS256CodeChallenge(codeVerifier);
 		url.searchParams.set("code_challenge_method", "S256");

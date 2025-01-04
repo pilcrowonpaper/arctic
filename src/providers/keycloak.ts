@@ -9,7 +9,12 @@ export class KeyCloak {
 
 	private client: OAuth2Client;
 
-	constructor(realmURL: string, clientId: string, clientSecret: string, redirectURI: string) {
+	constructor(
+		realmURL: string,
+		clientId: string,
+		clientSecret: string | null,
+		redirectURI: string
+	) {
 		this.authorizationEndpoint = realmURL + "/protocol/openid-connect/auth";
 		this.tokenEndpoint = realmURL + "/protocol/openid-connect/token";
 		this.tokenRevocationEndpoint = realmURL + "/protocol/openid-connect/revoke";

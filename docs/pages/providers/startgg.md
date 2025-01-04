@@ -11,27 +11,27 @@ Also see the [OAuth 2.0](/guides/oauth2) guide.
 ## Initialization
 
 ```ts
-import { StartGG } from "arctic";
+import * as arctic from "arctic";
 
-const startgg = new StartGG(clientId, clientSecret, redirectURI);
+const startgg = new arctic.StartGG(clientId, clientSecret, redirectURI);
 ```
 
 ## Create authorization URL
 
 ```ts
-import { generateState } from "arctic";
+import * as arctic from "arctic";
 
-const state = generateState();
+const state = arctic.generateState();
 const scopes = ["user.identity", "user.email"];
 const url = startgg.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
 
-Start.gg requires a list of scopes in addition to the authorization code. `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), or a standard `Error` (parse errors). Start.gg returns an access token, the access token expiration, and a refresh token.
+Start.gg requires a list of scopes in addition to the authorization code. `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Start.gg returns an access token, the access token expiration, and a refresh token.
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
 	const tokens = await startgg.validateAuthorizationCode(code, scopes);
@@ -39,12 +39,12 @@ try {
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 		const code = e.code;
 		// ...
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 		const cause = e.cause;
 		// ...
@@ -58,18 +58,19 @@ try {
 Use `refreshAccessToken()` to get a new access token using a refresh token. Start.gg returns the same values as during the authorization code validation. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
-import { OAuth2RequestError, ArcticFetchError } from "arctic";
+import * as arctic from "arctic";
 
 try {
-	const tokens = await startgg.refreshAccessToken(accessToken, scopes);
+	// Pass an empty `scopes` array to keep using the same scopes.
+	const tokens = await startgg.refreshAccessToken(refreshToken, scopes);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
 } catch (e) {
-	if (e instanceof OAuth2RequestError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
 	}
-	if (e instanceof ArcticFetchError) {
+	if (e instanceof arctic.ArcticFetchError) {
 		// Failed to call `fetch()`
 	}
 	// Parse error

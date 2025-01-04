@@ -11,7 +11,7 @@
 				["OAuth 2.0", "/guides/oauth2"],
 				["OAuth 2.0 with PKCE", "/guides/oauth2-pkce"],
 				["Generic OAuth 2.0 client", "/guides/generic-oauth2-client"],
-				["Migrate to v2", "/guides/migrate-v2"]
+				["Migrate to v3", "/guides/migrate-v3"]
 			]
 		},
 		{
@@ -61,6 +61,7 @@
 				["Spotify", "/providers/spotify"],
 				["Start.gg", "/providers/startgg"],
 				["Strava", "/providers/strava"],
+				["TikTok", "/providers/tiktok"],
 				["Tiltify", "/providers/tiltify"],
 				["Tumblr", "/providers/tumblr"],
 				["Twitch", "/providers/twitch"],

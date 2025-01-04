@@ -2,18 +2,18 @@
 
 **Documentation: [arcticjs.dev](https://arcticjs.dev)**
 
-Arctic is a collection of OAuth 2.0 clients for popular providers. It only supports the authorization code grant type and intended to be used server-side. Built on top of the Fetch API, it's light weight, fully-typed, and runtime-agnostic.
+Arctic is a collection of OAuth 2.0 clients for popular providers. Only the authorization code flow is supported. Built on top of the Fetch API, it's light weight, fully-typed, and runtime-agnostic.
 
 ```
 npm install arctic
 ```
 
 ```ts
-import { GitHub, generateState } from "arctic";
+import * as arctic from "arctic";
 
-const github = new GitHub(clientId, clientSecret);
+const github = new arctic.GitHub(clientId, clientSecret);
 
-const state = generateState();
+const state = arctic.generateState();
 const scopes = ["user:email"];
 const authorizationURL = github.createAuthorizationURL(state, scopes);
 
@@ -74,6 +74,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Spotify
 - Start.gg
 - Strava
+- TikTok
 - Tiltify
 - Tumblr
 - Twitch

@@ -1,19 +1,21 @@
 ---
-title: "Arctic v2 documentation"
+title: "Arctic v3 documentation"
 ---
 
-# Arctic v2 documentation
+# Arctic v3 documentation
 
 _See [v1.arcticjs.dev](https://v1.arcticjs.dev) for the v1 docs._
 
-Arctic is a collection of OAuth 2.0 clients for popular providers. It only supports the authorization code grant type and intended to be used server-side. Built on top of the Fetch API, it's light weight, fully-typed, and runtime-agnostic.
+_See [v2.arcticjs.dev](https://v2.arcticjs.dev) for the v2 docs._
+
+Arctic is a collection of OAuth 2.0 clients for popular providers. Only the authorization code flow is supported. Built on top of the Fetch API, it's light weight, fully-typed, and runtime-agnostic.
 
 ```ts
-import { GitHub, generateState } from "arctic";
+import * as arctic from "arctic";
 
-const github = new GitHub(clientId, clientSecret);
+const github = new arctic.GitHub(clientId, clientSecret);
 
-const state = generateState();
+const state = arctic.generateState();
 const scopes = ["user:email"];
 const authorizationURL = github.createAuthorizationURL(state, scopes);
 

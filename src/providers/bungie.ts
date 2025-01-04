@@ -8,7 +8,7 @@ const tokenEndpoint = "https://www.bungie.net/platform/app/oauth/token";
 export class Bungie {
 	private client: OAuth2Client;
 
-	constructor(clientId: string, clientSecret: string, redirectURI: string) {
+	constructor(clientId: string, clientSecret: string | null, redirectURI: string) {
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
