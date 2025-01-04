@@ -36,7 +36,7 @@ Providers affected by this breaking change are: Auth0, Discord, Spotify, and Wor
 
 ## Self-hosted providers
 
-All providers that can be self-hosted now use a unified `baseURL` parameter in their constructors. This is a breaking change only for the Authentik provider.
+All providers that can be self-hosted now use a unified `baseURL` parameter in their constructors. This is a breaking change only for the GitLab and Authentik provider.
 
 ```ts
 import * as arctic from "arctic";
