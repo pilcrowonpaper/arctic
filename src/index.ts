@@ -4,6 +4,7 @@ export { Apple } from "./providers/apple.js";
 export { Atlassian } from "./providers/atlassian.js";
 export { Auth0 } from "./providers/auth0.js";
 export { Authentik } from "./providers/authentik.js";
+export { BattleNet } from "./providers/battlenet.js";
 export { Bitbucket } from "./providers/bitbucket.js";
 export { Box } from "./providers/box.js";
 export { Bungie } from "./providers/bungie.js";
