@@ -5,8 +5,7 @@ import { trimLeft, trimRight } from "./utils.js";
 export function joinURIAndPath(base: string, ...path: string[]): string {
 	let joined = trimRight(base, "/");
 	for (const part of path) {
-		joined += "/";
-		joined += trimRight(trimLeft(part, "/"), "/");
+		joined = trimRight(joined, "/") + "/" + trimLeft(part, "/");
 	}
 	return joined;
 }
