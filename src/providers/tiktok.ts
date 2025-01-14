@@ -27,7 +27,7 @@ export class TikTok {
 		url.searchParams.set("code_challenge_method", "S256");
 		url.searchParams.set("code_challenge", codeChallenge);
 		if (scopes.length > 0) {
-			url.searchParams.set("scope", scopes.join(" "));
+			url.searchParams.set("scope", scopes.join(","));
 		}
 		url.searchParams.set("redirect_uri", this.redirectURI);
 		return url;
