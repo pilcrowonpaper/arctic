@@ -4,8 +4,8 @@ import { createOAuth2Request, sendTokenRequest, sendTokenRevocationRequest } fro
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://www.tiktok.com/v2/auth/authorize";
-const tokenEndpoint = "https://open.tiktokapis.com/v2/oauth/token";
-const tokenRevocationEndpoint = "https://open.tiktokapis.com/v2/oauth/revoke";
+const tokenEndpoint = "https://open.tiktokapis.com/v2/oauth/token/";
+const tokenRevocationEndpoint = "https://open.tiktokapis.com/v2/oauth/revoke/";
 
 export class TikTok {
 	private clientKey: string;
