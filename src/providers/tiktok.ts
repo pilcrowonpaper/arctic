@@ -4,8 +4,8 @@ import { createOAuth2Request, sendTokenRequest, sendTokenRevocationRequest } fro
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://www.tiktok.com/v2/auth/authorize";
-const tokenEndpoint = "https://open.tiktokapis.com/v2/oauth/token";
-const tokenRevocationEndpoint = "https://open.tiktokapis.com/v2/oauth/revoke";
+const tokenEndpoint = "https://open.tiktokapis.com/v2/oauth/token/";
+const tokenRevocationEndpoint = "https://open.tiktokapis.com/v2/oauth/revoke/";
 
 export class TikTok {
 	private clientKey: string;
@@ -27,7 +27,7 @@ export class TikTok {
 		url.searchParams.set("code_challenge_method", "S256");
 		url.searchParams.set("code_challenge", codeChallenge);
 		if (scopes.length > 0) {
-			url.searchParams.set("scope", scopes.join(" "));
+			url.searchParams.set("scope", scopes.join(","));
 		}
 		url.searchParams.set("redirect_uri", this.redirectURI);
 		return url;
