@@ -18,12 +18,12 @@ There you have to:
 2. Enable the OIDC service
 3. Create a new OAuth App.
 
-> Note:
-> Both the _base URL_ and the _redirect URI_ have to use `https`.
+> Note: Both the _base URL_ and the _redirect URI_ have to use `https`.
 
 ## Initialization
 
 The `baseURL` parameter is the full URL of your Synology NAS that you have configured in the SSO Server.
+Synology SSO doesn't support public clients, so you have to provide the `clientPassword`.
 
 ```ts
 import * as arctic from "arctic";
@@ -70,7 +70,7 @@ Synology returns an access token and the access token expiration.
 import * as arctic from "arctic";
 
 try {
-	const tokens = await spotify.validateAuthorizationCode(code, null);
+	const tokens = await synology.validateAuthorizationCode(code, null);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
@@ -91,7 +91,7 @@ try {
 For PKCE clients, pass the authorization code and code verifier.
 
 ```ts
-const tokens = await spotify.validateAuthorizationCode(code, codeVerifier);
+const tokens = await synology.validateAuthorizationCode(code, codeVerifier);
 ```
 
 ## Get user info

@@ -9,9 +9,9 @@ export class Synology {
 
 	private client: OAuth2Client;
 
-	constructor(baseURL: string, clientId: string, clientSecret: string | null, redirectURI: string) {
+	constructor(baseURL: string, clientId: string, clientSecret: string, redirectURI: string) {
 		this.authorizationEndpoint = joinURIAndPath(baseURL, "/webman/sso/SSOOauth.cgi");
-		this.tokenEndpoint = joinURIAndPath(baseURL, "/webman/sso/SSOAccessToken.cg");
+		this.tokenEndpoint = joinURIAndPath(baseURL, "/webman/sso/SSOAccessToken.cgi");
 
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
