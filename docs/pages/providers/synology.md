@@ -14,18 +14,16 @@ To use this provider, you have to install [SSO Server](https://www.synology.com/
 
 There you have to:
 
-1. configure the base URL under which the SSO Server will be reachable,
-2. enable the OIDC service,
-3. create a new OAuth App.
+1. Configure the base URL under which the SSO Server will be reachable
+2. Enable the OIDC service
+3. Create a new OAuth App.
 
 > Note:
 > Both the _base URL_ and the _redirect URI_ have to use `https`.
 
 ## Initialization
 
-The `baseURL` parameter is the full URL of your Synology NAS,
-that you have configured in the SSO Server.
-The `redirectURI` parameter is required and has to be one of those configured in the SSO Server for this application.
+The `baseURL` parameter is the full URL of your Synology NAS that you have configured in the SSO Server.
 
 ```ts
 import * as arctic from "arctic";
@@ -35,8 +33,7 @@ const baseURL = "https://sso.nas.example.com";
 const synology = new arctic.Synology(baseUrl, clientId, clientPassword, redirectUri);
 ```
 
-> Note:
-> Synology calls `clientId` _Application ID_ and `clientPassword` _Application Secret_.
+> Note: Synology calls `clientId` _Application ID_ and `clientPassword` _Application Secret_.
 
 ## Create authorization URL
 
@@ -59,8 +56,7 @@ const scopes = ["email", "groups", "openid"];
 const url = synology.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
-> Note:
-> You can find available scopes in `${baseURL}/webman/sso/.well-known/openid-configuration`
+> Note: You can find available scopes in `/webman/sso/.well-known/openid-configuration`
 
 ## Validate authorization code
 
@@ -103,9 +99,9 @@ const tokens = await spotify.validateAuthorizationCode(code, codeVerifier);
 Use the `/webman/sso/SSOUserInfo.cgi` endpoint.
 
 ```ts
-const user_info = await fetch(`${baseURL}/webman/sso/SSOUserInfo.cgi`, {
+const user_info = await fetch(`https://example.com/webman/sso/SSOUserInfo.cgi`, {
 	headers: {
-		Authorization: "Bearer " + access_token
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const user = await response.json();
