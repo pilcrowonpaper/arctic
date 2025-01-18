@@ -37,16 +37,6 @@ const synology = new arctic.Synology(baseUrl, clientId, clientPassword, redirect
 
 ## Create authorization URL
 
-Synology SSO supports both plain and PKCE OAuth 2.0 authorization flows.
-
-```ts
-import * as arctic from "arctic";
-
-const state = arctic.generateState();
-const scopes = ["email", "groups", "openid"];
-const url = synology.createAuthorizationURL(state, null, scopes);
-```
-
 ```ts
 import * as arctic from "arctic";
 
@@ -60,8 +50,6 @@ const url = synology.createAuthorizationURL(state, codeVerifier, scopes);
 
 ## Validate authorization code
 
-For confidential clients, pass the authorization code.
-
 `validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError).
 
 Synology returns an access token and the access token expiration.
@@ -70,7 +58,7 @@ Synology returns an access token and the access token expiration.
 import * as arctic from "arctic";
 
 try {
-	const tokens = await synology.validateAuthorizationCode(code, null);
+	const tokens = await synology.validateAuthorizationCode(code, codeVerifier);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
@@ -86,12 +74,6 @@ try {
 	}
 	// Parse error
 }
-```
-
-For PKCE clients, pass the authorization code and code verifier.
-
-```ts
-const tokens = await synology.validateAuthorizationCode(code, codeVerifier);
 ```
 
 ## Get user info
