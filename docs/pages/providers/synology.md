@@ -6,7 +6,7 @@ title: "Synology"
 
 OAuth 2.0 provider for Synology SSO and OAuth Apps.
 
-Also see the [OAuth 2.0](/guides/oauth2) guide.
+Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Prerequisites
 
@@ -16,24 +16,21 @@ There you have to:
 
 1. Configure the base URL under which the SSO Server will be reachable
 2. Enable the OIDC service
-3. Create a new OAuth App.
+3. Create a new OAuth App
 
 > Note: Both the _base URL_ and the _redirect URI_ have to use `https`.
 
 ## Initialization
 
 The `baseURL` parameter is the full URL of your Synology NAS that you have configured in the SSO Server.
-Synology SSO doesn't support public clients, so you have to provide the `clientPassword`.
 
 ```ts
 import * as arctic from "arctic";
 
 const baseURL = "https://my_synology_nas.local:5001";
 const baseURL = "https://sso.nas.example.com";
-const synology = new arctic.Synology(baseUrl, clientId, clientPassword, redirectUri);
+const synology = new arctic.Synology(baseUrl, applicationId, applicationSecret, redirectURI);
 ```
-
-> Note: Synology calls `clientId` _Application ID_ and `clientPassword` _Application Secret_.
 
 ## Create authorization URL
 
@@ -46,7 +43,7 @@ const scopes = ["email", "groups", "openid"];
 const url = synology.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
-> Note: You can find available scopes in `/webman/sso/.well-known/openid-configuration`
+> Note: You can find all available scopes in `/webman/sso/.well-known/openid-configuration`
 
 ## Validate authorization code
 
@@ -81,7 +78,7 @@ try {
 Use the `/webman/sso/SSOUserInfo.cgi` endpoint.
 
 ```ts
-const user_info = await fetch(`https://example.com/webman/sso/SSOUserInfo.cgi`, {
+const user_info = await fetch("https://example.com/webman/sso/SSOUserInfo.cgi", {
 	headers: {
 		Authorization: `Bearer ${accessToken}`
 	}
