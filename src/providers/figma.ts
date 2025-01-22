@@ -4,6 +4,7 @@ import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://www.figma.com/oauth";
 const tokenEndpoint = "https://www.figma.com/api/oauth/token";
+const refreshEndpoint = "https://api.figma.com/v1/oauth/refresh";
 
 export class Figma {
 	private client: OAuth2Client;
@@ -19,6 +20,11 @@ export class Figma {
 
 	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
 		const tokens = await this.client.validateAuthorizationCode(tokenEndpoint, code, null);
+		return tokens;
+	}
+
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const tokens = await this.client.refreshAccessToken(refreshEndpoint, refreshToken, []);
 		return tokens;
 	}
 }
