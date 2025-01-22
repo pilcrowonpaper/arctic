@@ -19,7 +19,7 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/pilcrowOnPaper/arctic"
+		"url": "https://github.com/pilcrowonpaper/arctic.git"
 	},
 	"devDependencies": {
 		"@types/node": "^20.8.6",
