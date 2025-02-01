@@ -11,9 +11,9 @@ jobs:
     if: github.repository == 'pilcrowonpaper/arctic' && github.ref == 'refs/heads/main'
     steps:
       - name: setup actions
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20.5.1
           registry-url: https://registry.npmjs.org
