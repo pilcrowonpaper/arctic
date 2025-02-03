@@ -8,22 +8,24 @@ import {
 } from "../request.js";
 import { OAuth2Tokens } from "../oauth2.js";
 
-const authorizationEndpoint = "https://gitea.com/login/oauth/authorize";
-const tokenEndpoint = "https://gitea.com/login/oauth/access_token";
-
 export class Gitea {
+    private authorizationEndpoint: string;
+    private tokenEndpoint: string;
+
     private clientId: string;
 	private clientSecret: string;
 	private redirectURI: string | null;
 
-    constructor(clientId: string, clientSecret: string, redirectURI: string | null) {
+    constructor(domain: string, clientId: string, clientSecret: string, redirectURI: string | null) {
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.redirectURI = redirectURI;
+        this.authorizationEndpoint = `https://${domain}/login/oauth/authorize`;
+        this.tokenEndpoint = `https://${domain}/login/oauth/access_token`;
 	}
 
     public createAuthorizationURL(state: string, scopes: string[]): URL {
-            const url = new URL(authorizationEndpoint);
+            const url = new URL(this.authorizationEndpoint);
             url.searchParams.set("response_type", "code");
             url.searchParams.set("client_id", this.clientId);
             url.searchParams.set("state", state);
@@ -43,7 +45,7 @@ export class Gitea {
             if (this.redirectURI !== null) {
                 body.set("redirect_uri", this.redirectURI);
             }
-            const request = createOAuth2Request(tokenEndpoint, body);
+            const request = createOAuth2Request(this.tokenEndpoint, body);
             const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
             request.headers.set("Authorization", `Basic ${encodedCredentials}`);
             const tokens = await sendTokenRequest(request);
@@ -54,7 +56,7 @@ export class Gitea {
             const body = new URLSearchParams();
             body.set("grant_type", "refresh_token");
             body.set("refresh_token", refreshToken);
-            const request = createOAuth2Request(tokenEndpoint, body);
+            const request = createOAuth2Request(this.tokenEndpoint, body);
             const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
             request.headers.set("Authorization", `Basic ${encodedCredentials}`);
             const tokens = await sendTokenRequest(request);
