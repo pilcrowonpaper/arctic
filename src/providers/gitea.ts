@@ -1,4 +1,3 @@
-
 import { OAuth2Tokens } from "../oauth2.js";
 import { OAuth2Client } from "../client.js";
 import { joinURIAndPath } from "../request.js";
