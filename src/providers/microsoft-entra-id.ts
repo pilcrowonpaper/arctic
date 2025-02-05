@@ -59,11 +59,13 @@ export class MicrosoftEntraId {
 			body.set("client_id", this.clientId);
 		}
 		const request = createOAuth2Request(this.tokenEndpoint, body);
-		// Origin header required for public clients. Value can be anything.
-		request.headers.set("Origin", "arctic");
 		if (this.clientSecret !== null) {
 			const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientId);
 			request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		} else {
+			// Origin header required for public clients. Must not be defined for confidential clients.
+			// Value can be anything.
+			request.headers.set("Origin", "arctic");
 		}
 		const tokens = await sendTokenRequest(request);
 		return tokens;
@@ -80,11 +82,13 @@ export class MicrosoftEntraId {
 			body.set("scope", scopes.join(" "));
 		}
 		const request = createOAuth2Request(this.tokenEndpoint, body);
-		// Origin header required for public clients. Value can be anything.
-		request.headers.set("Origin", "arctic");
 		if (this.clientSecret !== null) {
 			const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientSecret);
 			request.headers.set("Authorization", `Basic ${encodedCredentials}`);
+		} else {
+			// Origin header required for public clients. Must not be defined for confidential clients.
+			// Value can be anything.
+			request.headers.set("Origin", "arctic");
 		}
 		const tokens = await sendTokenRequest(request);
 		return tokens;
