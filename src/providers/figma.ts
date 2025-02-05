@@ -3,7 +3,7 @@ import { OAuth2Client } from "../client.js";
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://www.figma.com/oauth";
-const tokenEndpoint = "https://www.figma.com/api/oauth/token";
+const tokenEndpoint = "https://api.figma.com/v1/oauth/token";
 const refreshEndpoint = "https://api.figma.com/v1/oauth/refresh";
 
 export class Figma {
