@@ -6,9 +6,7 @@ title: "Gitea"
 
 OAuth 2.0 provider for Gitea.
 
-Also see the [OAuth 2.0](/guides/oauth2) guide.
-
-Read the Gitea OAuth2 Provider docs [Here](https://docs.gitea.com/development/oauth2-provider).
+Also see the [OAuth 2.0](/guides/oauth2) guide and [Gitea OAuth 2.0 provider docs](https://docs.gitea.com/development/oauth2-provider).
 
 ## Initialization
 
@@ -35,7 +33,7 @@ const url = gitea.createAuthorizationURL(state, scopes);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). gitea returns an access token, the access token expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Gitea returns an access token, the access token expiration, and a refresh token.
 
 ```ts
 import * as arctic from "arctic";

@@ -36,6 +36,7 @@
 				["Etsy", "/providers/etsy"],
 				["Facebook", "/providers/facebook"],
 				["Figma", "/providers/figma"],
+				["Gitea", "/providers/gitea"],
 				["GitHub", "/providers/github"],
 				["GitLab", "/providers/gitlab"],
 				["Google", "/providers/google"],
