@@ -83,7 +83,7 @@ try {
 
 ## Get user profile
 
-Add the `read:user` scope and [`Gitea oauth docs`](https://gitea.com/api/swagger#/user).
+Add the `read:user` scope and use the [`/user` endpoint](https://gitea.com/api/swagger#/user).
 
 ```ts
 const scopes = ["read:user"];
@@ -98,9 +98,3 @@ const response = await fetch("https://gitea.com/user", {
 });
 const user = await response.json();
 ```
-
-## Note
-
-For historical reasons, Gitea needs the word token included before the API key token in an authorization header, like this:
-
-Authorization: token 65eaa9c8ef52460d22a93307fe0aee76289dc675
