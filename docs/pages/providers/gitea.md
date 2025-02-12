@@ -6,7 +6,7 @@ title: "Gitea"
 
 OAuth 2.0 provider for Gitea.
 
-Also see the [OAuth 2.0](/guides/oauth2) guide and [Gitea OAuth 2.0 provider docs](https://docs.gitea.com/development/oauth2-provider).
+Also see [OAuth 2.0 with PKCE](/guides/oauth2-pkce).
 
 ## Initialization
 
@@ -27,8 +27,9 @@ const gitea = new arctic.gitea(baseURL, clientId, null, redirectURI);
 import * as arctic from "arctic";
 
 const state = arctic.generateState();
+const codeVerifier = arctic.generateCodeVerifier();
 const scopes = ["read:user", "write:notification"];
-const url = gitea.createAuthorizationURL(state, scopes);
+const url = gitea.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ## Validate authorization code
@@ -39,7 +40,7 @@ const url = gitea.createAuthorizationURL(state, scopes);
 import * as arctic from "arctic";
 
 try {
-	const tokens = await gitea.validateAuthorizationCode(code);
+	const tokens = await gitea.validateAuthorizationCode(code, codeVerifier);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
@@ -87,7 +88,7 @@ Add the `read:user` scope and use the [`/user` endpoint](https://gitea.com/api/s
 
 ```ts
 const scopes = ["read:user"];
-const url = gitea.createAuthorizationURL(state, scopes);
+const url = gitea.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
