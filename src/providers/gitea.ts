@@ -15,25 +15,20 @@ export class Gitea {
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
-	public createAuthorizationURL(state: string, codeVerifier: string | null, scopes: string[]): URL {
-		let url: URL;
-		if (codeVerifier !== null) {
-			url = this.client.createAuthorizationURLWithPKCE(
-				this.authorizationEndpoint,
-				state,
-				CodeChallengeMethod.S256,
-				codeVerifier,
-				scopes
-			);
-		} else {
-			url = this.client.createAuthorizationURL(this.authorizationEndpoint, state, scopes);
-		}
+	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
+		const url = this.client.createAuthorizationURLWithPKCE(
+			this.authorizationEndpoint,
+			state,
+			CodeChallengeMethod.S256,
+			codeVerifier,
+			scopes
+		);
 		return url;
 	}
 
 	public async validateAuthorizationCode(
 		code: string,
-		codeVerifier: string | null
+		codeVerifier: string
 	): Promise<OAuth2Tokens> {
 		const tokens = await this.client.validateAuthorizationCode(
 			this.tokenEndpoint,
