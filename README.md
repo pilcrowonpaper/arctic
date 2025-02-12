@@ -50,6 +50,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Epic Games
 - Facebook
 - Figma
+- Gitea
 - GitHub
 - GitLab
 - Google
