@@ -26,7 +26,7 @@ import * as arctic from "arctic";
 
 const state = arctic.generateState();
 const codeVerifier = arctic.generateCodeVerifier();
-const scopes = ["openid", "profile"];
+const scopes = ["user:read"];
 const url = kick.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
