@@ -22,6 +22,7 @@ export { GitLab } from "./providers/gitlab.js";
 export { Google } from "./providers/google.js";
 export { Intuit } from "./providers/intuit.js";
 export { Kakao } from "./providers/kakao.js";
+export { Kick } from "./providers/kick.js";
 export { KeyCloak } from "./providers/keycloak.js";
 export { Lichess } from "./providers/lichess.js";
 export { Line } from "./providers/line.js";

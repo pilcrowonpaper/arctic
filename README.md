@@ -56,6 +56,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Google
 - Intuit
 - Kakao
+- Kick
 - Lichess
 - Line
 - Linear
