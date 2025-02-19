@@ -47,6 +47,8 @@
 				["Line", "/providers/line"],
 				["Linear", "/providers/linear"],
 				["LinkedIn", "/providers/linkedin"],
+				["MercadoLibre", "/providers/mercadolibre"],
+				["MercadoPago", "/providers/mercadopago"],
 				["Microsoft Entra ID", "/providers/microsoft-entra-id"],
 				["MyAnimeList", "/providers/myanimelist"],
 				["Naver", "/providers/naver"],
