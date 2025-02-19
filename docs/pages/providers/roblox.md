@@ -120,7 +120,7 @@ Pass a token to `revokeToken()` to revoke all tokens associated with the authori
 
 ```ts
 try {
-	await cognito.revokeToken(refreshToken);
+	await roblox.revokeToken(refreshToken);
 } catch (e) {
 	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
