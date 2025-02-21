@@ -44,6 +44,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Bungie
 - Coinbase
 - Discord
+- DonationAlerts
 - Dribbble
 - Dropbox
 - Etsy
