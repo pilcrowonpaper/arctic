@@ -1,5 +1,5 @@
 import { createOAuth2Request, sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
-import type { OAuth2Tokens } from "../oauth2.js";
+import { createS256CodeChallenge, type OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://id.kick.com/oauth/authorize";
 const tokenEndpoint = "https://id.kick.com/oauth/token";
@@ -25,7 +25,8 @@ export class Kick {
 		if (scopes.length > 0) {
 			url.searchParams.set("scope", scopes.join(" "));
 		}
-		url.searchParams.set("code_challenge", codeVerifier);
+		const codeChallenge = createS256CodeChallenge(codeVerifier);
+		url.searchParams.set("code_challenge", codeChallenge);
 		url.searchParams.set("code_challenge_method", "S256");
 		return url;
 	}
