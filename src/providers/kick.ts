@@ -58,15 +58,9 @@ export class Kick {
 		return tokens;
 	}
 
-	public async revokeToken(
-		token: string,
-		tokenHintType?: "access_token" | "refresh_token"
-	): Promise<void> {
+	public async revokeToken(token: string): Promise<void> {
 		const body = new URLSearchParams();
 		body.set("token", token);
-		if (tokenHintType) {
-			body.set("token_type_hint", tokenHintType);
-		}
 		const request = createOAuth2Request(tokenRevocationEndpoint, body);
 		await sendTokenRevocationRequest(request);
 	}
