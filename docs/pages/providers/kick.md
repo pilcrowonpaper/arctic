@@ -10,13 +10,10 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
-Pass the client secret for confidential clients.
-
 ```ts
 import * as arctic from "arctic";
 
 const kick = new arctic.Kick(clientId, clientSecret, redirectURI);
-const kick = new arctic.Kick(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
@@ -88,7 +85,7 @@ const scopes = ["user:read"];
 const url = kick.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
-Then in your callback make a request to the Kick API.
+Then make a request to the Kick REST API with the access token.
 
 ```ts
 const tokens = await kick.validateAuthorizationCode(code, codeVerifier);
