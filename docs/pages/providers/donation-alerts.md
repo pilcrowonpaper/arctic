@@ -60,7 +60,8 @@ Use `refreshAccessToken()` to get a new access token using a refresh token. Dona
 import * as arctic from "arctic";
 
 try {
-	const tokens = await donationAlerts.refreshAccessToken(refreshToken);
+	const scopes = ["oauth-user-show"];
+	const tokens = await donationAlerts.refreshAccessToken(refreshToken, scopes);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {

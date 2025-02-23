@@ -18,33 +18,32 @@ export class DonationAlerts {
 
 	public createAuthorizationURL(scopes: string[]): URL {
 		const url = new URL(authorizationEndpoint);
-		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("response_type", "code");
+		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("scope", scopes.join(" "));
 		url.searchParams.set("redirect_uri", this.redirectURI);
-		if (scopes.length > 0) {
-			url.searchParams.set("scope", scopes.join(" "));
-		}
 		return url;
 	}
 
 	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
 		body.set("code", code);
+		body.set("redirect_uri", this.redirectURI);
 		body.set("client_id", this.clientId);
 		body.set("client_secret", this.clientSecret);
-		body.set("redirect_uri", this.redirectURI);
-		body.set("grant_type", "authorization_code");
 		const request = createOAuth2Request(tokenEndpoint, body);
 		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
 
-	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+	public async refreshAccessToken(refreshToken: string, scopes: string[]): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
 		body.set("refresh_token", refreshToken);
 		body.set("client_id", this.clientId);
 		body.set("client_secret", this.clientSecret);
-		body.set("grant_type", "refresh_token");
+		body.set("scope", scopes.join(" "));
 		const request = createOAuth2Request(tokenEndpoint, body);
 		const tokens = await sendTokenRequest(request);
 		return tokens;
