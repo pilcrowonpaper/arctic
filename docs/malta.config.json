@@ -43,6 +43,7 @@
 				["Intuit", "/providers/intuit"],
 				["Kakao", "/providers/kakao"],
 				["KeyCloak", "/providers/keycloak"],
+				["Kick", "/providers/kick"],
 				["Lichess", "/providers/lichess"],
 				["Line", "/providers/line"],
 				["Linear", "/providers/linear"],
