@@ -1,12 +1,12 @@
 ---
-title: "MercadoPago"
+title: "Mercado Pago"
 ---
 
-# MercadoPago
+# Mercado Pago
 
-OAuth 2.0 provider for MercadoPago.
+OAuth 2.0 provider for Mercado Pago. This client requires PKCE to be enabled in your application settings.
 
-Also see the [OAuth 2.0](/guides/oauth2) guide for confidential clients and the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide for public clients.
+Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
@@ -29,7 +29,7 @@ const url = mercadopago.createAuthorizationURL(state);
 
 ## Validate authorization code
 
-`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). MercadoPago returns an access token, its expiration, and a refresh token.
+`validateAuthorizationCode()` will either return an [`OAuth2Tokens`](/reference/main/OAuth2Tokens), or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError). Mercado Pago returns an access token and its expiration by default.
 
 ```ts
 import * as arctic from "arctic";
@@ -54,11 +54,16 @@ try {
 }
 ```
 
-## Refresh access tokens
+## Refresh tokens
 
-> This flow can only be used if the application return the `scope` parameter indicating the value `offline_access` and the vendor has previously authorized this action through the Authorization code flow.
+Add the `offline_access` scope to get a refresh token.
 
-Use `refreshAccessToken()` to get a new access token using a refresh token. MercadoPago returns the same values as during the authorization code validation. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
+```ts
+const tokens = await mercadopago.validateAuthorizationCode(code, codeVerifier);
+const refreshToken = tokens.refreshToken();
+```
+
+Use `refreshAccessToken()` to get a new access token using a refresh token. Mercado Pago returns the same values as during the authorization code validation. This method also returns `OAuth2Tokens` and throws the same errors as `validateAuthorizationCode()`
 
 ```ts
 import * as arctic from "arctic";
@@ -78,7 +83,3 @@ try {
 	// Parse error
 }
 ```
-
-## Get user profile
-
-Getting the user profile depends of the service you are connecting to. Learn more at [MercadoPago](https://www.mercadopago.com.ar/developers/es/reference/oauth/_oauth_token/post).
