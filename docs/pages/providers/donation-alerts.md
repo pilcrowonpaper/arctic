@@ -21,8 +21,9 @@ const donationAlerts = new arctic.DonationAlerts(clientId, clientSecret, redirec
 ```ts
 import * as arctic from "arctic";
 
+const state = arctic.generateState();
 const scopes = ["oauth-user-show"];
-const url = donationAlerts.createAuthorizationURL(scopes);
+const url = donationAlerts.createAuthorizationURL(state, scopes);
 ```
 
 ## Validate authorization code
@@ -77,21 +78,17 @@ try {
 
 ### Get user profile
 
-Add the `oauth-user-show` scope when creating the authorization URL.
+Add the `oauth-user-show` scope and use the [`/user/oauth`](https://www.donationalerts.com/apidoc#api_v1__users__user_profile_information) endpoint.
 
 ```ts
 const scopes = ["oauth-user-show"];
-const url = donationAlerts.createAuthorizationURL(scopes);
+const url = donationAlerts.createAuthorizationURL(state, scopes);
 ```
 
-Then in your callback make a request to the DonationAlerts API.
-
 ```ts
-const tokens = await donationAlerts.validateAuthorizationCode(code);
-
 const response = await fetch("https://www.donationalerts.com/api/v1/user/oauth", {
 	headers: {
-		Authorization: `Bearer ${tokens.accessToken()}`
+		Authorization: `Bearer ${accessToken}`
 	}
 });
 const user = await response.json();
