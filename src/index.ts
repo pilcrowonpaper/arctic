@@ -10,6 +10,7 @@ export { Box } from "./providers/box.js";
 export { Bungie } from "./providers/bungie.js";
 export { Coinbase } from "./providers/coinbase.js";
 export { Discord } from "./providers/discord.js";
+export { DonationAlerts } from "./providers/donation-alerts.js";
 export { Dribbble } from "./providers/dribbble.js";
 export { Dropbox } from "./providers/dropbox.js";
 export { Etsy } from "./providers/etsy.js";
