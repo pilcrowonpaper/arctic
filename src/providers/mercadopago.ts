@@ -17,7 +17,7 @@ export class MercadoPago {
 		this.clientSecret = clientSecret;
 		this.redirectURI = redirectURI;
 	}
-	
+
 	// `scopes` not required since they are defined in the application settings
 	public createAuthorizationURL(state: string, codeVerifier: string): URL {
 		const url = new URL(authorizationEndpoint);
