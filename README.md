@@ -63,6 +63,8 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Line
 - Linear
 - LinkedIn
+- MercadoLibre
+- MercadoPago
 - Microsoft Entra ID
 - MyAnimeList
 - Naver
