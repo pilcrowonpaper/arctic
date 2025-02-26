@@ -10,8 +10,6 @@ Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
 ## Initialization
 
-The domain should not include the protocol or path.
-
 ```ts
 import * as arctic from "arctic";
 
