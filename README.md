@@ -44,6 +44,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Bungie
 - Coinbase
 - Discord
+- DonationAlerts
 - Dribbble
 - Dropbox
 - Etsy
@@ -56,10 +57,14 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Google
 - Intuit
 - Kakao
+- KeyCloak
+- Kick
 - Lichess
 - Line
 - Linear
 - LinkedIn
+- MercadoLibre
+- MercadoPago
 - Microsoft Entra ID
 - MyAnimeList
 - Naver
