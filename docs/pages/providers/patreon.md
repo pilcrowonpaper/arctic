@@ -22,7 +22,7 @@ const patreon = new arctic.Patreon(clientId, clientSecret, redirectURI);
 import * as arctic from "arctic";
 
 const state = arctic.generateState();
-const scopes = ["identify", "identity[email]"];
+const scopes = ["identity", "identity[email]"];
 const url = patreon.createAuthorizationURL(state, scopes);
 ```
 
@@ -81,7 +81,7 @@ try {
 Add the `identity` scope and use the [`/api/oauth2/v2/identity` endpoint](https://docs.patreon.com/#get-api-oauth2-v2-identity). Optionally add the `identity[email]` scope to get user email.
 
 ```ts
-const scopes = ["identify", "identity[email]"];
+const scopes = ["identity", "identity[email]"];
 const url = patreon.createAuthorizationURL(state, scopes);
 ```
 
