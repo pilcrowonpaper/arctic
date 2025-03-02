@@ -107,10 +107,11 @@ const user = await response.json();
 
 ### Get user profile
 
-Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
+Make sure to add the `profile` scope to get the user profile. The Roblox API does
+not provide an email address.
 
 ```ts
-const scopes = ["openid", "profile", "email"];
+const scopes = ["openid", "profile"];
 const url = roblox.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
