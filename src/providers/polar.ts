@@ -7,6 +7,7 @@ const authorizationEndpoint = "https://polar.sh/oauth2/authorize";
 const tokenEndpoint = "https://api.polar.sh/v1/oauth2/token";
 const tokenRevocationEndpoint = "https://api.polar.sh/v1/oauth2/revoke";
 
+// Polar.sh supports HTTP Basic Auth but `client_secret` is set as the default authentication method.
 export class Polar {
 	private clientId: string;
 	private clientSecret: string | null;
