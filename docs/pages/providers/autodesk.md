@@ -15,8 +15,8 @@ Pass the client secret for confidential clients.
 ```ts
 import * as arctic from "arctic";
 
-const autodesk = new arctic.Autodesk(tenant, clientId, clientSecret, redirectURI);
-const autodesk = new arctic.Autodesk(tenant, clientId, null, redirectURI);
+const autodesk = new arctic.Autodesk(clientId, clientSecret, redirectURI);
+const autodesk = new arctic.Autodesk(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
@@ -25,8 +25,8 @@ import * as arctic from "arctic";
 
 const state = arctic.generateState();
 const codeVerifier = arctic.generateCodeVerifier();
-const scopes = ["openid", "profile"];
-const url = entraId.createAuthorizationURL(state, codeVerifier, scopes);
+const scopes = ["openid", "user:read", "data:read"];
+const url = autodesk.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 The list of optional scopes can be found at the [Developer's Guide/Scopes](https://aps.autodesk.com/en/docs/oauth/v2/developers_guide/scopes/) page.
@@ -39,7 +39,7 @@ The list of optional scopes can be found at the [Developer's Guide/Scopes](https
 import * as arctic from "arctic";
 
 try {
-	const tokens = await entraId.validateAuthorizationCode(code, codeVerifier);
+	const tokens = await autodesk.validateAuthorizationCode(code, codeVerifier);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 	const refreshToken = tokens.refreshToken();
@@ -67,7 +67,7 @@ import * as arctic from "arctic";
 
 try {
 	// Pass an empty `scopes` array to keep using the same scopes.
-	const tokens = await entraId.refreshAccessToken(refreshToken, scopes);
+	const tokens = await autodesk.refreshAccessToken(refreshToken, scopes);
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
@@ -81,13 +81,31 @@ try {
 }
 ```
 
+## Revoke tokens
+Use `revokeToken()` to revoke a token. You need to specify wether the token is an `access_token` or a `refresh_token`. This can throw the same errors as `validateAuthorizationCode()`.
+
+```ts
+try {
+	await autodesk.revokeToken(token, token_type);
+} catch (e) {
+	if (e instanceof arctic.OAuth2RequestError) {
+		// Invalid authorization code, credentials, or redirect URI
+	}
+	if (e instanceof arctic.ArcticFetchError) {
+		// Failed to call `fetch()`
+	}
+	// Parse error
+}
+```
+
+
 ## OpenID Connect
 
 Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. The `nonce` parameter is required by Autodesk Platform Services to use OpenID. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
 
 ```ts
 const scopes = ["openid"];
-const url = entraId.createAuthorizationURL(state, codeVerifier, scopes);
+const url = autodesk.createAuthorizationURL(state, codeVerifier, scopes);
 // The nonce should be unique to each request similar to state.
 // However, nonce can just be "_" here since it isn't useful for server-based OAuth.
 url.searchParams.set("nonce", nonce);
@@ -96,7 +114,7 @@ url.searchParams.set("nonce", nonce);
 ```ts
 import * as arctic from "arctic";
 
-const tokens = await entraId.validateAuthorizationCode(code, codeVerifier);
+const tokens = await autodesk.validateAuthorizationCode(code, codeVerifier);
 const idToken = tokens.idToken();
 const claims = arctic.decodeIdToken(idToken);
 ```
@@ -112,9 +130,9 @@ const user = await response.json();
 
 ### Get user profile
 
-Make sure to add the `profile` scope to get the user profile and the `email` scope to get the user email.
+Make sure to add the `user-profile:read` scope to get the user profile and email.
 
 ```ts
-const scopes = ["openid", "profile", "email"];
-const url = entraId.createAuthorizationURL(state, codeVerifier, scopes);
+const scopes = ["openid", "user-profile:read"];
+const url = autodesk.createAuthorizationURL(state, codeVerifier, scopes);
 ```
