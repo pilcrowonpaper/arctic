@@ -29,7 +29,7 @@ const scopes = ["openid", "user:read", "data:read"];
 const url = autodesk.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
-The list of optional scopes can be found at the [Developer's Guide/Scopes](https://aps.autodesk.com/en/docs/oauth/v2/developers_guide/scopes/) page.
+The list of scopes Autodesk Platform Services supports can be found at the [Developer's Guide/Scopes](https://aps.autodesk.com/en/docs/oauth/v2/developers_guide/scopes/) page.
 
 ## Validate authorization code
 
@@ -101,15 +101,14 @@ try {
 
 ## OpenID Connect
 
-Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the `userinfo` endpoint. The `nonce` parameter is required by Autodesk Platform Services to use OpenID. Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
+Use OpenID Connect with the `openid` scope to get an `idToken`.
 
 ```ts
 const scopes = ["openid"];
 const url = autodesk.createAuthorizationURL(state, codeVerifier, scopes);
-// The nonce should be unique to each request similar to state.
-// However, nonce can just be "_" here since it isn't useful for server-based OAuth.
-url.searchParams.set("nonce", nonce);
 ```
+
+Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
 
 ```ts
 import * as arctic from "arctic";
@@ -119,6 +118,10 @@ const idToken = tokens.idToken();
 const claims = arctic.decodeIdToken(idToken);
 ```
 
+## Get user information
+
+Get the user information by using the [`https://api.userprofile.autodesk.com/userinfo` endpoint](https://aps.autodesk.com/en/docs/profile/v1/reference/profile/oidcuserinfo/).
+
 ```ts
 const response = await fetch("https://api.userprofile.autodesk.com/userinfo", {
 	headers: {
@@ -126,13 +129,4 @@ const response = await fetch("https://api.userprofile.autodesk.com/userinfo", {
 	}
 });
 const user = await response.json();
-```
-
-### Get user profile
-
-Make sure to add the `user-profile:read` scope to get the user profile and email.
-
-```ts
-const scopes = ["openid", "user-profile:read"];
-const url = autodesk.createAuthorizationURL(state, codeVerifier, scopes);
 ```
