@@ -4,7 +4,7 @@ title: "Autodesk Platform Services"
 
 # Autodesk Platform Services
 
-OAuth 2.0 provider for Autodesk Platform Services. See the [Authentication (OAuth)](https://aps.autodesk.com/en/docs/oauth/v2/developers_guide/overview/) documentation for more information about the API.
+OAuth 2.0 provider for [Autodesk Platform Services](https://aps.autodesk.com/en/docs/oauth/v2/developers_guide/overview/).
 
 Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
@@ -102,14 +102,14 @@ try {
 
 ## OpenID Connect
 
-Use OpenID Connect with the `openid` scope to get an `idToken`.
+Use OpenID Connect with the `openid` scope to get the user's profile with an ID token or the [`userinfo` endpoint](https://aps.autodesk.com/en/docs/profile/v1/reference/profile/oidcuserinfo/). Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
+
+See the endpoint documentation for the token claims.
 
 ```ts
 const scopes = ["openid"];
 const url = autodesk.createAuthorizationURL(state, codeVerifier, scopes);
 ```
-
-Arctic provides [`decodeIdToken()`](/reference/main/decodeIdToken) for decoding the token's payload.
 
 ```ts
 import * as arctic from "arctic";
@@ -118,10 +118,6 @@ const tokens = await autodesk.validateAuthorizationCode(code, codeVerifier);
 const idToken = tokens.idToken();
 const claims = arctic.decodeIdToken(idToken);
 ```
-
-## Get user information
-
-Get the user information by using the [`https://api.userprofile.autodesk.com/userinfo` endpoint](https://aps.autodesk.com/en/docs/profile/v1/reference/profile/oidcuserinfo/).
 
 ```ts
 const response = await fetch("https://api.userprofile.autodesk.com/userinfo", {
