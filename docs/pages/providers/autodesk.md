@@ -4,7 +4,7 @@ title: "Autodesk Platform Services"
 
 # Autodesk Platform Services
 
-OAuth 2.0 provider for Autodesk Platform Services. See the [Authentication (OAuth)](https://aps.autodesk.com/en/docs/oauth/v2/developers_guide/overview/) documentation for more information about the API. 
+OAuth 2.0 provider for Autodesk Platform Services. See the [Authentication (OAuth)](https://aps.autodesk.com/en/docs/oauth/v2/developers_guide/overview/) documentation for more information about the API.
 
 Also see the [OAuth 2.0 with PKCE](/guides/oauth2-pkce) guide.
 
@@ -20,6 +20,7 @@ const autodesk = new arctic.Autodesk(clientId, null, redirectURI);
 ```
 
 ## Create authorization URL
+
 ```ts
 import * as arctic from "arctic";
 
@@ -82,6 +83,7 @@ try {
 ```
 
 ## Revoke tokens
+
 Use `revokeToken()` to revoke a token. You need to specify wether the token is an `access_token` or a `refresh_token`. This can throw the same errors as `validateAuthorizationCode()`.
 
 ```ts
@@ -97,7 +99,6 @@ try {
 	// Parse error
 }
 ```
-
 
 ## OpenID Connect
 
