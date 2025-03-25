@@ -3,7 +3,7 @@ import { createOAuth2Request, sendTokenRequest } from "../request.js";
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://www.strava.com/oauth/authorize";
-const tokenEndpoint = "https://www.strava.com/oauth/token";
+const tokenEndpoint = "https://www.strava.com/api/v3/oauth/token";
 
 export class Strava {
 	private clientId: string;
@@ -34,6 +34,17 @@ export class Strava {
 		body.set("grant_type", "authorization_code");
 		body.set("code", code);
 		body.set("redirect_uri", this.redirectURI);
+		body.set("client_id", this.clientId);
+		body.set("client_secret", this.clientSecret);
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
+		return tokens;
+	}
+
+	public async refreshAccessToken(refreshToken: string): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
+		body.set("refresh_token", refreshToken);
 		body.set("client_id", this.clientId);
 		body.set("client_secret", this.clientSecret);
 		const request = createOAuth2Request(tokenEndpoint, body);
