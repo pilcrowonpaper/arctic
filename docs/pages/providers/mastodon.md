@@ -15,7 +15,7 @@ The `baseURL` parameter is the full URL where the Mastodon instance is hosted.
 ```ts
 import * as arctic from "arctic";
 
-const baseURL = "https://mastodon.social/api/v1";
+const baseURL = "https://mastodon.social";
 const mastodon = new arctic.Mastodon(baseURL, clientId, clientSecret, redirectURI);
 ```
 

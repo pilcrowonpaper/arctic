@@ -11,9 +11,9 @@ export class Mastodon {
 	private client: OAuth2Client;
 
 	constructor(baseURL: string, clientId: string, clientSecret: string, redirectURI: string) {
-		this.authorizationEndpoint = joinURIAndPath(baseURL, "/oauth/authorize");
-		this.tokenEndpoint = joinURIAndPath(baseURL, "/oauth/token");
-		this.tokenRevocationEndpoint = joinURIAndPath(baseURL, "/oauth/revoke");
+		this.authorizationEndpoint = joinURIAndPath(baseURL, "/api/v1/oauth/authorize");
+		this.tokenEndpoint = joinURIAndPath(baseURL, "/api/v1/oauth/token");
+		this.tokenRevocationEndpoint = joinURIAndPath(baseURL, "/api/v1/oauth/revoke");
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
