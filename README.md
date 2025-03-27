@@ -38,6 +38,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Atlassian
 - Auth0
 - Authentik
+- Autodesk Platform Services
 - Battle.net
 - Bitbucket
 - Box
@@ -63,6 +64,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Line
 - Linear
 - LinkedIn
+- Mastodon
 - MercadoLibre
 - MercadoPago
 - Microsoft Entra ID
