@@ -30,6 +30,7 @@ export { Lichess } from "./providers/lichess.js";
 export { Line } from "./providers/line.js";
 export { Linear } from "./providers/linear.js";
 export { LinkedIn } from "./providers/linkedin.js";
+export { Mastodon } from "./providers/mastodon.js";
 export { MercadoLibre } from "./providers/mercadolibre.js";
 export { MercadoPago } from "./providers/mercadopago.js";
 export { MicrosoftEntraId } from "./providers/microsoft-entra-id.js";

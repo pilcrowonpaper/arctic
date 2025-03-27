@@ -50,6 +50,7 @@
 				["Line", "/providers/line"],
 				["Linear", "/providers/linear"],
 				["LinkedIn", "/providers/linkedin"],
+				["Mastodon", "/providers/mastodon"],
 				["MercadoLibre", "/providers/mercadolibre"],
 				["MercadoPago", "/providers/mercadopago"],
 				["Microsoft Entra ID", "/providers/microsoft-entra-id"],
