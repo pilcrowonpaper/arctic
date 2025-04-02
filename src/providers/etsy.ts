@@ -9,7 +9,7 @@ export class Etsy {
 	private client: OAuth2Client;
 
 	constructor(clientId: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, null, redirectURI);
+		this.client = new OAuth2Client(clientId, null, redirectURI, null);
 	}
 
 	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {

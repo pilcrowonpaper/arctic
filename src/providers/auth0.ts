@@ -13,7 +13,7 @@ export class Auth0 {
 		this.authorizationEndpoint = `https://${domain}/authorize`;
 		this.tokenEndpoint = `https://${domain}/oauth/token`;
 		this.tokenRevocationEndpoint = `https://${domain}/oauth/revoke`;
-		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
+		this.client = new OAuth2Client(clientId, clientSecret, redirectURI, null);
 	}
 	public createAuthorizationURL(state: string, codeVerifier: string | null, scopes: string[]): URL {
 		let url: URL;
