@@ -9,11 +9,13 @@ export class OAuth2Client {
 
 	private clientPassword: string | null;
 	private redirectURI: string | null;
+	private clientSecret: string | null;
 
-	constructor(clientId: string, clientPassword: string | null, redirectURI: string | null) {
+	constructor(clientId: string, clientPassword: string | null, redirectURI: string | null, clientSecret: string | null) {
 		this.clientId = clientId;
 		this.clientPassword = clientPassword;
 		this.redirectURI = redirectURI;
+		this.clientSecret = clientSecret;
 	}
 
 	public createAuthorizationURL(
@@ -79,6 +81,9 @@ export class OAuth2Client {
 		if (this.clientPassword === null) {
 			body.set("client_id", this.clientId);
 		}
+		if (this.clientSecret !== null) {
+			body.set("client_secret", this.clientSecret)
+		}
 		const request = createOAuth2Request(tokenEndpoint, body);
 		if (this.clientPassword !== null) {
 			const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientPassword);
@@ -99,6 +104,9 @@ export class OAuth2Client {
 		if (this.clientPassword === null) {
 			body.set("client_id", this.clientId);
 		}
+		if (this.clientSecret !== null) {
+			body.set("client_secret", this.clientSecret)
+		}
 		if (scopes.length > 0) {
 			body.set("scope", scopes.join(" "));
 		}
@@ -116,6 +124,9 @@ export class OAuth2Client {
 		body.set("token", token);
 		if (this.clientPassword === null) {
 			body.set("client_id", this.clientId);
+		}
+		if (this.clientSecret !== null) {
+			body.set("client_secret", this.clientSecret)
 		}
 		const request = createOAuth2Request(tokenRevocationEndpoint, body);
 		if (this.clientPassword !== null) {
