@@ -9,7 +9,7 @@ export class Bungie {
 	private client: OAuth2Client;
 
 	constructor(clientId: string, clientSecret: string | null, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
+		this.client = new OAuth2Client(clientId, clientSecret, redirectURI, null);
 	}
 
 	public createAuthorizationURL(state: string, scopes: string[]): URL {
