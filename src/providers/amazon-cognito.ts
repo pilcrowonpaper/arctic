@@ -14,7 +14,7 @@ export class AmazonCognito {
 		this.tokenEndpoint = `https://${domain}/oauth2/token`;
 		this.tokenRevocationEndpoint = `https://${domain}/oauth2/revoke`;
 
-		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
+		this.client = new OAuth2Client(clientId, clientSecret, redirectURI, null);
 	}
 
 	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {

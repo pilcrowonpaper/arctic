@@ -18,7 +18,7 @@ export class KeyCloak {
 		this.authorizationEndpoint = realmURL + "/protocol/openid-connect/auth";
 		this.tokenEndpoint = realmURL + "/protocol/openid-connect/token";
 		this.tokenRevocationEndpoint = realmURL + "/protocol/openid-connect/revoke";
-		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
+		this.client = new OAuth2Client(clientId, clientSecret, redirectURI, null);
 	}
 
 	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
