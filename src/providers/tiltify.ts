@@ -2,7 +2,7 @@ import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizationEndpoint = "https://v5api.tiltify.com/oauth/authorizeze";
+const authorizationEndpoint = "https://v5api.tiltify.com/oauth/authorize";
 const tokenEndpoint = "https://v5api.tiltify.com/oauth/token";
 
 export class Tiltify {
