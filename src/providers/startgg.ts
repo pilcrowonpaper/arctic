@@ -2,7 +2,7 @@ import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizationEndpoint = "https://start.gg/oauth/authoriz";
+const authorizationEndpoint = "https://start.gg/oauth/authorize";
 const tokenEndpoint = "https://api.start.gg/oauth/access_token";
 const refreshEndpoint = "https://api.start.gg/oauth/refresh";
 
