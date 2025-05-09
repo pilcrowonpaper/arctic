@@ -13,7 +13,7 @@ Arctic is a collection of OAuth 2.0 clients for popular providers. Only the auth
 ```ts
 import * as arctic from "arctic";
 
-const github = new arctic.GitHub(clientId, clientSecret);
+const github = new arctic.GitHub(clientId, clientSecret, redirectURI);
 
 const state = arctic.generateState();
 const scopes = ["user:email"];
