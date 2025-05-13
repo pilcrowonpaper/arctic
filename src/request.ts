@@ -30,7 +30,7 @@ export function encodeBasicCredentials(username: string, password: string): stri
 	return encoding.encodeBase64(bytes);
 }
 
-export async function sendTokenRequest(request: Request): Promise<OAuth2Tokens> {
+export async function sendTokenRequest(request: Request, processResponse?: (obj: unknown) => unknown): Promise<OAuth2Tokens> {
 	let response: Response;
 	try {
 		response = await fetch(request);
@@ -63,6 +63,9 @@ export async function sendTokenRequest(request: Request): Promise<OAuth2Tokens> 
 			data = await response.json();
 		} catch {
 			throw new UnexpectedResponseError(response.status);
+		}
+		if (processResponse) {
+			data = processResponse(data);
 		}
 		if (typeof data !== "object" || data === null) {
 			throw new UnexpectedErrorResponseBodyError(response.status, data);

@@ -56,6 +56,7 @@ export { Tumblr } from "./providers/tumblr.js";
 export { Twitch } from "./providers/twitch.js";
 export { Twitter } from "./providers/twitter.js";
 export { VK } from "./providers/vk.js";
+export { Withings } from "./providers/withings.js";
 export { WorkOS } from "./providers/workos.js";
 export { Yahoo } from "./providers/yahoo.js";
 export { Yandex } from "./providers/yandex.js";
