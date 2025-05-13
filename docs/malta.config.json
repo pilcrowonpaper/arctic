@@ -76,6 +76,7 @@
 				["Twitch", "/providers/twitch"],
 				["Twitter", "/providers/twitter"],
 				["VK", "/providers/vk"],
+				["Withings", "/providers/withings"],
 				["WorkOS", "/providers/workos"],
 				["Yahoo", "/providers/yahoo"],
 				["Yandex", "/providers/yandex"],
