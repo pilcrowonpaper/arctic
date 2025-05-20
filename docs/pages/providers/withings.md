@@ -40,9 +40,9 @@ try {
 	const accessToken = tokens.accessToken();
 	const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
 } catch (e) {
-	if (e instanceof arctic.UnexpectedErrorResponseBodyError) {
+	if (e instanceof arctic.OAuth2RequestError) {
 		// Invalid authorization code, credentials, or redirect URI
-		const responseBody = e.data;
+		const responseBody = e.code;
 		// ...
 	}
 	if (e instanceof arctic.ArcticFetchError) {
@@ -67,9 +67,9 @@ const response = await fetch("https://wbsapi.withings.net/measure", {
 	},
 	body: JSON.stringify({
 		action: "getmeas",
-		meastypes: "1,5,6,8,76", // weight-related measures
-		category: 1, // real measures
-		lastupdate: 1746082800 // May 1, 2025
+		meastypes: "1,5,6,8,76",
+		category: 1,
+		lastupdate: 1746082800
 	})
 });
 const measures = await response.json();
