@@ -10,6 +10,8 @@ title: "arctic"
 - [`ArcticFetchError`](/reference/main/ArcticFetchError)
 - [`OAuth2RequestError`](/reference/main/OAuth2RequestError)
 - [`OAuth2Tokens`](/reference/main/OAuth2Tokens)
+- [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError)
+- [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError)
 
 ## Functions
 
