@@ -12,4 +12,4 @@ If your pull request is making changes to the library source code, please create
 
 If you're unsure, you can just create it against the `main` branch.
 
-- [ ] Please tick this box if you’ve read and understood this section..
+- [ ] Please tick this box if you’ve read and understood this section.

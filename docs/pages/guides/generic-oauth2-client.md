@@ -51,7 +51,7 @@ const url = client.createAuthorizationURLWithPKCE(
 
 ## Validate authorization code
 
-Use `OAuth2Client.validateAuthorizationCode()` to validate authorization codes. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens) instance, or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError)..
+Use `OAuth2Client.validateAuthorizationCode()` to validate authorization codes. This returns an [`OAuth2Tokens`](/reference/main/OAuth2Tokens) instance, or throw one of [`OAuth2RequestError`](/reference/main/OAuth2RequestError), [`ArcticFetchError`](/reference/main/ArcticFetchError), [`UnexpectedResponseError`](/reference/main/UnexpectedResponseError), or [`UnexpectedErrorResponseBodyError`](/reference/main/UnexpectedErrorResponseBodyError).
 
 ```ts
 import * as arctic from "arctic";
