@@ -11,17 +11,17 @@ export function joinURIAndPath(base: string, ...path: string[]): string {
 }
 
 export function createOAuth2Request(endpoint: string, body: URLSearchParams): Request {
-	const bodyBytes = new TextEncoder().encode(body.toString());
+	const bodyStr = body.toString('utf-8');
 	const request = new Request(endpoint, {
 		method: "POST",
-		body: bodyBytes
+		body: bodyStr
 	});
 	request.headers.set("Content-Type", "application/x-www-form-urlencoded");
 	request.headers.set("Accept", "application/json");
 	// Required by GitHub, and probably by others as well
 	request.headers.set("User-Agent", "arctic");
 	// Required by Reddit
-	request.headers.set("Content-Length", bodyBytes.byteLength.toString());
+	request.headers.set("Content-Length", Buffer.byteLength(bodyStr, 'utf-8'));
 	return request;
 }
 
