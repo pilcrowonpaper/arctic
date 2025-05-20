@@ -70,6 +70,8 @@ async function sendTokenRequest(request: Request): Promise<OAuth2Tokens> {
 		let error: Error;
 		try {
 			// Withings returns an `error` field but the value deviates from the RFC.
+			// Probably better to throw `UnexpectedErrorResponseBodyError`
+			// but we're keeping `OAuth2RequestError` for consistency with the other providers.
 			error = createOAuth2RequestError(data);
 		} catch {
 			throw new UnexpectedErrorResponseBodyError(response.status, data);
