@@ -60,14 +60,14 @@ Use the `/measure` endpoint. See [the API docs](https://developer.withings.com/a
 const response = await fetch("https://wbsapi.withings.net/measure", {
 	method: "POST",
 	headers: {
-       	Authorization: `Bearer ${tokens.accessToken()}`,
+		Authorization: `Bearer ${tokens.accessToken()}`,
 		"Content-Type": "application/json"
 	},
 	body: JSON.stringify({
 		action: "getmeas",
 		meastypes: "1,5,6,8,76", // weight-related measures
-		category: 1,             // real measures
-		lastupdate: 1746082800   // May 1, 2025
+		category: 1, // real measures
+		lastupdate: 1746082800 // May 1, 2025
 	})
 });
 const measures = await response.json();

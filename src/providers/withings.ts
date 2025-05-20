@@ -1,6 +1,11 @@
-import { createOAuth2Request, sendTokenRequest } from "../request.js";
-
-import type { OAuth2Tokens } from "../oauth2.js";
+import {
+	ArcticFetchError,
+	createOAuth2Request,
+	createOAuth2RequestError,
+	UnexpectedErrorResponseBodyError,
+	UnexpectedResponseError
+} from "../request.js";
+import { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://account.withings.com/oauth2_user/authorize2";
 const tokenEndpoint = "https://wbsapi.withings.net/v2/oauth2";
@@ -21,6 +26,7 @@ export class Withings {
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("state", state);
+		// Withings deviates from the RFC and uses a comma-delimitated string instead of spaces.
 		if (scopes.length > 0) {
 			url.searchParams.set("scope", scopes.join(","));
 		}
@@ -30,6 +36,7 @@ export class Withings {
 
 	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
+		// Withings requires an `action` parameter.
 		body.set("action", "requesttoken");
 		body.set("grant_type", "authorization_code");
 		body.set("code", code);
@@ -37,7 +44,60 @@ export class Withings {
 		body.set("client_id", this.clientId);
 		body.set("client_secret", this.clientSecret);
 		const request = createOAuth2Request(tokenEndpoint, body);
-		const tokens = await sendTokenRequest(request, (obj) => (obj as any).body);
+		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
+}
+
+async function sendTokenRequest(request: Request): Promise<OAuth2Tokens> {
+	let response: Response;
+	try {
+		response = await fetch(request);
+	} catch (e) {
+		throw new ArcticFetchError(e);
+	}
+
+	if (response.status === 400 || response.status === 401) {
+		let data: unknown;
+		try {
+			data = await response.json();
+		} catch {
+			throw new UnexpectedResponseError(response.status);
+		}
+		if (typeof data !== "object" || data === null) {
+			throw new UnexpectedErrorResponseBodyError(response.status, data);
+		}
+		let error: Error;
+		try {
+			// Withings returns an `error` field but the value deviates from the RFC.
+			error = createOAuth2RequestError(data);
+		} catch {
+			throw new UnexpectedErrorResponseBodyError(response.status, data);
+		}
+		throw error;
+	}
+
+	if (response.status === 200) {
+		let data: unknown;
+		try {
+			data = await response.json();
+		} catch {
+			throw new UnexpectedResponseError(response.status);
+		}
+		if (typeof data !== "object" || data === null) {
+			// consistent with the shared `sendTokenRequest()`
+			throw new UnexpectedErrorResponseBodyError(response.status, data);
+		}
+		// Withings returns `{"status": 0, "body": {...}}`.
+		if (!("body" in data) || typeof data.body !== "object" || data.body === null) {
+			throw new Error("Missing or invalid 'body' field");
+		}
+		const tokens = new OAuth2Tokens(data.body);
+		return tokens;
+	}
+
+	if (response.body !== null) {
+		await response.body.cancel();
+	}
+	throw new UnexpectedResponseError(response.status);
 }
