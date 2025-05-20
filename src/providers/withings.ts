@@ -57,21 +57,30 @@ async function sendTokenRequest(request: Request): Promise<OAuth2Tokens> {
 		throw new ArcticFetchError(e);
 	}
 
-	if (response.status === 400 || response.status === 401) {
-		let data: unknown;
-		try {
-			data = await response.json();
-		} catch {
-			throw new UnexpectedResponseError(response.status);
+	// Withings returns a 200 even for error responses.
+	if (response.status !== 200) {
+		if (response.body !== null) {
+			await response.body.cancel();
 		}
-		if (typeof data !== "object" || data === null) {
-			throw new UnexpectedErrorResponseBodyError(response.status, data);
-		}
+		throw new UnexpectedResponseError(response.status);
+	}
+
+	let data: unknown;
+	try {
+		data = await response.json();
+	} catch {
+		throw new UnexpectedResponseError(response.status);
+	}
+	if (typeof data !== "object" || data === null) {
+		throw new UnexpectedErrorResponseBodyError(response.status, data);
+	}
+
+	// Withings returns an `error` field but the value deviates from the RFC.
+	// Probably better to throw `UnexpectedErrorResponseBodyError`
+	// but we're keeping `OAuth2RequestError` for now to be consistent with the other providers.
+	if ("error" in data && typeof data.error === "string") {
 		let error: Error;
 		try {
-			// Withings returns an `error` field but the value deviates from the RFC.
-			// Probably better to throw `UnexpectedErrorResponseBodyError`
-			// but we're keeping `OAuth2RequestError` for consistency with the other providers.
 			error = createOAuth2RequestError(data);
 		} catch {
 			throw new UnexpectedErrorResponseBodyError(response.status, data);
@@ -79,27 +88,10 @@ async function sendTokenRequest(request: Request): Promise<OAuth2Tokens> {
 		throw error;
 	}
 
-	if (response.status === 200) {
-		let data: unknown;
-		try {
-			data = await response.json();
-		} catch {
-			throw new UnexpectedResponseError(response.status);
-		}
-		if (typeof data !== "object" || data === null) {
-			// consistent with the shared `sendTokenRequest()`
-			throw new UnexpectedErrorResponseBodyError(response.status, data);
-		}
-		// Withings returns `{"status": 0, "body": {...}}`.
-		if (!("body" in data) || typeof data.body !== "object" || data.body === null) {
-			throw new Error("Missing or invalid 'body' field");
-		}
-		const tokens = new OAuth2Tokens(data.body);
-		return tokens;
+	// Withings returns `{"status": 0, "body": {...}}`.
+	if (!("body" in data) || typeof data.body !== "object" || data.body === null) {
+		throw new Error("Missing or invalid 'body' field");
 	}
-
-	if (response.body !== null) {
-		await response.body.cancel();
-	}
-	throw new UnexpectedResponseError(response.status);
+	const tokens = new OAuth2Tokens(data.body);
+	return tokens;
 }
