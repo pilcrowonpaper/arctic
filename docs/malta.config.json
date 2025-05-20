@@ -90,6 +90,7 @@
 			"title": "Links",
 			"pages": [
 				["v1 docs", "https://v1.arcticjs.dev"],
+				["v2 docs", "https://v2.arcticjs.dev"],
 				["GitHub", "https://github.com/pilcrowonpaper/arctic"],
 				["Twitter", "https://twitter.com/pilcrowonpaper"],
 				["Donate", "https://github.com/sponsors/pilcrowOnPaper"]
