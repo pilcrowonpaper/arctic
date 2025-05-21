@@ -11,7 +11,7 @@ export function joinURIAndPath(base: string, ...path: string[]): string {
 }
 
 export function createOAuth2Request(endpoint: string, body: URLSearchParams): Request {
-	const bodyStr = body.toString('utf-8');
+	const bodyStr = body.toString();
 	const request = new Request(endpoint, {
 		method: "POST",
 		body: bodyStr
@@ -21,7 +21,7 @@ export function createOAuth2Request(endpoint: string, body: URLSearchParams): Re
 	// Required by GitHub, and probably by others as well
 	request.headers.set("User-Agent", "arctic");
 	// Required by Reddit
-	request.headers.set("Content-Length", Buffer.byteLength(bodyStr, 'utf-8'));
+	request.headers.set("Content-Length", Buffer.byteLength(bodyStr, 'utf8'));
 	return request;
 }
 
