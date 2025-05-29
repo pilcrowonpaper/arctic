@@ -10,7 +10,7 @@ export class Figma {
 	private client: OAuth2Client;
 
 	constructor(clientId: string, clientSecret: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, clientSecret, redirectURI, null);
+		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
 	public createAuthorizationURL(state: string, scopes: string[]): URL {

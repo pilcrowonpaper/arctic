@@ -14,7 +14,7 @@ export class GitLab {
 		this.authorizationEndpoint = joinURIAndPath(baseURL, "/oauth/authorize");
 		this.tokenEndpoint = joinURIAndPath(baseURL, "/oauth/token");
 		this.tokenRevocationEndpoint = joinURIAndPath(baseURL, "/oauth/revoke");
-		this.client = new OAuth2Client(clientId, clientSecret, redirectURI, null);
+		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
 	public createAuthorizationURL(state: string, scopes: string[]): URL {

@@ -9,7 +9,7 @@ export class Lichess {
 	private client: OAuth2Client;
 
 	constructor(clientId: string, redirectURI: string) {
-		this.client = new OAuth2Client(clientId, null, redirectURI, null);
+		this.client = new OAuth2Client(clientId, null, redirectURI);
 	}
 	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
 		const url = this.client.createAuthorizationURLWithPKCE(

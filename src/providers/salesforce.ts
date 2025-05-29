@@ -13,7 +13,7 @@ export class Salesforce {
 		this.authorizationEndpoint = `https://${domain}/services/oauth2/authorize`;
 		this.tokenEndpoint = `https://${domain}/services/oauth2/token`;
 		this.tokenRevocationEndpoint = `https://${domain}/services/oauth2/revoke`;
-		this.client = new OAuth2Client(clientId, clientSecret, redirectURI, null);
+		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
 	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {

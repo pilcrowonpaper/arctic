@@ -12,7 +12,7 @@ export class Gitea {
 	constructor(baseURL: string, clientId: string, clientSecret: string | null, redirectURI: string) {
 		this.authorizationEndpoint = joinURIAndPath(baseURL, "/login/oauth/authorize");
 		this.tokenEndpoint = joinURIAndPath(baseURL, "/login/oauth/access_token");
-		this.client = new OAuth2Client(clientId, clientSecret, redirectURI, null);
+		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
 	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {

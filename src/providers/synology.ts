@@ -18,7 +18,7 @@ export class Synology {
 		this.authorizationEndpoint = joinURIAndPath(baseURL, "/webman/sso/SSOOauth.cgi");
 		this.tokenEndpoint = joinURIAndPath(baseURL, "/webman/sso/SSOAccessToken.cgi");
 
-		this.client = new OAuth2Client(applicationId, applicationSecret, redirectURI, null);
+		this.client = new OAuth2Client(applicationId, applicationSecret, redirectURI);
 	}
 
 	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {

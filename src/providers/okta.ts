@@ -24,7 +24,7 @@ export class Okta {
 		this.authorizationEndpoint = joinURIAndPath(baseURL, "/v1/authorize");
 		this.tokenEndpoint = joinURIAndPath(baseURL, "/v1/token");
 		this.tokenRevocationEndpoint = joinURIAndPath(baseURL, "/v1/revoke");
-		this.client = new OAuth2Client(clientId, clientSecret, redirectURI, null);
+		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
 	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
