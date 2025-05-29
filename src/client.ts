@@ -88,6 +88,28 @@ export class OAuth2Client {
 		return tokens;
 	}
 
+	public async validateAuthorizationCodeWithClientSecret(
+		tokenEndpoint: string,
+		code: string,
+		codeVerifier: string | null
+	): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "authorization_code");
+		body.set("code", code);
+		if (this.redirectURI !== null) {
+			body.set("redirect_uri", this.redirectURI);
+		}
+		if (codeVerifier !== null) {
+			body.set("code_verifier", codeVerifier);
+		}
+		if (this.clientPassword !== null) {
+			body.set("client_secret", this.clientPassword);
+		}
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
+		return tokens;
+	}
+
 	public async refreshAccessToken(
 		tokenEndpoint: string,
 		refreshToken: string,
@@ -111,6 +133,25 @@ export class OAuth2Client {
 		return tokens;
 	}
 
+	public async refreshAccessTokenWithClientSecret(
+		tokenEndpoint: string,
+		refreshToken: string,
+		scopes: string[]
+	): Promise<OAuth2Tokens> {
+		const body = new URLSearchParams();
+		body.set("grant_type", "refresh_token");
+		body.set("refresh_token", refreshToken);
+		if (this.clientPassword !== null) {
+			body.set("client_secret", this.clientPassword);
+		}
+		if (scopes.length > 0) {
+			body.set("scope", scopes.join(" "));
+		}
+		const request = createOAuth2Request(tokenEndpoint, body);
+		const tokens = await sendTokenRequest(request);
+		return tokens;
+	}
+
 	public async revokeToken(tokenRevocationEndpoint: string, token: string): Promise<void> {
 		const body = new URLSearchParams();
 		body.set("token", token);
@@ -122,6 +163,16 @@ export class OAuth2Client {
 			const encodedCredentials = encodeBasicCredentials(this.clientId, this.clientPassword);
 			request.headers.set("Authorization", `Basic ${encodedCredentials}`);
 		}
+		await sendTokenRevocationRequest(request);
+	}
+
+	public async revokeTokenWithClientSecret(tokenRevocationEndpoint: string, token: string): Promise<void> {
+		const body = new URLSearchParams();
+		body.set("token", token);
+		if (this.clientPassword !== null) {
+			body.set("client_secret", this.clientPassword);
+		}
+		const request = createOAuth2Request(tokenRevocationEndpoint, body);
 		await sendTokenRevocationRequest(request);
 	}
 }
