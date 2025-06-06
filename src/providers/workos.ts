@@ -2,24 +2,26 @@ import { createOAuth2Request, sendTokenRequest } from "../request.js";
 
 import { createS256CodeChallenge, type OAuth2Tokens } from "../oauth2.js";
 
-const authorizationEndpoint = "https://api.workos.com/sso/authorize";
-const tokenEndpoint = "https://api.workos.com/sso/token";
-
 export class WorkOS {
 	private clientId: string;
 	private clientSecret: string | null;
 	private redirectURI: string;
+	private authorizationEndpoint: string;
+	private tokenEndpoint: string;
 
-	constructor(clientId: string, clientSecret: string | null, redirectURI: string) {
+	constructor(domain:string,clientId: string, clientSecret: string | null, redirectURI: string) {
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.redirectURI = redirectURI;
+		this.authorizationEndpoint = `https://${domain}/oauth2/authorize`;
+		this.tokenEndpoint = `https://${domain}/oauth2/token`;
 	}
 
 	public createAuthorizationURL(state: string, codeVerifier: string | null): URL {
-		const url = new URL(authorizationEndpoint);
+		const url = new URL(this.authorizationEndpoint);
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
+		url.searchParams.set("nonce", crypto.randomUUID());
 		url.searchParams.set("state", state);
 		url.searchParams.set("redirect_uri", this.redirectURI);
 		if (codeVerifier !== null) {
@@ -45,7 +47,7 @@ export class WorkOS {
 		if (codeVerifier !== null) {
 			body.set("code_verifier", codeVerifier);
 		}
-		const request = createOAuth2Request(tokenEndpoint, body);
+		const request = createOAuth2Request(this.tokenEndpoint, body);
 		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}
