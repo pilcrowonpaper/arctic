@@ -9,7 +9,7 @@ export class WorkOS {
 	private authorizationEndpoint: string;
 	private tokenEndpoint: string;
 
-	constructor(domain:string,clientId: string, clientSecret: string | null, redirectURI: string) {
+	constructor(domain:string, clientId: string, clientSecret: string | null, redirectURI: string) {
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.redirectURI = redirectURI;
