@@ -1,12 +1,13 @@
 import { createS256CodeChallenge } from "../oauth2.js";
 import { createOAuth2Request, sendTokenRequest } from "../request.js";
+import type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "../provider.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://auth.mercadolibre.com/authorization";
 const tokenEndpoint = "https://api.mercadolibre.com/oauth/token";
 
-export class MercadoLibre {
+export class MercadoLibre implements OAuth2Provider<["state", "codeVerifier"], ["code", "codeVerifier"]> {
 	public clientId: string;
 
 	private clientSecret: string;
@@ -19,7 +20,8 @@ export class MercadoLibre {
 	}
 
 	// `scopes` not required since they are defined in the application settings
-	public createAuthorizationURL(state: string, codeVerifier: string): URL {
+	public createAuthorizationURL(options: Pick<OAuth2AuthorizationOptions, "state" | "codeVerifier">): URL {
+		const { state, codeVerifier } = options;
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
@@ -32,9 +34,9 @@ export class MercadoLibre {
 	}
 
 	public async validateAuthorizationCode(
-		code: string,
-		codeVerifier: string
+		options: Pick<OAuth2ValidationOptions, "code" | "codeVerifier">
 	): Promise<OAuth2Tokens> {
+		const { code, codeVerifier } = options;
 		const body = new URLSearchParams();
 		body.set("grant_type", "authorization_code");
 		body.set("code", code);

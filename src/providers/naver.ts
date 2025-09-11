@@ -1,11 +1,12 @@
 import { createOAuth2Request, sendTokenRequest } from "../request.js";
+import type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "../provider.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://nid.naver.com/oauth2.0/authorize";
 const tokenEndpoint = "https://nid.naver.com/oauth2.0/token";
 
-export class Naver {
+export class Naver implements OAuth2Provider<[], ["code"]> {
 	private clientId: string;
 	private clientSecret: string;
 	private redirectURI: string;
@@ -16,7 +17,7 @@ export class Naver {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(): URL {
+	public createAuthorizationURL(options: {}): URL {
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
@@ -24,7 +25,8 @@ export class Naver {
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+	public async validateAuthorizationCode(options: Pick<OAuth2ValidationOptions, "code">): Promise<OAuth2Tokens> {
+		const { code } = options;
 		const body = new URLSearchParams();
 		body.set("grant_type", "authorization_code");
 		body.set("client_id", this.clientId);

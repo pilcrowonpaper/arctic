@@ -1,9 +1,10 @@
 import { OAuth2Client } from "../client.js";
 import { joinURIAndPath } from "../request.js";
+import type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "../provider.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-export class GitLab {
+export class GitLab implements OAuth2Provider<["state", "scopes"], ["code"]> {
 	private authorizationEndpoint: string;
 	private tokenEndpoint: string;
 	private tokenRevocationEndpoint: string;
@@ -17,12 +18,14 @@ export class GitLab {
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
-	public createAuthorizationURL(state: string, scopes: string[]): URL {
+	public createAuthorizationURL(options: Pick<OAuth2AuthorizationOptions, "state" | "scopes">): URL {
+		const { state, scopes = [] } = options;
 		const url = this.client.createAuthorizationURL(this.authorizationEndpoint, state, scopes);
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+	public async validateAuthorizationCode(options: Pick<OAuth2ValidationOptions, "code">): Promise<OAuth2Tokens> {
+		const { code } = options;
 		const tokens = await this.client.validateAuthorizationCode(this.tokenEndpoint, code, null);
 		return tokens;
 	}

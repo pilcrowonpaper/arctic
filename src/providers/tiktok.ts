@@ -1,5 +1,6 @@
 import { createS256CodeChallenge } from "../oauth2.js";
 import { createOAuth2Request, sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
+import type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "../provider.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -7,7 +8,7 @@ const authorizationEndpoint = "https://www.tiktok.com/v2/auth/authorize";
 const tokenEndpoint = "https://open.tiktokapis.com/v2/oauth/token/";
 const tokenRevocationEndpoint = "https://open.tiktokapis.com/v2/oauth/revoke/";
 
-export class TikTok {
+export class TikTok implements OAuth2Provider<["state", "codeVerifier", "scopes"], ["code", "codeVerifier"]> {
 	private clientKey: string;
 	private clientSecret: string;
 	private redirectURI: string;
@@ -18,7 +19,8 @@ export class TikTok {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
+	public createAuthorizationURL(options: Pick<OAuth2AuthorizationOptions, "state" | "codeVerifier" | "scopes">): URL {
+		const { state, codeVerifier, scopes = [] } = options;
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_key", this.clientKey);
@@ -34,9 +36,9 @@ export class TikTok {
 	}
 
 	public async validateAuthorizationCode(
-		code: string,
-		codeVerifier: string
+		options: Pick<OAuth2ValidationOptions, "code" | "codeVerifier">
 	): Promise<OAuth2Tokens> {
+		const { code, codeVerifier } = options;
 		const body = new URLSearchParams();
 		body.set("grant_type", "authorization_code");
 		body.set("code", code);

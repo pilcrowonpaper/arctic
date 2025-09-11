@@ -1,5 +1,6 @@
 import { createS256CodeChallenge } from "../oauth2.js";
 import { createOAuth2Request, sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
+import type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "../provider.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -8,7 +9,7 @@ const tokenEndpoint = "https://api.polar.sh/v1/oauth2/token";
 const tokenRevocationEndpoint = "https://api.polar.sh/v1/oauth2/revoke";
 
 // Polar.sh supports HTTP Basic Auth but `client_secret` is set as the default authentication method.
-export class Polar {
+export class Polar implements OAuth2Provider<["state", "codeVerifier", "scopes"], ["code", "codeVerifier"]> {
 	private clientId: string;
 	private clientSecret: string | null;
 	private redirectURI: string;
@@ -19,7 +20,8 @@ export class Polar {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
+	public createAuthorizationURL(options: Pick<OAuth2AuthorizationOptions, "state" | "codeVerifier" | "scopes">): URL {
+		const { state, codeVerifier, scopes = [] } = options;
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set("client_id", this.clientId);
 		url.searchParams.set("response_type", "code");
@@ -35,9 +37,9 @@ export class Polar {
 	}
 
 	public async validateAuthorizationCode(
-		code: string,
-		codeVerifier: string
+		options: Pick<OAuth2ValidationOptions, "code" | "codeVerifier">
 	): Promise<OAuth2Tokens> {
+		const { code, codeVerifier } = options;
 		const body = new URLSearchParams();
 		body.set("code", code);
 		body.set("client_id", this.clientId);

@@ -1,11 +1,12 @@
 import { createOAuth2Request, sendTokenRequest } from "../request.js";
+import type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "../provider.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://www.donationalerts.com/oauth/authorize";
 const tokenEndpoint = "https://www.donationalerts.com/oauth/token";
 
-export class DonationAlerts {
+export class DonationAlerts implements OAuth2Provider<["scopes"], ["code"]> {
 	private clientId: string;
 	private clientSecret: string;
 	private redirectURI: string;
@@ -16,7 +17,8 @@ export class DonationAlerts {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(scopes: string[]): URL {
+	public createAuthorizationURL(options: Pick<OAuth2AuthorizationOptions, "scopes">): URL {
+		const { scopes = [] } = options;
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
@@ -25,7 +27,8 @@ export class DonationAlerts {
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+	public async validateAuthorizationCode(options: Pick<OAuth2ValidationOptions, "code">): Promise<OAuth2Tokens> {
+		const { code } = options;
 		const body = new URLSearchParams();
 		body.set("grant_type", "authorization_code");
 		body.set("code", code);

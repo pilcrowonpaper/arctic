@@ -1,4 +1,5 @@
 import { createOAuth2Request, sendTokenRequest, sendTokenRevocationRequest } from "../request.js";
+import type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "../provider.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
@@ -6,7 +7,7 @@ const authorizationEndpoint = "https://account.box.com/api/oauth2/authorize";
 const tokenEndpoint = "https://api.box.com/oauth2/token";
 const tokenRevocationEndpoint = "https://api.box.com/oauth2/revoke";
 
-export class Box {
+export class Box implements OAuth2Provider<["state", "scopes"], ["code"]> {
 	private clientId: string;
 	private clientSecret: string;
 	private redirectURI: string;
@@ -17,7 +18,8 @@ export class Box {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(state: string, scopes: string[]): URL {
+	public createAuthorizationURL(options: Pick<OAuth2AuthorizationOptions, "state" | "scopes">): URL {
+		const { state, scopes = [] } = options;
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
@@ -29,9 +31,10 @@ export class Box {
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+	public async validateAuthorizationCode(options: Pick<OAuth2ValidationOptions, "code">): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
 		body.set("grant_type", "authorization_code");
+		const { code } = options;
 		body.set("code", code);
 		body.set("redirect_uri", this.redirectURI);
 		body.set("client_id", this.clientId);

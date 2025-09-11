@@ -5,10 +5,11 @@ import {
 	joinURIAndPath,
 	sendTokenRequest
 } from "../request.js";
+import type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "../provider.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-export class MicrosoftEntraId {
+export class MicrosoftEntraId implements OAuth2Provider<["state", "codeVerifier", "scopes"], ["code", "codeVerifier"]> {
 	private authorizationEndpoint: string;
 	private tokenEndpoint: string;
 	private clientId: string;
@@ -31,7 +32,8 @@ export class MicrosoftEntraId {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
+	public createAuthorizationURL(options: Pick<OAuth2AuthorizationOptions, "state" | "codeVerifier" | "scopes">): URL {
+		const { state, codeVerifier, scopes = [] } = options;
 		const url = new URL(this.authorizationEndpoint);
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
@@ -47,9 +49,9 @@ export class MicrosoftEntraId {
 	}
 
 	public async validateAuthorizationCode(
-		code: string,
-		codeVerifier: string
+		options: Pick<OAuth2ValidationOptions, "code" | "codeVerifier">
 	): Promise<OAuth2Tokens> {
+		const { code, codeVerifier } = options;
 		const body = new URLSearchParams();
 		body.set("grant_type", "authorization_code");
 		body.set("code", code);

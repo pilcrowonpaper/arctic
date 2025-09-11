@@ -1,8 +1,9 @@
 import { OAuth2Client, CodeChallengeMethod } from "../client.js";
+import type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "../provider.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-export class Salesforce {
+export class Salesforce implements OAuth2Provider<["state", "codeVerifier", "scopes"], ["code", "codeVerifier"]> {
 	private authorizationEndpoint: string;
 	private tokenEndpoint: string;
 	private tokenRevocationEndpoint: string;
@@ -16,7 +17,8 @@ export class Salesforce {
 		this.client = new OAuth2Client(clientId, clientSecret, redirectURI);
 	}
 
-	public createAuthorizationURL(state: string, codeVerifier: string, scopes: string[]): URL {
+	public createAuthorizationURL(options: Pick<OAuth2AuthorizationOptions, "state" | "codeVerifier" | "scopes">): URL {
+		const { state, codeVerifier, scopes = [] } = options;
 		const url = this.client.createAuthorizationURLWithPKCE(
 			this.authorizationEndpoint,
 			state,
@@ -28,9 +30,9 @@ export class Salesforce {
 	}
 
 	public async validateAuthorizationCode(
-		code: string,
-		codeVerifier: string
+		options: Pick<OAuth2ValidationOptions, "code" | "codeVerifier">
 	): Promise<OAuth2Tokens> {
+		const { code, codeVerifier } = options;
 		const tokens = await this.client.validateAuthorizationCode(
 			this.tokenEndpoint,
 			code,

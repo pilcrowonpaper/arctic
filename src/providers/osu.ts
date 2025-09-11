@@ -1,11 +1,12 @@
 import { createOAuth2Request, sendTokenRequest } from "../request.js";
+import type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "../provider.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
 const authorizationEndpoint = "https://osu.ppy.sh/oauth/authorize";
 const tokenEndpoint = "https://osu.ppy.sh/oauth/token";
 
-export class Osu {
+export class Osu implements OAuth2Provider<["state", "scopes"], ["code"]> {
 	private clientId: string;
 	private clientSecret: string;
 	private redirectURI: string | null;
@@ -16,7 +17,8 @@ export class Osu {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(state: string, scopes: string[]): URL {
+	public createAuthorizationURL(options: Pick<OAuth2AuthorizationOptions, "state" | "scopes">): URL {
+		const { state, scopes = [] } = options;
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
@@ -30,9 +32,10 @@ export class Osu {
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+	public async validateAuthorizationCode(options: Pick<OAuth2ValidationOptions, "code">): Promise<OAuth2Tokens> {
 		const body = new URLSearchParams();
 		body.set("grant_type", "authorization_code");
+		const { code } = options;
 		body.set("code", code);
 		if (this.redirectURI !== null) {
 			body.set("redirect_uri", this.redirectURI);
@@ -40,6 +43,7 @@ export class Osu {
 		body.set("client_id", this.clientId);
 		body.set("client_secret", this.clientSecret);
 		const request = createOAuth2Request(tokenEndpoint, body);
+
 		const tokens = await sendTokenRequest(request);
 		return tokens;
 	}

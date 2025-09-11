@@ -7,11 +7,12 @@ import {
 	UnexpectedResponseError
 } from "../request.js";
 import { OAuth2Tokens } from "../oauth2.js";
+import type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "../provider.js";
 
 const authorizationEndpoint = "https://github.com/login/oauth/authorize";
 const tokenEndpoint = "https://github.com/login/oauth/access_token";
 
-export class GitHub {
+export class GitHub implements OAuth2Provider<["state", "scopes"], ["code"]> {
 	private clientId: string;
 	private clientSecret: string;
 	private redirectURI: string | null;
@@ -22,7 +23,8 @@ export class GitHub {
 		this.redirectURI = redirectURI;
 	}
 
-	public createAuthorizationURL(state: string, scopes: string[]): URL {
+	public createAuthorizationURL(options: Pick<OAuth2AuthorizationOptions, "state" | "scopes">): URL {
+		const { state, scopes = [] } = options;
 		const url = new URL(authorizationEndpoint);
 		url.searchParams.set("response_type", "code");
 		url.searchParams.set("client_id", this.clientId);
@@ -36,7 +38,8 @@ export class GitHub {
 		return url;
 	}
 
-	public async validateAuthorizationCode(code: string): Promise<OAuth2Tokens> {
+	public async validateAuthorizationCode(options: Pick<OAuth2ValidationOptions, "code">): Promise<OAuth2Tokens> {
+		const { code } = options;
 		const body = new URLSearchParams();
 		body.set("grant_type", "authorization_code");
 		body.set("code", code);

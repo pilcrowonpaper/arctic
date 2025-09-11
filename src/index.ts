@@ -72,3 +72,4 @@ export {
 	UnexpectedResponseError
 } from "./request.js";
 export { decodeIdToken } from "./oidc.js";
+export type { OAuth2Provider, OAuth2AuthorizationOptions, OAuth2ValidationOptions } from "./provider.js";
