@@ -68,7 +68,7 @@ const claims = arctic.decodeIdToken(idToken);
 ```
 
 ```ts
-const response = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
+const response = await fetch("https://slack.com/api/openid.connect.userInfo", {
 	headers: {
 		Authorization: `Bearer ${accessToken}`
 	}
