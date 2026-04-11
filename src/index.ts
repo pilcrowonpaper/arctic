@@ -50,6 +50,7 @@ export { Spotify } from "./providers/spotify.js";
 export { StartGG } from "./providers/startgg.js";
 export { Strava } from "./providers/strava.js";
 export { Synology } from "./providers/synology.js";
+export { Telegram } from "./providers/telegram.js";
 export { TikTok } from "./providers/tiktok.js";
 export { Tiltify } from "./providers/tiltify.js";
 export { Tumblr } from "./providers/tumblr.js";

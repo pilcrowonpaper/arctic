@@ -70,6 +70,7 @@
 				["Start.gg", "/providers/startgg"],
 				["Strava", "/providers/strava"],
 				["Synology", "/providers/synology"],
+				["Telegram", "/providers/telegram"],
 				["TikTok", "/providers/tiktok"],
 				["Tiltify", "/providers/tiltify"],
 				["Tumblr", "/providers/tumblr"],
