@@ -84,6 +84,7 @@ Arctic does not strictly follow semantic versioning. While we aim to only introd
 - Start.gg
 - Strava
 - Synology
+- Telegram
 - TikTok
 - Tiltify
 - Tumblr
