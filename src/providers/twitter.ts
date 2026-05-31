@@ -2,9 +2,9 @@ import { OAuth2Client, CodeChallengeMethod } from "../client.js";
 
 import type { OAuth2Tokens } from "../oauth2.js";
 
-const authorizationEndpoint = "https://twitter.com/i/oauth2/authorize";
-const tokenEndpoint = "https://api.twitter.com/2/oauth2/token";
-const tokenRevocationEndpoint = "https://api.twitter.com/2/oauth2/revoke";
+const authorizationEndpoint = "https://x.com/i/oauth2/authorize";
+const tokenEndpoint = "https://api.x.com/2/oauth2/token";
+const tokenRevocationEndpoint = "https://api.x.com/2/oauth2/revoke";
 
 export class Twitter {
 	private client: OAuth2Client;

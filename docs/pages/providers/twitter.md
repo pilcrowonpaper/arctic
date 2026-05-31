@@ -57,7 +57,7 @@ try {
 
 ## Get user profile
 
-Add the `users.read` and `tweet.read` scopes and use the [`/users/me` endpoint](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me). You cannot get user emails with the v2 API.
+Add the `users.read` and `tweet.read` scopes and use the [`/users/me` endpoint](https://docs.x.com/x-api/users/get-my-user). You cannot get user emails with the v2 API.
 
 ```ts
 const scopes = ["users.read", "tweet.read"];
@@ -65,7 +65,7 @@ const url = twitter.createAuthorizationURL(state, codeVerifier, scopes);
 ```
 
 ```ts
-const response = await fetch("https://api.twitter.com/2/users/me", {
+const response = await fetch("https://api.x.com/2/users/me", {
 	headers: {
 		Authorization: `Bearer ${accessToken}`
 	}
