@@ -1,0 +1,14 @@
+Arctic was deprecated on July 2026. Some example code (with comments) to replace the package can be found under /code.
+
+Before starting, you should do the following:
+
+- Register an OAuth client. You should note down the client ID and possibly the client secret.
+- Find the authorization server's authorization URL and token endpoint.
+- Check if the authorization server supports PKCE. If it isn't specified, it likely doesn't support PKCE. Using PKCE is recommended if supported.
+
+For a deep dive on everything auth, see the Auth Book. Feel free to ask questions on the Discord server linked in the book.
+
+Website: arcticjs.dev
+Repository: github.com/pilcrowonpaper/arctic
+Maintained by: Pilcrow (pilcrowonpaper.com)
+License: MIT (unless otherwise specified)

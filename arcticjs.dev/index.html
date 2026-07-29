@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Arctic</title>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+
+		<meta property="og:title" content="Arctic">
+		<meta property="og:type" content="website">
+		<meta property="og:locale" content="en_US">
+		<meta property="og:site_name" content="Arctic">
+		<meta property="og:url" content="https://arcticjs.dev">
+		<meta property="og:image" content="https://pilcrowonpaper.com/pilcrow.jpeg">
+
+		<meta name="twitter:card" content="summary">
+
+		<link rel="icon" type="image/jpeg" href="https://pilcrowonpaper.com/pilcrow.jpeg">
+
+		<link rel="canonical" href="https://arcticjs.dev">
+	</head>
+
+	<body>
+		<main>
+			<h1>Arctic</h1>
+
+			<p>
+				Arctic was deprecated in July 2026 (<a href="https://pilcrowonpaper.com/blog/18">announcement</a>). Some example
+				code with comments to replace the package can be found under /code directory in the repository (see below). The
+				<a href="https://github.com/pilcrowonpaper/arctic/tree/v3.7.0/docs/pages"
+					>old documentation and API reference</a
+				>
+				can be found in the GitHub repository.
+			</p>
+
+			<p>
+				For a basic OAuth 2.0 flow, the user is first redirected to the authorization server (e.g. google.com) to sign
+				in. This is called the authorization request. Next, the user is redirected back to your server with an
+				authorization code in the URL query string. Your server exchanges that authorization code for a new access token
+				by sending an access token request to the authorization server. The authorization server may also return a
+				refresh token, which can be exchanged for a new access token in the future by sending another access token
+				request.
+			</p>
+
+			<p>Before starting, you should do the following:</p>
+
+			<ul>
+				<li>
+					Register an OAuth client with the provider. You should note down the client ID and the client secret if
+					issued.
+				</li>
+				<li>Find the authorization server's authorization URL and token endpoint.</li>
+				<li>
+					Check if the authorization server supports PKCE. If it isn't specified, it likely doesn't support PKCE. Using
+					PKCE is recommended if supported.
+				</li>
+			</ul>
+
+			<p>Example code:</p>
+
+			<ul>
+				<li>
+					Authorization request without PKCE:
+					<a
+						href="https://raw.githubusercontent.com/pilcrowonpaper/arctic/refs/heads/main/code/authorization_request.ts"
+						>authorization_request.ts</a
+					>
+				</li>
+				<li>
+					Authorization request with PKCE:
+					<a
+						href="https://raw.githubusercontent.com/pilcrowonpaper/arctic/refs/heads/main/code/authorization_request-pkce.ts"
+						>authorization_request-pkce.ts</a
+					>
+				</li>
+				<li>
+					Authorization code exchange without PKCE:
+					<a
+						href="https://raw.githubusercontent.com/pilcrowonpaper/arctic/refs/heads/main/code/authorization_code_exchange.ts"
+						>authorization_code_exchange.ts</a
+					>
+				</li>
+				<li>
+					Authorization code exchange with PKCE:
+					<a
+						href="https://raw.githubusercontent.com/pilcrowonpaper/arctic/refs/heads/main/code/authorization_code_exchange.ts"
+						>authorization_code_exchange-pkce.ts</a
+					>
+				</li>
+				<li>
+					Refresh request:
+					<a href="https://raw.githubusercontent.com/pilcrowonpaper/arctic/refs/heads/main/code/refresh_request.ts"
+						>refresh_request.ts</a
+					>
+				</li>
+				<li>
+					Token revocation request:
+					<a
+						href="https://raw.githubusercontent.com/pilcrowonpaper/arctic/refs/heads/main/code/token_revocation_request.ts"
+						>token_revocation_request.ts</a
+					>
+				</li>
+			</ul>
+
+			<p>
+				For a deep dive on everything auth, see the <a href="https://auth.pilcrowonpaper.com">Auth Book</a>. Feel free
+				to ask questions on the Discord server linked in the book.
+			</p>
+
+			<p>
+				This website is maintained by <a href="https://pilcrowonpaper.com">Pilcrow</a>. The source code is hosted at
+				<a href="https://github.com/pilcrowonpaper/arctic">github.com/pilcrowonpaper/arctic</a>.
+			</p>
+		</main>
+	</body>
+</html>
